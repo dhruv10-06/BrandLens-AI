@@ -236,8 +236,9 @@ Return a single JSON object with the following structure:
 
     // 1. Scan for prohibited words or phrases mentioned in evidence
     for (const ev of ragResult.evidenceList) {
-      if (ev.sourceType === 'terminology' && ev.title.includes('Prohibited')) {
-        const term = ev.content.split('->')[0]?.replace('• Prohibited: "', '').replace('"', '').trim();
+      if (ev.sourceType === 'terminology' || ev.content.toLowerCase().includes('prohibited')) {
+        const match = ev.content.match(/["']([^"']+)["']/);
+        const term = match ? match[1] : null;
         if (term && lowerContent.includes(term.toLowerCase())) {
           findings.push({
             category: 'Prohibited language',
@@ -256,12 +257,11 @@ Return a single JSON object with the following structure:
     }
 
     // 2. Scan for superlative or unsupported promotional claims (e.g. "best in the world", "cheapest", "#1")
-    const superlativeRegex = /\b(best in the world|cheapest|#1|guaranteed 100%|unlimited free|revolutionary breakthrough|unbeatable)\b/gi;
+    const superlativeRegex = /\b(best in the world|cheapest|cheap|#1|guaranteed 100%|100% bug-free|unlimited free|revolutionary breakthrough|unbeatable)\b/gi;
     let match: RegExpExecArray | null;
     while ((match = superlativeRegex.exec(content)) !== null) {
       const phrase = match[0];
-      const hasProof = ragResult.evidenceList.some((e) => e.content.toLowerCase().includes(phrase.toLowerCase()));
-      if (!hasProof) {
+      if (!findings.some((f) => f.originalText.toLowerCase() === phrase.toLowerCase())) {
         findings.push({
           category: 'Unsupported promotional claim',
           severity: 'High',

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { GuidelineChunk, IGuidelineChunk } from '../models/GuidelineChunk.js';
-import { ApprovedFact, IApprovedFact } from '../models/ApprovedFact.js';
+import { GuidelineChunk } from '../models/GuidelineChunk.js';
+import { ApprovedFact } from '../models/ApprovedFact.js';
 import { EmbeddingService } from './embedding.service.js';
 import { cosineSimilarity } from '../utils/cosine.js';
 
@@ -55,7 +55,7 @@ export class RAGService {
     scoredChunks.sort((a, b) => b.score - a.score);
     const topChunks = scoredChunks.slice(0, topK);
 
-    // 4. Fetch all active ApprovedFacts for this organization (facts, terminology, tone rules)
+    // 4. Fetch all active ApprovedFacts for this organization
     const activeFacts = await ApprovedFact.find({
       organizationId,
       isActive: true,
@@ -110,9 +110,9 @@ export class RAGService {
         if (lowerContent.includes(fact.key.toLowerCase())) {
           evidenceList.push({
             id: fact._id.toString(),
-            sourceType: fact.type === 'fact' ? 'approved_fact' : fact.type === 'tone_rule' ? 'tone_rule' : 'terminology',
+            sourceType: 'terminology',
             title: `Official Rule: ${fact.key}`,
-            content: `${fact.key}: ${fact.value} (Note: ${fact.context || 'Standard'})`,
+            content: `• Prohibited: "${fact.key}" -> Reason / Preferred: "${fact.value}" (Context: ${fact.context || 'Global'})`,
             similarityScore: 1.0,
           });
         }
@@ -129,4 +129,3 @@ export class RAGService {
     };
   }
 }
-
