@@ -59,3 +59,4 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 'md' }) =>
     </div>
   );
 };
+

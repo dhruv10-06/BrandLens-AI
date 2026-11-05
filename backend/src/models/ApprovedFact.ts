@@ -35,3 +35,4 @@ const ApprovedFactSchema = new Schema<IApprovedFact>(
 ApprovedFactSchema.index({ organizationId: 1, type: 1, isActive: 1 });
 
 export const ApprovedFact = mongoose.model<IApprovedFact>('ApprovedFact', ApprovedFactSchema);
+

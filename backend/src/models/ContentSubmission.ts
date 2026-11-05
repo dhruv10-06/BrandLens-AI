@@ -57,3 +57,4 @@ const ContentSubmissionSchema = new Schema<IContentSubmission>(
 ContentSubmissionSchema.index({ organizationId: 1, status: 1 });
 
 export const ContentSubmission = mongoose.model<IContentSubmission>('ContentSubmission', ContentSubmissionSchema);
+

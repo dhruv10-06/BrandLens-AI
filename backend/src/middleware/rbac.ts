@@ -25,3 +25,4 @@ export function requireRole(allowedRoles: UserRole[]) {
 
 export const requireReviewer = requireRole(['reviewer', 'admin']);
 export const requireCreator = requireRole(['creator', 'reviewer', 'admin']);
+

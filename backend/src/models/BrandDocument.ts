@@ -34,3 +34,4 @@ const BrandDocumentSchema = new Schema<IBrandDocument>(
 );
 
 export const BrandDocument = mongoose.model<IBrandDocument>('BrandDocument', BrandDocumentSchema);
+

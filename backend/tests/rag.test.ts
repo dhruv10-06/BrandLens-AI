@@ -40,3 +40,4 @@ describe('RAG and Vector Math', () => {
     expect(relSim).toBeGreaterThan(unrelSim);
   });
 });
+

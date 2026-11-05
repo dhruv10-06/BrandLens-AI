@@ -25,7 +25,7 @@ const CreateSubmissionSchema = z.object({
 
 const UpdateContentSchema = z.object({
   content: z.string().min(5, 'Content must be at least 5 characters').max(25000),
-  reason: z.string().optional(),
+  reason: z.string().max(300).optional(),
 });
 
 export class SubmissionController {
@@ -78,7 +78,7 @@ export class SubmissionController {
         summary: analysisOutput.summary,
         findings: analysisOutput.findings,
         retrievedChunkIds: ragResult.guidelineChunkIds,
-        aiModelUsed: 'gemini-2.5-flash',
+        aiModelUsed: analysisOutput.aiModelUsed || 'gemini-2.5-flash',
       });
 
       // 5. Update submission status based on findings
@@ -121,7 +121,7 @@ export class SubmissionController {
       const submissions = await ContentSubmission.find(query)
         .sort({ updatedAt: -1 })
         .populate('creatorId', 'name email role')
-        .populate('latestAnalysisId', 'overallComplianceScore status summary findings');
+        .populate('latestAnalysisId', 'overallComplianceScore status summary findings aiModelUsed');
 
       res.json({
         success: true,
@@ -173,6 +173,7 @@ export class SubmissionController {
 
   /**
    * Update content (e.g. after user applies corrections or manually edits)
+   * Strictly enforces ownership: Creators can only modify their own submissions.
    */
   public static async updateContent(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -186,7 +187,16 @@ export class SubmissionController {
       });
 
       if (!submission) {
-        res.status(404).json({ success: false, error: 'Submission not found.' });
+        res.status(404).json({ success: false, error: 'Submission not found in your organisation.' });
+        return;
+      }
+
+      // Ownership enforcement
+      if (req.user!.role === 'creator' && submission.creatorId.toString() !== req.user!.id) {
+        res.status(403).json({
+          success: false,
+          error: 'Access denied: You can only edit your own content submissions.',
+        });
         return;
       }
 
@@ -220,6 +230,7 @@ export class SubmissionController {
 
   /**
    * Re-analyze content after corrections have been applied.
+   * Strictly enforces ownership: Creators can only re-analyze their own submissions.
    */
   public static async reanalyzeSubmission(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -232,7 +243,16 @@ export class SubmissionController {
       });
 
       if (!submission) {
-        res.status(404).json({ success: false, error: 'Submission not found.' });
+        res.status(404).json({ success: false, error: 'Submission not found in your organisation.' });
+        return;
+      }
+
+      // Ownership enforcement
+      if (req.user!.role === 'creator' && submission.creatorId.toString() !== req.user!.id) {
+        res.status(403).json({
+          success: false,
+          error: 'Access denied: You can only re-analyze your own content submissions.',
+        });
         return;
       }
 
@@ -257,7 +277,7 @@ export class SubmissionController {
         summary: analysisOutput.summary,
         findings: analysisOutput.findings,
         retrievedChunkIds: ragResult.guidelineChunkIds,
-        aiModelUsed: 'gemini-2.5-flash',
+        aiModelUsed: analysisOutput.aiModelUsed || 'gemini-2.5-flash',
       });
 
       const newStatus =
@@ -282,6 +302,7 @@ export class SubmissionController {
 
   /**
    * Creator submits the reviewed/fixed content to the reviewer queue.
+   * Strictly enforces ownership: Creators can only submit their own submissions.
    */
   public static async submitForReview(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -294,7 +315,16 @@ export class SubmissionController {
       });
 
       if (!submission) {
-        res.status(404).json({ success: false, error: 'Submission not found.' });
+        res.status(404).json({ success: false, error: 'Submission not found in your organisation.' });
+        return;
+      }
+
+      // Ownership enforcement
+      if (req.user!.role === 'creator' && submission.creatorId.toString() !== req.user!.id) {
+        res.status(403).json({
+          success: false,
+          error: 'Access denied: You can only submit your own content for review.',
+        });
         return;
       }
 

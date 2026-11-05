@@ -16,27 +16,93 @@ export interface DocumentChunk {
 }
 
 export class DocumentParserService {
+  private static readonly MAX_EXTRACTED_CHARS = 200000;
+  private static readonly PARSE_TIMEOUT_MS = 8000;
+
   /**
-   * Extract plain text from PDF buffer or TXT buffer.
+   * Verify actual file signatures (magic bytes) to prevent disguised binary uploads.
+   */
+  public static verifyFileSignature(buffer: Buffer, declaredType: 'pdf' | 'txt'): void {
+    if (!buffer || buffer.length === 0) {
+      throw new Error('File buffer is empty (0 bytes).');
+    }
+
+    if (declaredType === 'pdf') {
+      // PDF must begin with %PDF- (0x25 0x50 0x44 0x46 0x2D)
+      const header = buffer.subarray(0, 5).toString('ascii');
+      if (!header.startsWith('%PDF-')) {
+        throw new Error(
+          'File signature verification failed: Uploaded file does not contain valid PDF magic bytes (%PDF-).'
+        );
+      }
+    } else if (declaredType === 'txt') {
+      // Check for executable / binary signatures disguised as TXT
+      const b0 = buffer[0];
+      const b1 = buffer[1];
+      const b2 = buffer[2];
+      const b3 = buffer[3];
+
+      // MZ (DOS/Windows PE executable)
+      if (b0 === 0x4d && b1 === 0x5a) {
+        throw new Error('Security violation: Windows PE/Executable file detected in text upload.');
+      }
+      // \x7fELF (Linux ELF executable)
+      if (b0 === 0x7f && b1 === 0x45 && b2 === 0x4c && b3 === 0x46) {
+        throw new Error('Security violation: Linux ELF binary detected in text upload.');
+      }
+      // PK.. (Zip/Jar/Docx archive)
+      if (b0 === 0x50 && b1 === 0x4b && b2 === 0x03 && b3 === 0x04) {
+        throw new Error('Security violation: Compressed archive (ZIP/JAR) detected in text upload.');
+      }
+
+      // Check proportion of non-printable control characters
+      let binaryByteCount = 0;
+      const sampleLength = Math.min(buffer.length, 1024);
+      for (let i = 0; i < sampleLength; i++) {
+        const byte = buffer[i];
+        // Allow newline (10), carriage return (13), tab (9), standard printable (32-126), and UTF-8 multibyte (> 127)
+        if (byte < 9 || (byte > 10 && byte < 13) || (byte > 13 && byte < 32)) {
+          binaryByteCount++;
+        }
+      }
+      if (binaryByteCount / sampleLength > 0.05) {
+        throw new Error('File content validation failed: TXT file contains excessive binary/non-text control bytes.');
+      }
+    }
+  }
+
+  /**
+   * Extract plain text from PDF buffer or TXT buffer with timeout and signature checks.
    */
   public static async extractText(
     buffer: Buffer,
     fileType: 'pdf' | 'txt'
   ): Promise<ParsedDocumentResult> {
-    if (!buffer || buffer.length === 0) {
-      throw new Error('File buffer is empty.');
-    }
+    // 1. Verify Magic Byte Signature First
+    this.verifyFileSignature(buffer, fileType);
 
     let rawText = '';
     let pageCount: number | undefined;
 
     if (fileType === 'pdf') {
       try {
-        const pdfData = await pdfParse(buffer);
+        // Execute PDF parsing with strict timeout protection against decompression bombs / hang
+        const parsePromise = pdfParse(buffer, {
+          max: 100, // Limit max pages to prevent memory exhaustion
+        });
+
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(
+            () => reject(new Error('PDF extraction timed out after 8 seconds (possible malformed or complex PDF).')),
+            this.PARSE_TIMEOUT_MS
+          )
+        );
+
+        const pdfData: any = await Promise.race([parsePromise, timeoutPromise]);
         rawText = pdfData.text || '';
         pageCount = pdfData.numpages;
       } catch (err: any) {
-        throw new Error(`Failed to parse PDF document: ${err.message || 'File may be corrupted or password-protected.'}`);
+        throw new Error(`Failed to parse PDF document: ${err.message || 'File is corrupted, invalid or password-protected.'}`);
       }
     } else if (fileType === 'txt') {
       try {
@@ -53,6 +119,15 @@ export class DocumentParserService {
 
     if (cleanedText.trim().length < 15) {
       throw new Error('Extracted text is empty or too short to contain meaningful brand guidelines.');
+    }
+
+    if (cleanedText.length > this.MAX_EXTRACTED_CHARS) {
+      console.warn(`[DocumentParserService] Truncating oversized document from ${cleanedText.length} to ${this.MAX_EXTRACTED_CHARS} chars.`);
+      return {
+        text: cleanedText.slice(0, this.MAX_EXTRACTED_CHARS),
+        charCount: this.MAX_EXTRACTED_CHARS,
+        pageCount,
+      };
     }
 
     return {
@@ -77,7 +152,6 @@ export class DocumentParserService {
 
   /**
    * Chunk text into semantically cohesive guideline sections.
-   * Uses paragraph breaks, section headings, or sliding window chunks (~500 chars with 100 char overlap).
    */
   public static chunkDocument(
     fullText: string,

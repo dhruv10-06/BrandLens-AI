@@ -20,3 +20,4 @@ const OrganisationSchema = new Schema<IOrganisation>(
 );
 
 export const Organisation = mongoose.model<IOrganisation>('Organisation', OrganisationSchema);
+

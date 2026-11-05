@@ -6,6 +6,7 @@ import { BrandDocument } from '../models/BrandDocument.js';
 import { ApprovedFact } from '../models/ApprovedFact.js';
 import { ContentSubmission } from '../models/ContentSubmission.js';
 import { SeedService } from '../services/seed.service.js';
+import { isProd } from '../config/env.js';
 
 const UpdateVoiceSchema = z.object({
   brandVoiceSummary: z.string().min(5).max(2000),
@@ -72,6 +73,14 @@ export class OrgController {
 
   public static async seedDemo(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      if (process.env.NODE_ENV === 'production' || isProd) {
+        res.status(403).json({
+          success: false,
+          error: 'Demo seeding endpoint is disabled in production environments for security.',
+        });
+        return;
+      }
+
       const { force } = req.body;
       const result = await SeedService.seedDemoData(!!force);
       res.json({
@@ -84,3 +93,4 @@ export class OrgController {
     }
   }
 }
+

@@ -24,3 +24,4 @@ export const orgApi = {
     return res.data;
   },
 };
+

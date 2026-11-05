@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { documentsApi } from '../api/documents.api.ts';
 import { factsApi } from '../api/facts.api.ts';
 import { BrandDocument, ApprovedFact } from '../types/index.ts';
+import { useAuth } from '../context/AuthContext.tsx';
 import {
   Upload,
   FileText,
@@ -17,6 +18,8 @@ import {
 } from 'lucide-react';
 
 export const GuidelinesPage: React.FC = () => {
+  const { user } = useAuth();
+  const isReviewer = user?.role === 'reviewer' || user?.role === 'admin';
   const [documents, setDocuments] = useState<BrandDocument[]>([]);
   const [facts, setFacts] = useState<ApprovedFact[]>([]);
   const [activeTab, setActiveTab] = useState<'documents' | 'facts'>('documents');
@@ -149,22 +152,24 @@ export const GuidelinesPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setIsFactModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition shadow-sm"
-          >
-            <Plus className="w-3.5 h-3.5 text-slate-500" />
-            <span>Add Brand Rule / Term</span>
-          </button>
-          <button
-            onClick={() => setIsUploadModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition shadow-sm"
-          >
-            <Upload className="w-3.5 h-3.5" />
-            <span>Upload Guideline (PDF/TXT)</span>
-          </button>
-        </div>
+        {isReviewer && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsFactModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition shadow-sm"
+            >
+              <Plus className="w-3.5 h-3.5 text-slate-500" />
+              <span>Add Brand Rule / Term</span>
+            </button>
+            <button
+              onClick={() => setIsUploadModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition shadow-sm"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span>Upload Guideline (PDF/TXT)</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Tabs */}
@@ -249,13 +254,15 @@ export const GuidelinesPage: React.FC = () => {
                       <Eye className="w-3.5 h-3.5 text-slate-500" />
                       <span>View Chunks</span>
                     </button>
-                    <button
-                      onClick={() => handleDeleteDocument(doc._id, doc.originalName)}
-                      className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
-                      title="Deactivate and remove from analysis"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    {isReviewer && (
+                      <button
+                        onClick={() => handleDeleteDocument(doc._id, doc.originalName)}
+                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                        title="Deactivate and remove from analysis"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -290,12 +297,14 @@ export const GuidelinesPage: React.FC = () => {
                       <p className="text-slate-600 mt-0.5">{f.value}</p>
                       {f.context && <span className="text-[10px] text-slate-400 italic">Scope: {f.context}</span>}
                     </div>
-                    <button
-                      onClick={() => handleDeleteFact(f._id)}
-                      className="text-slate-400 hover:text-red-600 p-1"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {isReviewer && (
+                      <button
+                        onClick={() => handleDeleteFact(f._id)}
+                        className="text-slate-400 hover:text-red-600 p-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -323,12 +332,14 @@ export const GuidelinesPage: React.FC = () => {
                       <p className="text-slate-600 mt-0.5">{f.value}</p>
                       {f.context && <span className="text-[10px] text-slate-400 italic">Scope: {f.context}</span>}
                     </div>
-                    <button
-                      onClick={() => handleDeleteFact(f._id)}
-                      className="text-slate-400 hover:text-red-600 p-1"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {isReviewer && (
+                      <button
+                        onClick={() => handleDeleteFact(f._id)}
+                        className="text-slate-400 hover:text-red-600 p-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -355,12 +366,14 @@ export const GuidelinesPage: React.FC = () => {
                       <span className="font-bold text-emerald-900">{f.key}</span>
                       <p className="text-slate-600 mt-0.5">{f.value}</p>
                     </div>
-                    <button
-                      onClick={() => handleDeleteFact(f._id)}
-                      className="text-slate-400 hover:text-red-600 p-1"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {isReviewer && (
+                      <button
+                        onClick={() => handleDeleteFact(f._id)}
+                        className="text-slate-400 hover:text-red-600 p-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -387,12 +400,14 @@ export const GuidelinesPage: React.FC = () => {
                       <span className="font-bold text-amber-900">{f.key}</span>
                       <p className="text-slate-600 mt-0.5">{f.value}</p>
                     </div>
-                    <button
-                      onClick={() => handleDeleteFact(f._id)}
-                      className="text-slate-400 hover:text-red-600 p-1"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {isReviewer && (
+                      <button
+                        onClick={() => handleDeleteFact(f._id)}
+                        className="text-slate-400 hover:text-red-600 p-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -620,3 +635,4 @@ export const GuidelinesPage: React.FC = () => {
     </div>
   );
 };
+

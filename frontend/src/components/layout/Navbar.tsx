@@ -1,24 +1,9 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext.tsx';
-import { ShieldCheck, UserCircle, LogOut, RefreshCw, Sparkles, Building2 } from 'lucide-react';
-import { orgApi } from '../../api/org.api.ts';
+import { ShieldCheck, LogOut, Building2 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
-  const { user, logout, quickDemoLogin } = useAuth();
-  const [isSeeding, setIsSeeding] = React.useState(false);
-
-  const handleResetDemo = async () => {
-    if (!window.confirm('Reset demo dataset to fresh sample guidelines and sample submission?')) return;
-    try {
-      setIsSeeding(true);
-      await orgApi.seedDemo(true);
-      window.location.reload();
-    } catch (err: any) {
-      alert('Error resetting demo: ' + (err.message || err));
-    } finally {
-      setIsSeeding(false);
-    }
-  };
+  const { user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
@@ -53,62 +38,32 @@ export const Navbar: React.FC = () => {
             </div>
           )}
 
-          {/* Right Action Tools: Role Switcher, Reset Demo, Profile */}
+          {/* Right Section: Fixed Authenticated User & Logout */}
           <div className="flex items-center gap-3">
-            {/* Quick Demo Switcher */}
-            <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
-              <button
-                type="button"
-                onClick={() => quickDemoLogin('creator')}
-                className={`px-2.5 py-1 rounded-md transition-all ${
-                  user?.role === 'creator'
-                    ? 'bg-white text-brand-700 shadow-sm font-bold'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-                title="Switch to Creator demo role"
-              >
-                Creator Role
-              </button>
-              <button
-                type="button"
-                onClick={() => quickDemoLogin('reviewer')}
-                className={`px-2.5 py-1 rounded-md transition-all ${
-                  user?.role === 'reviewer'
-                    ? 'bg-white text-indigo-700 shadow-sm font-bold'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-                title="Switch to Reviewer demo role"
-              >
-                Reviewer Role
-              </button>
-            </div>
-
-            {/* Reset Demo Button */}
-            <button
-              type="button"
-              onClick={handleResetDemo}
-              disabled={isSeeding}
-              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg transition"
-              title="Reset sample guidelines, facts, and submission"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isSeeding ? 'animate-spin' : ''}`} />
-              <span>Reset Demo</span>
-            </button>
-
-            {/* User Profile */}
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+            {/* Read-Only Role Badge based strictly on authenticated database record */}
+            <div className="flex items-center gap-2">
               <div className="flex flex-col items-end text-right">
                 <span className="text-xs font-semibold text-slate-900 leading-tight">
-                  {user?.name?.split(' ')[0]}
+                  {user?.name}
                 </span>
-                <span className="text-[10px] uppercase font-bold text-brand-600 tracking-wider">
-                  {user?.role}
+                <span
+                  className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border ${
+                    user?.role === 'reviewer'
+                      ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                      : user?.role === 'admin'
+                      ? 'bg-purple-50 text-purple-700 border-purple-200'
+                      : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  }`}
+                >
+                  {user?.role} Role (Fixed)
                 </span>
               </div>
+
               <button
+                type="button"
                 onClick={logout}
-                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
-                title="Sign out"
+                className="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition ml-1"
+                title="Sign out of current account"
               >
                 <LogOut className="w-4 h-4" />
               </button>

@@ -12,3 +12,4 @@ router.post('/decision/:id', requireReviewer, ReviewController.makeDecision);
 router.get('/history', ReviewController.getReviewHistory);
 
 export default router;
+

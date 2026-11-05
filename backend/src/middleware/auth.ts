@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { ENV } from '../config/env.js';
-import { User, IUser, UserRole } from '../models/User.js';
-import mongoose from 'mongoose';
+import { User, UserRole } from '../models/User.js';
 
 export interface AuthenticatedUser {
   id: string;
@@ -20,6 +19,15 @@ declare global {
   }
 }
 
+/**
+ * Safely parse cookie string from headers
+ */
+function parseCookieToken(cookieHeader?: string): string | undefined {
+  if (!cookieHeader) return undefined;
+  const match = cookieHeader.match(/(?:^|;\s*)token=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : undefined;
+}
+
 export async function authenticate(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     let token: string | undefined;
@@ -29,12 +37,14 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
       token = authHeader.split(' ')[1];
     } else if (req.cookies && req.cookies.token) {
       token = req.cookies.token;
+    } else {
+      token = parseCookieToken(req.headers.cookie);
     }
 
     if (!token) {
       res.status(401).json({
         success: false,
-        error: 'Authentication required. No access token provided in request.',
+        error: 'Authentication required. No valid session or authorization token found.',
       });
       return;
     }
@@ -50,7 +60,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
       return;
     }
 
-    if (!decoded || !decoded.id || !decoded.organizationId) {
+    if (!decoded || !decoded.id) {
       res.status(401).json({
         success: false,
         error: 'Malformed token payload.',
@@ -58,6 +68,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
       return;
     }
 
+    // Always fetch the live user record from MongoDB to verify actual role and organization membership
     const user = await User.findById(decoded.id).select('-passwordHash').lean();
     if (!user) {
       res.status(401).json({

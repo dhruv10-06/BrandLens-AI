@@ -15,3 +15,4 @@ router.post('/:id/reanalyze', aiAnalysisLimiter, SubmissionController.reanalyzeS
 router.post('/:id/submit-for-review', SubmissionController.submitForReview);
 
 export default router;
+

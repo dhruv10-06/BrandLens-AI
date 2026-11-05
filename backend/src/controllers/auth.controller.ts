@@ -4,15 +4,15 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { User, UserRole } from '../models/User.js';
 import { Organisation } from '../models/Organisation.js';
-import { ENV } from '../config/env.js';
+import { ENV, isProd } from '../config/env.js';
 
+// Public registration strictly limits new users to 'creator' role to prevent privilege escalation
 const RegisterSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  role: z.enum(['creator', 'reviewer', 'admin']).default('creator'),
-  orgName: z.string().min(2, 'Organisation name must be at least 2 characters').optional(),
-  orgSlug: z.string().min(2).optional(),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  email: z.string().email('Invalid email address').max(150),
+  password: z.string().min(8, 'Password must be at least 8 characters').max(100),
+  orgName: z.string().min(2, 'Organisation name must be at least 2 characters').max(100).optional(),
+  orgSlug: z.string().min(2).max(100).optional(),
 });
 
 const LoginSchema = z.object({
@@ -20,10 +20,17 @@ const LoginSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: isProd,
+  sameSite: 'lax' as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+};
+
 export class AuthController {
   public static async register(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { name, email, password, role, orgName, orgSlug } = RegisterSchema.parse(req.body);
+      const { name, email, password, orgName, orgSlug } = RegisterSchema.parse(req.body);
 
       // Check if email already registered
       const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -61,12 +68,13 @@ export class AuthController {
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(password, salt);
 
-      // Create User
+      // Enforce: Public registrations ALWAYS receive 'creator' role.
+      // Reviewers are provisioned strictly via administrative processes.
       const user = await User.create({
         name,
         email: email.toLowerCase(),
         passwordHash,
-        role: role as UserRole,
+        role: 'creator' as UserRole,
         organizationId: org._id,
       });
 
@@ -81,6 +89,9 @@ export class AuthController {
         ENV.JWT_SECRET,
         { expiresIn: ENV.JWT_EXPIRES_IN as any }
       );
+
+      // Set HttpOnly Cookie
+      res.cookie('token', token, COOKIE_OPTIONS);
 
       res.status(201).json({
         success: true,
@@ -138,6 +149,9 @@ export class AuthController {
         { expiresIn: ENV.JWT_EXPIRES_IN as any }
       );
 
+      // Set HttpOnly Cookie
+      res.cookie('token', token, COOKIE_OPTIONS);
+
       res.json({
         success: true,
         message: 'Sign in successful.',
@@ -159,6 +173,14 @@ export class AuthController {
     } catch (err: any) {
       next(err);
     }
+  }
+
+  public static async logout(req: Request, res: Response): Promise<void> {
+    res.clearCookie('token', COOKIE_OPTIONS);
+    res.json({
+      success: true,
+      message: 'Signed out successfully.',
+    });
   }
 
   public static async getMe(req: Request, res: Response, next: NextFunction): Promise<void> {

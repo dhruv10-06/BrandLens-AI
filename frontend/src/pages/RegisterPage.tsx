@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.tsx';
 import { ShieldCheck, ArrowRight, AlertCircle } from 'lucide-react';
-import { UserRole } from '../types/index.ts';
 
 export const RegisterPage: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [orgName, setOrgName] = useState('');
-  const [role, setRole] = useState<UserRole>('creator');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register } = useAuth();
@@ -24,7 +22,6 @@ export const RegisterPage: React.FC = () => {
         name,
         email,
         password,
-        role,
         orgName,
       });
       navigate('/');
@@ -101,34 +98,8 @@ export const RegisterPage: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Your Initial Role
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setRole('creator')}
-                  className={`py-2 px-3 text-xs font-semibold rounded-lg border text-center transition ${
-                    role === 'creator'
-                      ? 'border-brand-600 bg-brand-50 text-brand-700 ring-2 ring-brand-500/20'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  Content Creator
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRole('reviewer')}
-                  className={`py-2 px-3 text-xs font-semibold rounded-lg border text-center transition ${
-                    role === 'reviewer'
-                      ? 'border-indigo-600 bg-indigo-50 text-indigo-700 ring-2 ring-indigo-500/20'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  Brand Reviewer
-                </button>
-              </div>
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-500">
+              New accounts are registered as <strong className="text-slate-800">Content Creators</strong>. Reviewer roles are granted by organisation administrators.
             </div>
 
             <div>

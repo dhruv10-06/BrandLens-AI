@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ENV } from './env.js';
+import { ENV, isProd } from './env.js';
 
 let mongodInstance: any = null;
 
@@ -7,7 +7,13 @@ export async function connectDB(): Promise<void> {
   let uri = ENV.MONGODB_URI;
 
   if (!uri) {
-    console.log('[Database] No MONGODB_URI provided in environment. Initializing in-memory MongoDB instance for local/demo use...');
+    if (isProd) {
+      throw new Error(
+        'FATAL: MONGODB_URI is not configured. Ephemeral in-memory database is strictly disabled in production.'
+      );
+    }
+
+    console.log('[Database] No MONGODB_URI provided in environment. Initializing local in-memory MongoDB instance for local testing...');
     try {
       const { MongoMemoryServer } = await import('mongodb-memory-server');
       mongodInstance = await MongoMemoryServer.create();
@@ -26,17 +32,22 @@ export async function connectDB(): Promise<void> {
     await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 8000,
     });
-    console.log('[Database] Successfully connected to MongoDB.');
+    console.log(`[Database] Successfully connected to ${uri.startsWith('mongodb+srv') ? 'MongoDB Atlas' : 'MongoDB'}.`);
   } catch (err: any) {
-    console.error(`[Database] Connection error to ${uri.startsWith('mongodb+srv') ? 'MongoDB Atlas' : 'MongoDB'}:`, err.message);
-    // If Atlas connection failed and in dev, try fallback
+    console.error(`[Database] Fatal connection error to ${uri.startsWith('mongodb+srv') ? 'MongoDB Atlas' : 'MongoDB'}:`, err.message);
+
+    if (isProd) {
+      throw new Error(`Production database connection failed: ${err.message}. Persistent database required.`);
+    }
+
+    // In dev or test only, try fallback if atlas failed
     if (!mongodInstance && (ENV.NODE_ENV === 'development' || ENV.NODE_ENV === 'test')) {
-      console.log('[Database] Attempting fallback to in-memory MongoDB for local resilience...');
+      console.log('[Database] Attempting dev fallback to in-memory MongoDB...');
       const { MongoMemoryServer } = await import('mongodb-memory-server');
       mongodInstance = await MongoMemoryServer.create();
       const fallbackUri = mongodInstance.getUri();
       await mongoose.connect(fallbackUri);
-      console.log(`[Database] Connected to fallback in-memory MongoDB: ${fallbackUri}`);
+      console.log(`[Database] Connected to dev fallback in-memory MongoDB: ${fallbackUri}`);
       return;
     }
     throw err;

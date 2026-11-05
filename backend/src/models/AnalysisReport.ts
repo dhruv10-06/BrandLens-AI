@@ -95,3 +95,4 @@ const AnalysisReportSchema = new Schema<IAnalysisReport>(
 );
 
 export const AnalysisReport = mongoose.model<IAnalysisReport>('AnalysisReport', AnalysisReportSchema);
+

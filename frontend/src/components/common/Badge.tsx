@@ -51,3 +51,4 @@ export const EvidenceBadge: React.FC<{ status: EvidenceStatus }> = ({ status }) 
     </span>
   );
 };
+

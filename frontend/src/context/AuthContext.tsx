@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '../types/index.ts';
 import { authApi } from '../api/auth.api.ts';
+import api from '../api/client.ts';
 
 interface AuthContextType {
   user: User | null;
@@ -12,12 +13,10 @@ interface AuthContextType {
     name: string;
     email: string;
     password: string;
-    role: UserRole;
     orgName?: string;
     orgSlug?: string;
   }) => Promise<void>;
-  logout: () => void;
-  quickDemoLogin: (role: 'creator' | 'reviewer') => Promise<void>;
+  logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -65,28 +64,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     name: string;
     email: string;
     password: string;
-    role: UserRole;
     orgName?: string;
     orgSlug?: string;
   }) => {
-    const res = await authApi.register(data);
+    // Public registration always defaults to creator role on the backend
+    const res = await authApi.register({
+      ...data,
+      role: 'creator' as UserRole,
+    });
     localStorage.setItem('brandlens_token', res.token);
     localStorage.setItem('brandlens_user', JSON.stringify(res.user));
     setToken(res.token);
     setUser(res.user);
   };
 
-  const logout = () => {
-    localStorage.removeItem('brandlens_token');
-    localStorage.removeItem('brandlens_user');
-    setToken(null);
-    setUser(null);
-  };
-
-  const quickDemoLogin = async (role: 'creator' | 'reviewer') => {
-    const email = role === 'creator' ? 'creator@brandlens.demo' : 'reviewer@brandlens.demo';
-    const password = role === 'creator' ? 'DemoCreator123!' : 'DemoReviewer123!';
-    await login(email, password);
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (err) {
+      // Ignore logout network errors
+    } finally {
+      localStorage.removeItem('brandlens_token');
+      localStorage.removeItem('brandlens_user');
+      setToken(null);
+      setUser(null);
+    }
   };
 
   const refreshUser = async () => {
@@ -109,7 +111,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
-        quickDemoLogin,
         refreshUser,
       }}
     >

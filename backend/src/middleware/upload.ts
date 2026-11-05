@@ -2,7 +2,7 @@ import multer from 'multer';
 import path from 'path';
 import { ENV } from '../config/env.js';
 
-// Use in-memory buffer storage to eliminate disk path traversal vulnerabilities
+// Use memoryStorage to avoid disk path traversal vulnerabilities
 const storage = multer.memoryStorage();
 
 const allowedMimeTypes = ['application/pdf', 'text/plain'];
@@ -12,7 +12,8 @@ export const uploadMiddleware = multer({
   storage,
   limits: {
     fileSize: ENV.MAX_FILE_SIZE_MB * 1024 * 1024, // 10MB limit
-    files: 1, // Single file upload
+    files: 1, // Strictly single file upload
+    fields: 5,
   },
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();

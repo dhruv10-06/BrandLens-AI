@@ -39,3 +39,4 @@ const GuidelineChunkSchema = new Schema<IGuidelineChunk>(
 GuidelineChunkSchema.index({ organizationId: 1, isActive: 1 });
 
 export const GuidelineChunk = mongoose.model<IGuidelineChunk>('GuidelineChunk', GuidelineChunkSchema);
+

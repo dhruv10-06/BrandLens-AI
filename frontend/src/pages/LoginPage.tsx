@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.tsx';
-import { ShieldCheck, ArrowRight, UserCheck, Sparkles, AlertCircle } from 'lucide-react';
+import { ShieldCheck, ArrowRight, UserCheck, Sparkles, AlertCircle, Lock } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, quickDemoLogin } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,11 +28,13 @@ export const LoginPage: React.FC = () => {
   const handleDemoSignIn = async (role: 'creator' | 'reviewer') => {
     setError(null);
     setIsSubmitting(true);
+    const demoEmail = role === 'creator' ? 'creator@brandlens.demo' : 'reviewer@brandlens.demo';
+    const demoPassword = role === 'creator' ? 'DemoCreator123!' : 'DemoReviewer123!';
     try {
-      await quickDemoLogin(role);
+      await login(demoEmail, demoPassword);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.error || err.message || 'Demo sign-in failed. Please click "Reset Demo" on the top right.');
+      setError(err.response?.data?.error || err.message || 'Demo authentication failed.');
     } finally {
       setIsSubmitting(false);
     }
@@ -61,33 +63,40 @@ export const LoginPage: React.FC = () => {
             </div>
           )}
 
-          {/* Quick Demo Access for Hackathon Judges */}
+          {/* Secure Demonstrator Access: Separate fixed-role accounts */}
           <div className="mb-6 p-4 rounded-xl bg-indigo-50/70 border border-indigo-100">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-900 uppercase tracking-wider mb-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-900 uppercase tracking-wider mb-1.5">
               <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-              <span>1-Click Hackathon Evaluator Access</span>
+              <span>CodeNexus India Evaluator Access</span>
             </div>
-            <p className="text-xs text-indigo-700 mb-3">
-              Explore the system immediately with preloaded brand guidelines, rules, and sample submissions:
+            <p className="text-[11px] text-indigo-700 mb-3 leading-relaxed">
+              Authenticate into separate fixed-role demo accounts with pre-indexed guidelines and sample violation drafts. Roles are non-switchable once logged in.
             </p>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-2">
               <button
                 type="button"
                 onClick={() => handleDemoSignIn('creator')}
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-lg transition shadow-sm"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition shadow-sm"
               >
-                <UserCheck className="w-3.5 h-3.5" />
-                <span>As Creator</span>
+                <div className="flex items-center gap-2">
+                  <UserCheck className="w-4 h-4" />
+                  <span>Demo Creator Account</span>
+                </div>
+                <span className="text-[10px] font-mono bg-brand-700 px-1.5 py-0.5 rounded">creator@brandlens.demo</span>
               </button>
+
               <button
                 type="button"
                 onClick={() => handleDemoSignIn('reviewer')}
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-900 bg-amber-400 hover:bg-amber-500 rounded-lg transition shadow-sm"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-slate-900 bg-amber-400 hover:bg-amber-500 rounded-xl transition shadow-sm"
               >
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>As Reviewer</span>
+                <div className="flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  <span>Demo Reviewer Account</span>
+                </div>
+                <span className="text-[10px] font-mono bg-amber-500/80 px-1.5 py-0.5 rounded">reviewer@brandlens.demo</span>
               </button>
             </div>
           </div>
@@ -97,7 +106,7 @@ export const LoginPage: React.FC = () => {
               <div className="w-full border-t border-slate-200" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-slate-400 font-semibold">Or sign in with email</span>
+              <span className="bg-white px-2 text-slate-400 font-semibold">Or sign in with credentials</span>
             </div>
           </div>
 
@@ -111,8 +120,8 @@ export const LoginPage: React.FC = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="creator@brandlens.demo"
-                className="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                placeholder="you@company.com"
+                className="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
 
@@ -126,7 +135,7 @@ export const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                className="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
 

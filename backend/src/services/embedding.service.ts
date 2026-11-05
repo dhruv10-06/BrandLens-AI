@@ -109,3 +109,4 @@ export class EmbeddingService {
     return vector;
   }
 }
+

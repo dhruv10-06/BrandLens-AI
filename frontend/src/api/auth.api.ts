@@ -18,7 +18,7 @@ export const authApi = {
     name: string;
     email: string;
     password: string;
-    role: string;
+    role?: string;
     orgName?: string;
     orgSlug?: string;
   }): Promise<AuthResponse> => {
@@ -31,3 +31,4 @@ export const authApi = {
     return res.data;
   },
 };
+

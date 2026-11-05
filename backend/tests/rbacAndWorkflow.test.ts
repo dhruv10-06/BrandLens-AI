@@ -36,7 +36,6 @@ describe('RBAC, Security & Human Review Workflow API Integration', () => {
         name: 'Creator Alice',
         email: 'testcreator@brandlens.io',
         password: 'Password123!',
-        role: 'creator',
         orgSlug: 'test-enterprise',
       });
 
@@ -44,20 +43,31 @@ describe('RBAC, Security & Human Review Workflow API Integration', () => {
     creatorToken = creatorRes.body.token;
     creatorUser = creatorRes.body.user;
 
-    // Register reviewer
-    const reviewerRes = await request(app)
+    // Register user then provision reviewer role directly in DB (simulating admin provisioning)
+    const reviewerReg = await request(app)
       .post('/api/auth/register')
       .send({
         name: 'Reviewer Bob',
         email: 'testreviewer@brandlens.io',
         password: 'Password123!',
-        role: 'reviewer',
         orgSlug: 'test-enterprise',
       });
 
-    expect(reviewerRes.status).toBe(201);
-    reviewerToken = reviewerRes.body.token;
-    reviewerUser = reviewerRes.body.user;
+    expect(reviewerReg.status).toBe(201);
+    await User.updateOne({ email: 'testreviewer@brandlens.io' }, { $set: { role: 'reviewer' } });
+
+    // Login as the provisioned reviewer
+    const reviewerLoginRes = await request(app)
+      .post('/api/auth/login')
+      .send({
+        email: 'testreviewer@brandlens.io',
+        password: 'Password123!',
+      });
+
+    expect(reviewerLoginRes.status).toBe(200);
+    reviewerToken = reviewerLoginRes.body.token;
+    reviewerUser = reviewerLoginRes.body.user;
+    expect(reviewerUser.role).toBe('reviewer');
   });
 
   afterAll(async () => {
@@ -139,3 +149,4 @@ describe('RBAC, Security & Human Review Workflow API Integration', () => {
     expect(res.body.history[0].reviewerId.email).toBe('testreviewer@brandlens.io');
   });
 });
+

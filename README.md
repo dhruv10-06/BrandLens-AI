@@ -297,3 +297,4 @@ An evaluator can independently test the entire platform without manual setup:
 - Multimodal visual brand governance (logo placement, color contrast, hex code compliance).
 - Cross-campaign recurring violation analytics.
 - Webhook integrations with CMS and publishing workflows (WordPress, Contentful).
+
