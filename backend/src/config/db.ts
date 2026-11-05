@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { ENV, isProd } from './env.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let mongodInstance: any = null;
 
@@ -15,7 +20,11 @@ export async function connectDB(): Promise<void> {
 
     console.log('[Database] No MONGODB_URI provided in environment. Initializing local in-memory MongoDB instance for local testing...');
     try {
-      const { MongoMemoryServer } = await import('mongodb-memory-server');
+      if (!process.env.MONGOMS_DOWNLOAD_DIR) {
+        process.env.MONGOMS_DOWNLOAD_DIR = path.resolve(__dirname, '../../node_modules/.cache/mongodb-memory-server');
+      }
+      const memPkg = 'mongodb-memory-server';
+      const { MongoMemoryServer } = await import(memPkg);
       mongodInstance = await MongoMemoryServer.create();
       uri = mongodInstance.getUri();
       console.log(`[Database] In-memory MongoDB running at: ${uri}`);
@@ -43,7 +52,8 @@ export async function connectDB(): Promise<void> {
     // In dev or test only, try fallback if atlas failed
     if (!mongodInstance && (ENV.NODE_ENV === 'development' || ENV.NODE_ENV === 'test')) {
       console.log('[Database] Attempting dev fallback to in-memory MongoDB...');
-      const { MongoMemoryServer } = await import('mongodb-memory-server');
+      const memPkg = 'mongodb-memory-server';
+      const { MongoMemoryServer } = await import(memPkg);
       mongodInstance = await MongoMemoryServer.create();
       const fallbackUri = mongodInstance.getUri();
       await mongoose.connect(fallbackUri);
