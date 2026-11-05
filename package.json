@@ -1,0 +1,22 @@
+{
+  "name": "brandlens-ai",
+  "version": "1.0.0",
+  "description": "BrandLens AI — Your Brand's Intelligent Checkpoint Before Publication",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "start": "npm run start --workspace=backend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build": "npm run build:backend && npm run build:frontend",
+    "test": "npm run test --workspace=backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
