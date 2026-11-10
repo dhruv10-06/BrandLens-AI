@@ -16,6 +16,9 @@ import {
   Sparkles,
   ShieldAlert,
   Clock,
+  BarChart3,
+  Image as ImageIcon,
+  Send,
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
@@ -71,6 +74,13 @@ export const DashboardPage: React.FC = () => {
               <span>Submit Content for Review</span>
             </Link>
             <Link
+              to="/analytics"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition shadow-sm"
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span>Brand Analytics</span>
+            </Link>
+            <Link
               to="/guidelines"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition"
             >
@@ -82,7 +92,7 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
             <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -101,7 +111,7 @@ export const DashboardPage: React.FC = () => {
         <div className="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm flex items-center justify-between">
           <div>
             <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Verified Rules & Terminology
+              Verified Rules & Terms
             </div>
             <div className="text-2xl font-extrabold text-slate-900 mt-1">
               {stats.factsAndRules}
@@ -127,6 +137,25 @@ export const DashboardPage: React.FC = () => {
             <FileText className="w-5 h-5" />
           </div>
         </div>
+
+        <Link
+          to="/analytics"
+          className="bg-white p-5 rounded-xl border border-indigo-200 shadow-sm flex items-center justify-between hover:border-indigo-400 transition group"
+        >
+          <div>
+            <div className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+              Governance Analytics
+            </div>
+            <div className="text-sm font-extrabold text-slate-900 mt-1 flex items-center gap-1 group-hover:text-indigo-600 transition">
+              <span>View Insights</span>
+              <ArrowRight className="w-4 h-4 text-indigo-500" />
+            </div>
+            <div className="text-[11px] text-slate-500 mt-0.5">Trends, gaps & recurring issues</div>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition">
+            <BarChart3 className="w-5 h-5" />
+          </div>
+        </Link>
       </div>
 
       {/* Preloaded Demo Submission Highlight */}
@@ -188,6 +217,11 @@ export const DashboardPage: React.FC = () => {
                     <span className="text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
                       {sub.contentType.replace('_', ' ')}
                     </span>
+                    {sub.submissionFormat && (
+                      <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        {sub.submissionFormat}
+                      </span>
+                    )}
                     <StatusBadge status={sub.status} />
                   </div>
                   <p className="text-xs text-slate-500 line-clamp-1 italic">

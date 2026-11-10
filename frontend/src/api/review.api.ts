@@ -9,9 +9,32 @@ export const reviewApi = {
 
   makeDecision: async (
     submissionId: string,
-    data: { decision: 'approved' | 'rejected' | 'requested_changes'; comments: string }
-  ): Promise<{ success: boolean; message: string; decision: ReviewDecision; submission: ContentSubmission }> => {
+    data: {
+      decision: 'approved' | 'rejected' | 'requested_changes';
+      comments: string;
+      publishChannel?: 'webhook' | 'cms' | 'social_media' | 'internal';
+      customWebhookUrl?: string;
+    }
+  ): Promise<{
+    success: boolean;
+    message: string;
+    decision: ReviewDecision;
+    submission: ContentSubmission;
+    publishingResult?: any;
+  }> => {
     const res = await api.post(`/review/decision/${submissionId}`, data);
+    return res.data;
+  },
+
+  previewPublish: async (
+    submissionId: string
+  ): Promise<{
+    success: boolean;
+    channel: string;
+    webhookUrl: string | null;
+    payload: any;
+  }> => {
+    const res = await api.get(`/review/preview-publish/${submissionId}`);
     return res.data;
   },
 

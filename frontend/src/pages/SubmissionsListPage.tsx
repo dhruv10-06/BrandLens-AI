@@ -106,6 +106,11 @@ export const SubmissionsListPage: React.FC = () => {
                     <span className="text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded capitalize">
                       {sub.contentType.replace('_', ' ')}
                     </span>
+                    {sub.submissionFormat && (
+                      <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        {sub.submissionFormat}
+                      </span>
+                    )}
                     <StatusBadge status={sub.status} />
                   </div>
                   <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">

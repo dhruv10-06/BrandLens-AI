@@ -14,6 +14,7 @@ import { AnalysisResultsPage } from './pages/AnalysisResultsPage.tsx';
 import { ReviewQueuePage } from './pages/ReviewQueuePage.tsx';
 import { ReviewDetailsPage } from './pages/ReviewDetailsPage.tsx';
 import { ReviewHistoryPage } from './pages/ReviewHistoryPage.tsx';
+import { AnalyticsPage } from './pages/AnalyticsPage.tsx';
 import { NotFoundPage } from './pages/NotFoundPage.tsx';
 
 // Protected Route Guard
@@ -63,6 +64,7 @@ export const App: React.FC = () => {
             <Route path="/review-queue" element={<ReviewQueuePage />} />
             <Route path="/review/:id" element={<ReviewDetailsPage />} />
             <Route path="/review-history" element={<ReviewHistoryPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

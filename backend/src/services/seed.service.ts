@@ -11,6 +11,7 @@ import { ReviewDecision } from '../models/ReviewDecision.js';
 import { DocumentParserService } from './documentParser.service.js';
 import { EmbeddingService } from './embedding.service.js';
 import { AnalysisService } from './analysis.service.js';
+import { VisualAnalysisService } from './visualAnalysis.service.js';
 import { RAGService } from './rag.service.js';
 
 export class SeedService {
@@ -32,6 +33,14 @@ export class SeedService {
       slug: 'apexflow',
       description: 'Enterprise AI Workflow Orchestration & Data Governance Platform.',
       brandVoiceSummary: 'Authoritative, precise, enterprise-ready, transparent, and customer-obsessed. Avoid hype and colloquialisms.',
+      brandVisualRules: {
+        primaryColors: ['#4F46E5', '#0F172A', '#FFFFFF'],
+        secondaryColors: ['#10B981', '#6366F1', '#94A3B8'],
+        prohibitedColors: ['#FF1493', '#FFFF00'],
+        logoGuidelines: 'ApexFlow logo mark must be anchored in upper-left quadrant with minimum 32px clear space. No rotational skewing or neon background collisions.',
+        typographyRules: 'Modern sans-serif typefaces (Inter, SF Pro). Avoid decorative display fonts or unreadable contrast.',
+      },
+      publishingWebhookUrl: 'https://webhook.site/brandlens-governed-dispatch-preview',
     });
 
     // 2. Create Demo Users
@@ -181,16 +190,43 @@ Claims regarding platform metrics must strictly adhere to verified benchmarks: "
       });
     }
 
-    // 5. Create Sample Content Submission intentionally containing violations
+    // 5. Create Sample Multi-Format Content Submission intentionally containing violations
     const samplePostContent = `Hey guys! We are super hyped to announce that the new ApexFlow tool is finally out! It is the cheapest and best in the world, guaranteed 100% bug-free with unlimited free access forever! Bruh, you gotta try this insane deal today.`;
+
+    const sampleCreativeSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="418" viewBox="0 0 800 418">
+      <defs>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0F172A" />
+          <stop offset="100%" stop-color="#1E1B4B" />
+        </linearGradient>
+      </defs>
+      <rect width="800" height="418" fill="url(#bg)" />
+      <circle cx="90" cy="50" r="16" fill="#4F46E5" />
+      <text x="116" y="56" fill="#FFFFFF" font-family="sans-serif" font-size="20" font-weight="bold">ApexFlow</text>
+      <text x="80" y="150" fill="#FFFFFF" font-family="sans-serif" font-size="32" font-weight="800">New ApexFlow Tool Released!</text>
+      <text x="80" y="200" fill="#94A3B8" font-family="sans-serif" font-size="18">100% Bug-free &amp; unlimited free access forever</text>
+      <rect x="80" y="260" width="240" height="52" rx="12" fill="#FF1493" />
+      <text x="115" y="293" fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold">Claim Insane Deal &rarr;</text>
+      <rect x="630" y="30" width="130" height="30" rx="6" fill="#FFFF00" />
+      <text x="642" y="50" fill="#000000" font-family="sans-serif" font-size="12" font-weight="900">CHEAPEST EVER</text>
+    </svg>`;
+    const sampleCreativeDataUrl = `data:image/svg+xml;base64,${Buffer.from(sampleCreativeSvg).toString('base64')}`;
 
     const submission = await ContentSubmission.create({
       organizationId: org._id,
       creatorId: creatorUser._id,
       title: 'Q2 Product Launch Social Campaign Announcement',
       contentType: 'social_media',
+      submissionFormat: 'multi_format',
       originalContent: samplePostContent,
       currentContent: samplePostContent,
+      visualAsset: {
+        filename: 'ApexFlow_Q2_Promo_Banner.png',
+        fileType: 'image/svg+xml',
+        fileSize: Buffer.byteLength(sampleCreativeSvg),
+        dataUrl: sampleCreativeDataUrl,
+        dimensions: { width: 800, height: 418 },
+      },
       status: 'needs_changes',
       version: 1,
       contentHistory: [
@@ -202,7 +238,7 @@ Claims regarding platform metrics must strictly adhere to verified benchmarks: "
       ],
     });
 
-    // 6. Run Initial Real Analysis on the sample submission
+    // 6. Run Real Analysis (Written RAG + Multimodal Visual Compliance)
     const ragResult = await RAGService.retrieveRelevantKnowledge(org._id, samplePostContent, 5);
     const analysisResult = await AnalysisService.analyzeContent(
       samplePostContent,
@@ -211,21 +247,87 @@ Claims regarding platform metrics must strictly adhere to verified benchmarks: "
       ragResult
     );
 
+    const visualResult = await VisualAnalysisService.analyzeImage(
+      sampleCreativeDataUrl,
+      'image/svg+xml',
+      org,
+      submission.title,
+      samplePostContent
+    );
+
+    const compositeScore = Math.round(analysisResult.overallComplianceScore * 0.55 + visualResult.overallVisualScore * 0.45);
+
     const report = await AnalysisReport.create({
       submissionId: submission._id,
       organizationId: org._id,
       analyzedContent: samplePostContent,
-      overallComplianceScore: analysisResult.overallComplianceScore,
-      status: analysisResult.status,
-      summary: analysisResult.summary,
+      overallComplianceScore: compositeScore,
+      status: 'violations_found',
+      summary: `${analysisResult.summary} Visual Audit: ${visualResult.summary}`,
       findings: analysisResult.findings,
+      visualAnalysis: {
+        overallVisualScore: visualResult.overallVisualScore,
+        detectedColors: visualResult.detectedColors,
+        logoAnalysis: visualResult.logoAnalysis,
+        typographyAnalysis: visualResult.typographyAnalysis,
+        visualFindings: visualResult.visualFindings,
+      },
       retrievedChunkIds: ragResult.guidelineChunkIds,
-      aiModelUsed: 'gemini-2.5-flash',
-      processingTimeMs: 850,
+      aiModelUsed: 'gemini-2.5-flash-multimodal',
+      processingTimeMs: 920,
     });
 
     submission.latestAnalysisId = report._id as mongoose.Types.ObjectId;
     await submission.save();
+
+    // 7. Seed a historical approved submission to provide immediate analytics data
+    const approvedPostContent = `We are proud to introduce Workflow Intelligence for the ApexFlow Platform. Designed for enterprise engineering teams, ApexFlow processes up to 10,000 tasks per second with high reliability and cost-effective value.`;
+    const approvedSub = await ContentSubmission.create({
+      organizationId: org._id,
+      creatorId: creatorUser._id,
+      title: 'Enterprise Workflow Intelligence Press Briefing',
+      contentType: 'press_release',
+      submissionFormat: 'text',
+      originalContent: approvedPostContent,
+      currentContent: approvedPostContent,
+      status: 'approved',
+      version: 2,
+      publishingDetails: {
+        channel: 'webhook',
+        webhookUrl: org.publishingWebhookUrl,
+        status: 'published',
+        publishedAt: new Date(),
+        payloadPreview: '{\n  "status": "Human-Approved",\n  "channel": "webhook"\n}',
+      },
+      contentHistory: [
+        { content: approvedPostContent, modifiedAt: new Date(Date.now() - 86400000), reason: 'Approved final release' },
+      ],
+    });
+
+    const approvedReport = await AnalysisReport.create({
+      submissionId: approvedSub._id,
+      organizationId: org._id,
+      analyzedContent: approvedPostContent,
+      overallComplianceScore: 96,
+      status: 'passed',
+      summary: 'Content aligns smoothly with approved brand guidelines and tone parameters. No critical violations detected.',
+      findings: [],
+      retrievedChunkIds: ragResult.guidelineChunkIds,
+      aiModelUsed: 'gemini-2.5-flash',
+      processingTimeMs: 640,
+    });
+
+    approvedSub.latestAnalysisId = approvedReport._id as mongoose.Types.ObjectId;
+    await approvedSub.save();
+
+    await ReviewDecision.create({
+      submissionId: approvedSub._id,
+      organizationId: org._id,
+      reviewerId: reviewerUser._id,
+      decision: 'approved',
+      comments: 'Excellent brand alignment, precise throughput metric citation, and professional authoritative tone. Approved for publishing.',
+      reviewedContent: approvedPostContent,
+    });
 
     console.log('[SeedService] Demo data successfully initialized for ApexFlow Technologies!');
     return {

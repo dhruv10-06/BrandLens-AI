@@ -1,13 +1,33 @@
 import api from './client.ts';
-import { ContentSubmission, AnalysisReport, ContentType } from '../types/index.ts';
+import { ContentSubmission, AnalysisReport, ContentType, SubmissionFormat, VisualAsset } from '../types/index.ts';
 
 export const submissionsApi = {
   createSubmission: async (data: {
     title: string;
     contentType: ContentType;
-    content: string;
+    submissionFormat?: SubmissionFormat;
+    content?: string;
+    visualAsset?: VisualAsset;
   }): Promise<{ success: boolean; submission: ContentSubmission; analysis: AnalysisReport }> => {
     const res = await api.post('/submissions', data);
+    return res.data;
+  },
+
+  uploadDraftDocument: async (
+    file: File
+  ): Promise<{
+    success: boolean;
+    filename: string;
+    fileType: string;
+    extractedText: string;
+    charCount: number;
+    pageCount?: number;
+  }> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await api.post('/submissions/upload-draft-document', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return res.data;
   },
 

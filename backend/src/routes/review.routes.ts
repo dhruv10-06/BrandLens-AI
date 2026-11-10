@@ -8,6 +8,7 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/queue', requireReviewer, ReviewController.getReviewQueue);
+router.get('/preview-publish/:id', requireReviewer, ReviewController.previewPublish);
 router.post('/decision/:id', requireReviewer, ReviewController.makeDecision);
 router.get('/history', ReviewController.getReviewHistory);
 

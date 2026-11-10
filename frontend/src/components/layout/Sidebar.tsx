@@ -10,6 +10,7 @@ import {
   History,
   ShieldAlert,
   Sparkles,
+  BarChart3,
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -18,6 +19,7 @@ export const Sidebar: React.FC = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
+    { name: 'Brand Analytics', path: '/analytics', icon: BarChart3, badge: 'R3' },
     { name: 'Brand Guidelines', path: '/guidelines', icon: BookOpen },
     { name: 'Submit Content', path: '/submissions/new', icon: FilePlus2 },
     { name: 'Submissions', path: '/submissions', icon: ListTodo },
@@ -76,10 +78,10 @@ export const Sidebar: React.FC = () => {
 
       {/* Footer Info */}
       <div className="p-4 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
-        <span>CodeNexus 2026 R2</span>
+        <span>CodeNexus 2026 R3</span>
         <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          Engine Live
+          Multimodal Live
         </span>
       </div>
     </aside>

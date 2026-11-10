@@ -3,10 +3,14 @@ import mongoose from 'mongoose';
 import { z } from 'zod';
 import { ContentSubmission } from '../models/ContentSubmission.js';
 import { ReviewDecision } from '../models/ReviewDecision.js';
+import { Organisation } from '../models/Organisation.js';
+import { PublishingIntegrationService } from '../services/publishingIntegration.service.js';
 
 const MakeDecisionSchema = z.object({
   decision: z.enum(['approved', 'rejected', 'requested_changes']),
   comments: z.string().min(2, 'A review comment or justification is required').max(2000),
+  publishChannel: z.enum(['webhook', 'cms', 'social_media', 'internal']).optional(),
+  customWebhookUrl: z.string().url('Invalid webhook URL format').optional(),
 });
 
 export class ReviewController {
@@ -23,7 +27,7 @@ export class ReviewController {
       })
         .sort({ updatedAt: -1 })
         .populate('creatorId', 'name email')
-        .populate('latestAnalysisId', 'overallComplianceScore status summary findings');
+        .populate('latestAnalysisId', 'overallComplianceScore status summary findings visualAnalysis');
 
       res.json({
         success: true,
@@ -38,11 +42,12 @@ export class ReviewController {
   /**
    * Human reviewer submits an approval, rejection, or changes request.
    * Strictly enforced on the backend: creators cannot approve their own content.
+   * On approval, executes verified publishing integrations (webhook, CMS, social) with full audit trail.
    */
   public static async makeDecision(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const { decision, comments } = MakeDecisionSchema.parse(req.body);
+      const { decision, comments, publishChannel, customWebhookUrl } = MakeDecisionSchema.parse(req.body);
       const orgId = new mongoose.Types.ObjectId(req.user!.organizationId);
       const reviewerId = new mongoose.Types.ObjectId(req.user!.id);
 
@@ -76,8 +81,30 @@ export class ReviewController {
       });
 
       // Update submission status
+      let publishingResult: any = undefined;
       if (decision === 'approved') {
         submission.status = 'approved';
+
+        // Execute verified publishing pipeline upon human reviewer approval
+        const org = await Organisation.findById(orgId);
+        if (org) {
+          publishingResult = await PublishingIntegrationService.dispatchPublication(
+            submission,
+            org,
+            reviewerId.toString(),
+            publishChannel || 'internal',
+            customWebhookUrl
+          );
+
+          submission.publishingDetails = {
+            channel: publishingResult.channel,
+            webhookUrl: customWebhookUrl || org.publishingWebhookUrl,
+            status: publishingResult.success ? 'published' : 'failed',
+            publishedAt: publishingResult.publishedAt,
+            payloadPreview: publishingResult.payloadPreview,
+            error: publishingResult.error,
+          };
+        }
       } else if (decision === 'rejected') {
         submission.status = 'rejected';
       } else if (decision === 'requested_changes') {
@@ -88,9 +115,40 @@ export class ReviewController {
 
       res.json({
         success: true,
-        message: `Content marked as ${decision.toUpperCase()} by reviewer.`,
+        message: `Content marked as ${decision.toUpperCase()} by reviewer.${publishingResult ? ` Publishing pipeline: ${publishingResult.destination} (${publishingResult.success ? 'dispatched' : 'error'}).` : ''}`,
         decision: reviewRecord,
         submission,
+        publishingResult,
+      });
+    } catch (err: any) {
+      next(err);
+    }
+  }
+
+  /**
+   * Preview publication payload before reviewer gives final approval.
+   */
+  public static async previewPublish(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const orgId = new mongoose.Types.ObjectId(req.user!.organizationId);
+
+      const [submission, org] = await Promise.all([
+        ContentSubmission.findOne({ _id: id, organizationId: orgId }),
+        Organisation.findById(orgId),
+      ]);
+
+      if (!submission || !org) {
+        res.status(404).json({ success: false, error: 'Submission or Organisation not found.' });
+        return;
+      }
+
+      const payload = PublishingIntegrationService.generatePayload(submission, org, req.user!.id);
+      res.json({
+        success: true,
+        channel: org.publishingWebhookUrl ? 'webhook' : 'internal',
+        webhookUrl: org.publishingWebhookUrl || null,
+        payload,
       });
     } catch (err: any) {
       next(err);

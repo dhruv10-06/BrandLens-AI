@@ -14,6 +14,7 @@ import submissionRoutes from './routes/submission.routes.js';
 import reviewRoutes from './routes/review.routes.js';
 import factRoutes from './routes/fact.routes.js';
 import orgRoutes from './routes/org.routes.js';
+import analyticsRoutes from './routes/analytics.routes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -70,6 +71,7 @@ export function createApp(): Express {
   app.use('/api/review', reviewRoutes);
   app.use('/api/facts', factRoutes);
   app.use('/api/org', orgRoutes);
+  app.use('/api/analytics', analyticsRoutes);
 
   // 7. 404 Handler
   app.use('/api/*', (req, res) => {

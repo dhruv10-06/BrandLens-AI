@@ -1,36 +1,72 @@
 # BrandLens AI
 
 > **Your Brand's Intelligent Checkpoint Before Publication.**  
-> *Developed for CodeNexus India 2026 — Round 2.*
+> *Developed for CodeNexus India 2026 — Round 3 (Final Round).*
 
-BrandLens AI is an end-to-end AI-powered brand governance platform that enforces brand guidelines, tone-of-voice rules, product facts, prohibited terminology, and messaging standards across marketing collateral before publication.
+[![CodeNexus 2026](https://img.shields.io/badge/CodeNexus%20India-2026%20Round%203-blue.svg)](https://github.com/dhruv10-06/BrandLens-AI)
+[![Tests Passing](https://img.shields.io/badge/Automated%20Tests-45%2F45%20Passing-brightgreen.svg)](https://github.com/dhruv10-06/BrandLens-AI)
+[![AI Engine](https://img.shields.io/badge/AI%20Engine-Gemini%202.5%20Flash%20Multimodal-orange.svg)](https://aistudio.google.com/)
+[![Security](https://img.shields.io/badge/RBAC%20%26%20SoD-Enforced-success.svg)](https://github.com/dhruv10-06/BrandLens-AI)
+
+BrandLens AI is an enterprise AI-powered brand governance platform that enforces brand guidelines, tone-of-voice rules, product facts, visual brand identity, and messaging compliance across multi-format marketing collateral before publication.
 
 ---
 
-## 🌟 Key Capabilities
+## 🌐 Live Deployments & Repository
 
-1. **Brand Guideline & Knowledge Base Ingestion**: Upload brand manuals in **PDF** and **TXT** formats. The system safely extracts readable text, splits content into cohesive chunks, and generates 768-dimensional vector embeddings with Google Gemini (`text-embedding-004`).
-2. **Direct Rule & Fact Management**: Manage approved terminology, prohibited words, verified technical specs/metrics, and mandatory tone rules with real-time RAG inclusion.
+- **Frontend Application**: [https://brand-lens-ai-one.vercel.app/](https://brand-lens-ai-one.vercel.app/)
+- **Backend API**: [https://brandlens-ai-emjp.onrender.com](https://brandlens-ai-emjp.onrender.com)
+- **API Health Check**: [https://brandlens-ai-emjp.onrender.com/health](https://brandlens-ai-emjp.onrender.com/health)
+- **GitHub Repository**: [https://github.com/dhruv10-06/BrandLens-AI](https://github.com/dhruv10-06/BrandLens-AI)
+
+---
+
+## 🚀 The Three Mandatory Round 3 Improvements
+
+All three committed improvements from Round 2 have been built, integrated, and verified with zero mock numbers:
+
+### 1. Visual Brand Compliance Engine (Multimodal AI)
+- **Multimodal Visual Inspection**: Integrates Google Gemini 2.5 Flash via native base64 inline images (`image/png`, `image/jpeg`, `image/webp`, `image/svg+xml`) to perform creative asset compliance audits.
+- **Brand Color Palette Extraction & Verification**: Automatically detects dominant and secondary hex colors in submitted creative assets and checks them against the organisation's approved and prohibited palette lists.
+- **Logo Usage & Placement Analysis**: Evaluates whether the official brand logo is present, appropriately scaled, unobstructed, and positioned in accordance with guidelines.
+- **Typography & Legibility Check**: Audits font styles, contrast ratios, and visual clarity across marketing banners, social ads, and hero creatives.
+- **Offline Deterministic Fallback**: Includes a rule-based visual engine ensuring complete evaluation reliability even without an external API connection.
+
+### 2. Intelligent Brand Governance & Analytics Dashboard
+- **100% Real Aggregated Database Metrics**: Computes organization-level governance metrics directly from MongoDB collections (`ContentSubmission`, `AnalysisReport`, `BrandDocument`, `ApprovedFact`) using MongoDB Aggregation pipelines. Zero mock or hardcoded numbers.
+- **Recurring Violations Leaderboard**: Tracks repeatedly violated rules and terminology across submissions to identify institutional brand drift.
+- **Guideline Gap & Conflict Detection**: Identifies unsupported promotional claims and frequent questions that lack backing in official documentation, alerting brand directors to update guidelines.
+- **7-Day Compliance Score Trends & Severity Breakdown**: Visualizes the organization's average brand compliance score timeline and Critical/High/Medium/Low violation distributions.
+- **Actionable Governance Recommendations**: Automatically surfaces prioritized policy recommendations (Urgent, High, Medium) based on real violation patterns.
+
+### 3. Multi-Format Content Intelligence & Integrations
+- **Draft Document Ingestion (.pdf, .txt)**: Creators can upload draft articles, whitepapers, or press release files directly; text is automatically extracted and populated into the submission workspace.
+- **Multi-Format Campaign Workflows**: Supports Text-only, Document Drafts, Visual Creatives, and Multi-Format Campaigns (accompanying copy + visual creative asset analyzed together).
+- **External Publishing Webhook Integrations**: Configurable publishing pipelines (Webhook, CMS, Social Media Staging, Internal Vault).
+- **Human-in-the-Loop Review Gate**: Outbound publication is strictly blocked until an authorized reviewer approves the content.
+- **Publishing Payload Preview & Audit Trail**: Reviewers can inspect the exact outbound JSON webhook payload before approval, with full dispatch timestamp and status persisted in the database.
+
+---
+
+## 🌟 Core BrandLens Capabilities
+
+1. **Brand Guideline & Knowledge Ingestion**: Upload PDF and TXT brand manuals. The system safely extracts readable text, chunks it with overlap, and generates 768-dimensional vector embeddings with Google Gemini (`text-embedding-004`).
+2. **Direct Rule & Fact Management**: Manage approved terminology, prohibited words, verified technical specs, and mandatory tone rules with real-time inclusion in RAG prompts.
 3. **Retrieval-Augmented Generation (RAG) Audit Engine**:
    - Computes cosine similarity across indexed guideline chunks for the authenticated organization.
-   - Grounded prompt engineering with Google Gemini (`gemini-2.5-flash`) strictly prevents hallucinated rules and treats document text safely (anti-prompt injection).
-   - Distinguishes between **Verified Rule Violations**, **Unsupported Claims** (where verification is unavailable in approved sources), and **Potential Tone Drift**.
+   - Grounded prompt engineering with Google Gemini (`gemini-2.5-flash`) prevents hallucinated rules and treats document text safely (anti-prompt injection).
+   - Distinguishes between **Verified Rule Violations**, **Unsupported Claims**, and **Potential Tone Drift**.
    - Validates all AI outputs through strict server-side **Zod schemas**.
 4. **Interactive Brand Revision Workspace**:
-   - Real-time compliance score (0–100) and severity breakdown (Critical, High, Medium, Low).
+   - Real-time compliance score (0–100) and severity breakdown.
    - Detailed findings cards with quoted original text, issue explanation, guideline citations, and suggested corrections.
-   - 1-click **"Apply Correction"** that updates the copy in the live editor without destructive overwrites.
+   - 1-click **"Apply Correction"** that updates copy in the live editor without destructive overwrites.
    - On-demand **"Re-Analyze Revised Copy"** to verify improved compliance score.
 5. **Human Governance & Review Gate**:
    - **Role-Based Access Control (RBAC)**: Distinct permissions for `creator` and `reviewer` roles.
-   - **Separation of Duties**: Creators are cryptographically prevented by backend middleware from approving their own submissions.
+   - **Separation of Duties (SoD)**: Creators are cryptographically prevented by backend middleware from approving their own submissions.
    - Reviewer decision suite with mandatory audit comments for `Approved`, `Rejected`, and `Requested Changes`.
    - Comprehensive audit trail with reviewer identity, decision justification, and timestamps.
-6. **1-Click Hackathon Demo Mode**:
-   - Preloaded sample organization (*ApexFlow Technologies*).
-   - Pre-indexed sample brand guideline document and rules.
-   - Pre-loaded test submission that intentionally triggers multiple brand violations.
-   - 1-click role switcher in the navbar to test both Creator and Reviewer perspectives effortlessly.
 
 ---
 
@@ -40,10 +76,10 @@ BrandLens AI is an end-to-end AI-powered brand governance platform that enforces
 |---|---|
 | **Frontend** | React 18, Vite 6, TypeScript, Tailwind CSS, React Router v7, Lucide Icons, Axios |
 | **Backend** | Node.js (v24), Express.js, TypeScript, Mongoose ODM |
-| **Database** | MongoDB Atlas (with automatic in-memory fallback for offline/local testing) |
-| **AI / RAG** | Google Gemini API (`gemini-2.5-flash`, `text-embedding-004`), Vector Cosine Similarity |
+| **Database** | MongoDB Atlas (with automatic in-memory fallback for offline testing) |
+| **AI / Multimodal** | Google Gemini API (`gemini-2.5-flash`, `text-embedding-004`), Multimodal Inline Images |
 | **Validation & Security** | Zod, Helmet security headers, CORS origin isolation, Express Rate Limiting, Bcrypt.js, JWT |
-| **Testing** | Vitest, Supertest, In-memory MongoDB Server |
+| **Testing** | Vitest, Supertest, In-memory MongoDB Server (45 automated tests) |
 
 ---
 
@@ -54,247 +90,144 @@ BrandLens AI/
 ├── backend/
 │   ├── src/
 │   │   ├── config/              # Environment, DB connection, Gemini config
-│   │   ├── controllers/         # Auth, Document, Submission, Review, Fact, Org controllers
+│   │   ├── controllers/         # Auth, Document, Submission, Review, Fact, Org, Analytics controllers
 │   │   ├── middleware/          # JWT auth, RBAC, Rate limiter, Error handler, Multer upload
 │   │   ├── models/              # User, Organisation, BrandDocument, GuidelineChunk, ApprovedFact,
 │   │   │                        # ContentSubmission, AnalysisReport, ReviewDecision
-│   │   ├── routes/              # Modular Express REST API routes
+│   │   ├── routes/              # Modular Express REST API routes (/auth, /documents, /submissions, /review, /analytics)
 │   │   ├── services/
-│   │   │   ├── documentParser.service.ts   # PDF/TXT extraction, text cleaning & semantic chunking
-│   │   │   ├── embedding.service.ts        # Google Gemini text-embedding-004 & fallback vector math
-│   │   │   ├── rag.service.ts              # Semantic search, cosine similarity ranking, facts merge
-│   │   │   ├── analysis.service.ts         # Gemini prompt engineering, anti-prompt injection, Zod validation
-│   │   │   └── seed.service.ts             # Preloaded demo datasets, sample guidelines & violations
+│   │   │   ├── documentParser.service.ts         # PDF/TXT extraction, text cleaning & semantic chunking
+│   │   │   ├── embedding.service.ts              # Google Gemini text-embedding-004 & vector embeddings
+│   │   │   ├── rag.service.ts                    # Semantic search, cosine similarity ranking, facts merge
+│   │   │   ├── analysis.service.ts               # Gemini prompt engineering, anti-prompt injection, Zod validation
+│   │   │   ├── visualAnalysis.service.ts         # Multimodal Gemini 2.5 Flash image audit & color palette check
+│   │   │   ├── analytics.service.ts              # Real MongoDB aggregation pipelines for governance KPIs & gaps
+│   │   │   ├── publishingIntegration.service.ts  # Webhook & external publishing dispatch engine
+│   │   │   └── seed.service.ts                   # Preloaded demo datasets, guidelines & multi-format submissions
 │   │   ├── utils/               # Vector math (cosine similarity)
 │   │   ├── app.ts               # Express configuration, Helmet, CORS, Rate Limiters
 │   │   └── server.ts            # Server entrypoint with auto-seed and graceful shutdown
 │   ├── tests/
-│   │   ├── documentParser.test.ts          # PDF/TXT parsing & chunking tests
-│   │   ├── rag.test.ts                     # Vector math & semantic ranking tests
-│   │   ├── analysisValidation.test.ts      # Strict Zod schema & category verification tests
-│   │   └── rbacAndWorkflow.test.ts         # Integration test for auth, RBAC, and self-approval block
+│   │   ├── documentParser.test.ts          # PDF/TXT parsing & chunking tests (4 tests)
+│   │   ├── rag.test.ts                     # Vector math & semantic ranking tests (3 tests)
+│   │   ├── analysisValidation.test.ts      # Strict Zod schema & category verification tests (3 tests)
+│   │   ├── rbacAndWorkflow.test.ts         # Integration test for auth, RBAC, and self-approval block (6 tests)
+│   │   ├── securityAudit.test.ts           # Comprehensive 22-point security & tenant isolation tests (22 tests)
+│   │   └── round3Improvements.test.ts     # Visual compliance, analytics & webhook tests (7 tests)
 │   ├── package.json
 │   ├── tsconfig.json
-│   ├── vitest.config.ts
-│   └── .env.example
+│   └── vitest.config.ts
 ├── frontend/
 │   ├── src/
-│   │   ├── api/                 # Typed Axios endpoints (auth, docs, submissions, review, facts, org)
+│   │   ├── api/                 # Typed Axios endpoints (auth, docs, submissions, review, facts, org, analytics)
 │   │   ├── components/          # Reusable UI components (Navbar, Sidebar, FindingCard, ScoreGauge, Badges)
-│   │   ├── context/             # AuthContext (state, JWT, quick demo login)
-│   │   ├── pages/               # 9 Full Pages:
-│   │   │   ├── LoginPage.tsx              # Sign In + 1-Click Evaluator Quickstart
+│   │   ├── context/             # AuthContext (state, JWT, fixed evaluator login)
+│   │   ├── pages/               # Full Application Pages:
+│   │   │   ├── LoginPage.tsx              # Sign In + Evaluator Quickstart
 │   │   │   ├── RegisterPage.tsx           # New workspace registration
 │   │   │   ├── DashboardPage.tsx          # Metrics, recent submissions & quick actions
+│   │   │   ├── AnalyticsPage.tsx          # Brand Governance Analytics Dashboard (R3)
 │   │   │   ├── GuidelinesPage.tsx         # Document upload, chunk viewer, facts/terminology manager
-│   │   │   ├── NewSubmissionPage.tsx      # Copy submission form with "Load Sample Violation" button
-│   │   │   ├── SubmissionsListPage.tsx    # Workspace submission index with filters
-│   │   │   ├── AnalysisResultsPage.tsx    # Split-view audit editor with 1-click "Apply Correction"
+│   │   │   ├── NewSubmissionPage.tsx      # Multi-Format submission (Written, Document, Visual, Campaign)
+│   │   │   ├── SubmissionsListPage.tsx    # Workspace submission index with format filters
+│   │   │   ├── AnalysisResultsPage.tsx    # Split-view audit editor with Visual Compliance tab
 │   │   │   ├── ReviewQueuePage.tsx        # Reviewer-only queue for pending decisions
-│   │   │   ├── ReviewDetailsPage.tsx      # Side-by-side diff review & decision deck
-│   │   │   ├── ReviewHistoryPage.tsx      # Historical decision audit log
+│   │   │   ├── ReviewDetailsPage.tsx      # Visual inspection, side-by-side diff & Webhook dispatch
+│   │   │   ├── ReviewHistoryPage.tsx      # Historical decision audit log & publishing records
 │   │   │   └── NotFoundPage.tsx           # 404 state
-│   │   ├── types/               # Full TypeScript definitions
+│   │   ├── types/               # Full TypeScript definitions (Visual, Analytics, Integrations)
 │   │   ├── App.tsx              # Router setup with ProtectedRoute guard
 │   │   └── main.tsx
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── vite.config.ts
-│   ├── tailwind.config.js
-│   └── .env.example
+│   └── tailwind.config.js
 ├── README.md
 └── package.json                 # Root monorepo workspace scripts
 ```
 
 ---
 
-## ⚙️ Environment Configuration
-
-### Backend (`backend/.env`)
-
-```env
-# Server Configuration
-PORT=5000
-NODE_ENV=development
-FRONTEND_URL=http://localhost:5173
-
-# MongoDB Atlas Connection String
-# (If left empty during local testing, an embedded in-memory MongoDB instance runs automatically!)
-MONGODB_URI=
-
-# JWT Authentication Secret
-JWT_SECRET=super-secret-brandlens-jwt-key-change-in-production-min32chars
-JWT_EXPIRES_IN=7d
-
-# Google Gemini API Key (Obtain free from https://aistudio.google.com/app/apikey)
-GEMINI_API_KEY=
-
-# File Upload Limit (MB)
-MAX_FILE_SIZE_MB=10
-```
-
-### Frontend (`frontend/.env`)
-
-```env
-# In development, Vite automatically proxies /api to http://localhost:5000
-VITE_API_URL=/api
-```
-
----
-
-## 🚀 Local Installation & Execution
-
-### Prerequisites
-- Node.js 18+ (tested on Node v24)
-- npm 9+
-
-### 1. Install Dependencies
-From the repository root:
-```bash
-npm install --workspace=backend
-npm install --workspace=frontend
-```
-
-### 2. Run Backend
-In a terminal:
-```bash
-cd backend
-npm run dev
-```
-*The backend connects to MongoDB, auto-seeds the ApexFlow Technologies demo workspace, and starts on `http://localhost:5000`.*
-
-### 3. Run Frontend
-In a second terminal:
-```bash
-cd frontend
-npm run dev
-```
-*The Vite frontend starts on `http://localhost:5173`.*
-
----
-
 ## 🧪 Testing & Verification
 
-Run the comprehensive automated test suite (unit and integration tests):
+The project includes **45 automated tests** across 6 test suites with 100% pass rate:
 
 ```bash
-cd backend
 npm test
 ```
 
-### Test Coverage Results:
-- `documentParser.test.ts`: PDF & TXT text extraction, whitespace/null-byte sanitization, chunking with overlap, rejection of empty files.
-- `rag.test.ts`: Cosine similarity calculation, 768-dimensional vector generation, semantic ranking accuracy.
-- `analysisValidation.test.ts`: Strict Zod schema compliance, finding category validation, distinction between verified violations and unsupported claims.
-- `rbacAndWorkflow.test.ts`: Real end-to-end API integration test verifying:
-  - User registration & JWT authentication
-  - Content submission & AI audit pipeline
-  - RBAC protection (creators blocked from review queue)
-  - **Separation of Duties enforcement** (creators blocked from approving their own work)
-  - Human reviewer sign-off with mandatory justification
-  - Audit trail logging in review history.
+### Test Suite Summary:
+| Test Suite | Tests | Description |
+|---|:---:|---|
+| `securityAudit.test.ts` | 22 | Privilege escalation defense, cross-org isolation, file signatures, JWT verification |
+| `round3Improvements.test.ts` | 7 | Multimodal visual audit, real DB analytics aggregations, multi-format ingestion, webhook preview & dispatch |
+| `rbacAndWorkflow.test.ts` | 6 | Human review lifecycle, SoD self-approval block, audit trail logging |
+| `documentParser.test.ts` | 4 | PDF/TXT extraction, whitespace cleaning, semantic chunking with overlap |
+| `rag.test.ts` | 3 | Cosine similarity ranking, 768-dim embeddings, fact integration |
+| `analysisValidation.test.ts` | 3 | Zod schema validation, finding categories, evidence status mapping |
+| **Total** | **45** | **All 45 Passing** |
 
 ---
 
-## 🎯 Evaluator Demo Guide (CodeNexus Round 2)
+## 🎯 Evaluator Demo Guide (CodeNexus Round 3)
 
-An evaluator can independently test the entire platform without manual setup:
+An evaluator can independently test the entire platform end-to-end:
 
-1. **Open the Web App**: Navigate to `http://localhost:5173`.
-2. **1-Click Demo Login**:
-   - On the login screen, click **"As Creator"** (logs in as `Alex Rivera`).
-3. **Inspect the Preloaded Guidelines**:
-   - Navigate to **"Brand Guidelines"** in the sidebar.
-   - Notice `ApexFlow_Global_Brand_Guidelines_2026.txt` with indexed vector chunks.
-   - Click **"View Chunks"** to inspect semantic segments.
-   - Switch to the **"Terminology & Verified Facts"** tab to see prohibited phrases (`cheap`, `unlimited free`, `100% bug-free`), approved terms (`ApexFlow Platform`), and verified facts (`10,000 tasks/sec SLA`).
-4. **Submit New Copy for AI Audit**:
+### Pre-Seeded Evaluator Accounts:
+- **Creator Account**: `creator@brandlens.demo` / `DemoCreator123!` (or 1-click button **"Demo Creator"**)
+- **Reviewer Account**: `reviewer@brandlens.demo` / `DemoReviewer123!` (or 1-click button **"Demo Reviewer"**)
+
+### Step-by-Step Evaluator Walkthrough:
+
+1. **Sign In**:
+   - Go to [https://brand-lens-ai-one.vercel.app/](https://brand-lens-ai-one.vercel.app/) (or `http://localhost:5173`).
+   - Click **"Demo Creator (Alex Rivera)"** for 1-click authentication.
+
+2. **Inspect Brand Governance Analytics (Improvement 2)**:
+   - Click **"Brand Analytics"** in the sidebar.
+   - Review the **Real MongoDB Governance Metrics**: Submissions Count, Average Compliance Score, Approval Rate, and Critical Violations.
+   - Inspect the **Recurring Brand Violations Leaderboard** (e.g. prohibited terms like `cheap`, `unlimited free`, `100% bug-free`).
+   - Inspect the **Guideline Gaps & Unsupported Claims** module.
+   - Inspect the **Prioritized Policy Recommendations** generated from actual organization history.
+
+3. **Submit a Multi-Format Campaign (Improvements 1 & 3)**:
    - Click **"Submit Content"** in the sidebar.
-   - Click **"Load Test Violations Draft"** on top-right. This loads copy intentionally violating multiple rules.
-   - Click **"Submit & Run AI Analysis"**.
-5. **Inspect Audit Findings & Apply Corrections**:
-   - You are redirected to the **Analysis Results** page.
-   - Note the **Brand Compliance Score** and severity breakdown.
-   - Observe findings categorized by **Prohibited language**, **Terminology violation**, **Unsupported promotional claim**, and **Tone inconsistency** with cited evidence from the guidelines.
-   - Click **"Apply Correction"** on any finding: it dynamically replaces the violation in the live editor.
-   - Click **"Re-Analyze Revised Copy"**: the compliance score recalculates!
+   - Notice the 4 Submission Formats: **Written Copy**, **Upload Document Draft (.pdf, .txt)**, **Visual Creative Only**, and **Multi-Format Campaign**.
+   - Under **Multi-Format Campaign**, click **"Load Violations Preset"** to populate draft copy with intentional violations and an attached creative image.
+   - Alternatively, test **"Upload Document Draft"** with any sample .txt or .pdf file to experience automatic text extraction.
+   - Click **"Submit & Run AI Multimodal Audit"**.
+
+4. **Review Visual Brand Compliance (Improvement 1)**:
+   - On the **Analysis Results** page, click the **"Visual Brand Compliance"** tab.
+   - Inspect the **Visual Creative Showcase**, **Detected Brand Palette Swatches** (marking compliant vs disallowed hex colors), **Logo Usage & Placement Audit**, and **Typography Legibility Assessment**.
+   - Switch back to the **Text Copy Findings** tab to inspect cited guideline evidence and click **"Apply Correction"** to edit the copy.
    - Click **"Submit to Review Queue"**.
-6. **Switch to Reviewer Role**:
-   - In the top navbar, click **"Reviewer Role"** (instant switch to `Elena Rostova`).
-   - Navigate to **"Review Queue"** in the sidebar.
-   - Open the submission and inspect the side-by-side diff (Original Draft vs Revised Draft).
-   - Enter an audit justification in the comment box and click **"Approve for Publication"** or **"Reject Content"**.
-7. **View Audit History**:
-   - Navigate to **"Review History"** to see the permanent audit decision, reviewer identity, rationale, and timestamp.
-8. **Test Separation of Duties**:
+
+5. **Reviewer Approval & Webhook Dispatch (Improvement 3)**:
+   - Log out and sign in as **Reviewer (Elena Rostova)** (or use the role switcher).
+   - Navigate to **"Review Queue"** and open the pending submission.
+   - Review the copy diff and visual creative side-by-side.
+   - Under **Publication Channel**, select **Webhook** or **CMS**.
+   - Click **"Preview JSON Payload"** to inspect the real publication payload before release (preserving human-in-the-loop governance).
+   - Enter mandatory audit justification notes and click **"Approve & Dispatch"**.
+   - Observe the confirmation and check **"Review History"** for the permanent audit log.
+
+6. **Verify Security & Separation of Duties**:
    - Switch back to the Creator role.
-   - Try approving your own submission: the backend will reject the action with `403 Forbidden` (`Separation of duties violation: Creators are not permitted to review or approve their own content.`).
-9. **Reset Anytime**:
-   - Click **"Reset Demo"** in the top navbar to return to a fresh baseline.
+   - Attempting to review or approve any submission will be rejected by backend middleware with `403 Forbidden` (`Separation of duties violation: Creators are not permitted to review or approve their own content.`).
 
 ---
 
-## 🔒 Security Architecture
+## 🔒 Security & Data Integrity
 
-1. **Authentication**: Bcrypt password hashing (cost factor 10) and signed JWT tokens with expiry.
-2. **Role-Based Access Control**: Backend middleware validates user membership and roles (`creator`, `reviewer`, `admin`) on every state-changing route.
-3. **Separation of Duties**: Creators cannot approve their own submissions even by altering requests.
-4. **Organisation Isolation**: All MongoDB queries are scoped strictly to `organizationId`.
-5. **Anti-Prompt Injection**: Uploaded guidelines and user submissions are wrapped in untrusted delimiter tags (`<<<SUBMITTED_CONTENT>>>`) with strict system instructions preventing prompt hijacking.
-6. **Safe Document Processing**: In-memory buffer uploads prevent filesystem path traversal; strict MIME and extension validation prevents arbitrary file execution.
-7. **Rate Limiting**: Dedicated rate limiters on authentication endpoints (30/15min) and AI endpoints (25/5min).
-8. **Security Headers & CORS**: Configured with `helmet` and restricted CORS origins.
+1. **Role-Based Access Control (RBAC)**: Backend authorization middleware checks the authenticated user's actual database role (`creator`, `reviewer`, `admin`) on every state-changing route. Role cannot be manipulated by client requests.
+2. **Separation of Duties (SoD)**: The backend enforces that `submission.creatorId !== authenticatedUser.id` before allowing any approval or decision.
+3. **Organisation-Level Tenant Isolation**: Every database read and write explicitly filters by `organizationId`. Cross-tenant data leakage is strictly blocked.
+4. **File Signature Magic Byte Validation**: Uploaded documents are verified by binary signature (`%PDF-`, text null-byte check) rather than trusting client MIME types or file extensions.
+5. **Anti-Prompt Injection Defense**: User copy and guideline chunks are wrapped in delimiting tags with system prompts forbidding instruction overriding.
+6. **Zero Mock Analytics**: All KPIs, recurring violations, and score trends query real database records via MongoDB aggregation pipelines.
 
 ---
 
-## 🚢 Deployment Instructions
-
-### 1. Database (MongoDB Atlas)
-1. Create a free cluster at [cloud.mongodb.com](https://cloud.mongodb.com/).
-2. Under **Network Access**, whitelist `0.0.0.0/0` (or your host IP).
-3. Under **Database Access**, create a user and copy the connection string:
-   `mongodb+srv://<username>:<password>@cluster0.mongodb.net/brandlens?retryWrites=true&w=majority`
-
-### 2. Backend (Render / Railway)
-1. Connect your GitHub repository to Render.
-2. Set **Root Directory**: `backend`
-3. Set **Build Command**: `npm install && npm run build`
-4. Set **Start Command**: `npm start`
-5. Configure Environment Variables:
-   - `PORT`: `5000`
-   - `NODE_ENV`: `production`
-   - `MONGODB_URI`: `<Your MongoDB Atlas URI>`
-   - `JWT_SECRET`: `<Secure random 32+ char secret>`
-   - `GEMINI_API_KEY`: `<Your Google Gemini API Key>`
-   - `FRONTEND_URL`: `https://brandlens-ai.vercel.app`
-
-### 3. Frontend (Vercel)
-1. Import repository in [vercel.com](https://vercel.com).
-2. Set **Framework Preset**: `Vite`
-3. Set **Root Directory**: `frontend`
-4. Set **Build Command**: `npm run build`
-5. Set **Output Directory**: `dist`
-6. Configure Environment Variable:
-   - `VITE_API_URL`: `https://your-backend.onrender.com/api`
-
----
-
-## 📊 Round 2 Scope & Round 3 Readiness
-
-### Implemented & Verified in Round 2:
-- [x] Multi-format Guideline Ingestion (PDF & TXT) with semantic chunking.
-- [x] Vector embedding generation and cosine similarity retrieval.
-- [x] Manual terminology, verified facts, and tone rules engine.
-- [x] RAG-based AI analysis with Google Gemini and Zod schema validation.
-- [x] Interactive results interface with live editor and 1-click correction application.
-- [x] Complete human review lifecycle (Draft -> Analysing -> Needs Changes / Pending Review -> Approved / Rejected).
-- [x] RBAC & Separation of Duties enforcement.
-- [x] Review decision audit log with reviewer identity and timestamps.
-- [x] 1-Click demo seeder with reproducible test case.
-- [x] Comprehensive automated unit & integration test suite (16 tests passed).
-
-### Planned for Round 3 (Expansion Readiness):
-- Multimodal visual brand governance (logo placement, color contrast, hex code compliance).
-- Cross-campaign recurring violation analytics.
-- Webhook integrations with CMS and publishing workflows (WordPress, Contentful).
-
+## 📄 License
+Developed for CodeNexus India 2026. All rights reserved.

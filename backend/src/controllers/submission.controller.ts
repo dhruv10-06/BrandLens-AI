@@ -1,27 +1,54 @@
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import { z } from 'zod';
-import { ContentSubmission, ContentType } from '../models/ContentSubmission.js';
+import { ContentSubmission, ContentType, SubmissionFormat } from '../models/ContentSubmission.js';
 import { AnalysisReport } from '../models/AnalysisReport.js';
+import { Organisation } from '../models/Organisation.js';
 import { RAGService } from '../services/rag.service.js';
 import { AnalysisService } from '../services/analysis.service.js';
+import { VisualAnalysisService } from '../services/visualAnalysis.service.js';
+import { DocumentParserService } from '../services/documentParser.service.js';
 
-const CreateSubmissionSchema = z.object({
-  title: z.string().min(2, 'Title must be at least 2 characters').max(150),
-  contentType: z.enum([
-    'social_media',
-    'blog',
-    'email',
-    'advertisement',
-    'press_release',
-    'product_copy',
-    'other',
-  ]),
-  content: z
-    .string()
-    .min(5, 'Content must be at least 5 characters')
-    .max(25000, 'Content must not exceed 25,000 characters'),
+const VisualAssetSchema = z.object({
+  filename: z.string().min(1),
+  fileType: z.string().min(1),
+  fileSize: z.number().max(10 * 1024 * 1024, 'Image size exceeds 10MB limit'),
+  dataUrl: z.string().min(10),
+  dimensions: z
+    .object({
+      width: z.number().optional(),
+      height: z.number().optional(),
+    })
+    .optional(),
 });
+
+const CreateSubmissionSchema = z
+  .object({
+    title: z.string().min(2, 'Title must be at least 2 characters').max(150),
+    contentType: z.enum([
+      'social_media',
+      'blog',
+      'email',
+      'advertisement',
+      'press_release',
+      'product_copy',
+      'other',
+    ]),
+    submissionFormat: z.enum(['text', 'document', 'image', 'multi_format']).default('text'),
+    content: z.string().max(25000, 'Content must not exceed 25,000 characters').optional().default(''),
+    visualAsset: VisualAssetSchema.optional(),
+  })
+  .refine(
+    (data) => {
+      const hasContent = Boolean(data.content && data.content.trim().length >= 5);
+      const hasVisual = Boolean(data.visualAsset && data.visualAsset.dataUrl);
+      return hasContent || hasVisual;
+    },
+    {
+      message: 'Either written content (at least 5 characters) or a visual creative asset must be provided.',
+      path: ['content'],
+    }
+  );
 
 const UpdateContentSchema = z.object({
   content: z.string().min(5, 'Content must be at least 5 characters').max(25000),
@@ -30,13 +57,33 @@ const UpdateContentSchema = z.object({
 
 export class SubmissionController {
   /**
-   * Submit new content and immediately trigger RAG-based AI brand analysis.
+   * Submit new content (text, document-extracted copy, visual creative, or multi-format campaign)
+   * and immediately trigger comprehensive brand governance analysis.
    */
   public static async createSubmission(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { title, contentType, content } = CreateSubmissionSchema.parse(req.body);
+      const { title, contentType, submissionFormat, content, visualAsset } = CreateSubmissionSchema.parse(req.body);
       const orgId = new mongoose.Types.ObjectId(req.user!.organizationId);
       const userId = new mongoose.Types.ObjectId(req.user!.id);
+
+      const org = await Organisation.findById(orgId);
+      if (!org) {
+        res.status(404).json({ success: false, error: 'Organisation not found.' });
+        return;
+      }
+
+      const safeContent = content && content.trim().length >= 5
+        ? content.trim()
+        : visualAsset
+        ? `[Visual Creative Asset: ${visualAsset.filename}]`
+        : '';
+
+      const detectedFormat: SubmissionFormat =
+        submissionFormat || (visualAsset && content && content.trim().length >= 5
+          ? 'multi_format'
+          : visualAsset
+          ? 'image'
+          : 'text');
 
       // 1. Create submission record in 'analysing' state
       const submission = await ContentSubmission.create({
@@ -44,46 +91,90 @@ export class SubmissionController {
         creatorId: userId,
         title,
         contentType: contentType as ContentType,
-        originalContent: content,
-        currentContent: content,
+        submissionFormat: detectedFormat,
+        originalContent: safeContent,
+        currentContent: safeContent,
+        visualAsset: visualAsset || undefined,
         status: 'analysing',
         version: 1,
         contentHistory: [
           {
-            content,
+            content: safeContent,
             modifiedAt: new Date(),
             reason: 'Initial creation',
           },
         ],
       });
 
-      // 2. Execute RAG Retrieval
-      const ragResult = await RAGService.retrieveRelevantKnowledge(orgId, content, 6);
-
-      // 3. Execute AI Evaluation
+      // 2. Execute RAG Retrieval & Written Content Analysis
+      const ragResult = await RAGService.retrieveRelevantKnowledge(orgId, safeContent, 6);
       const analysisOutput = await AnalysisService.analyzeContent(
-        content,
+        safeContent,
         contentType,
         title,
         ragResult
       );
 
-      // 4. Save Analysis Report
+      // 3. Execute Multimodal Visual Compliance Analysis if creative is attached
+      let visualResult: any = undefined;
+      if (visualAsset && visualAsset.dataUrl) {
+        visualResult = await VisualAnalysisService.analyzeImage(
+          visualAsset.dataUrl,
+          visualAsset.fileType,
+          org,
+          title,
+          safeContent
+        );
+      }
+
+      // 4. Calculate Combined Overall Score
+      let finalScore = analysisOutput.overallComplianceScore;
+      let finalStatus = analysisOutput.status;
+
+      if (visualResult && content && content.trim().length >= 5) {
+        // Weighted composite score: 55% copy compliance, 45% visual brand compliance
+        finalScore = Math.round(analysisOutput.overallComplianceScore * 0.55 + visualResult.overallVisualScore * 0.45);
+      } else if (visualResult && (!content || content.trim().length < 5)) {
+        finalScore = visualResult.overallVisualScore;
+      }
+
+      const hasViolations =
+        analysisOutput.findings.length > 0 || (visualResult && visualResult.visualFindings?.length > 0);
+
+      finalStatus =
+        finalScore >= 90 && !hasViolations
+          ? 'passed'
+          : finalScore >= 70
+          ? 'warning'
+          : 'violations_found';
+
+      const compositeSummary = visualResult
+        ? `${analysisOutput.summary} Visual Audit: ${visualResult.summary}`
+        : analysisOutput.summary;
+
+      // 5. Save Analysis Report
       const report = await AnalysisReport.create({
         submissionId: submission._id,
         organizationId: orgId,
-        analyzedContent: content,
-        overallComplianceScore: analysisOutput.overallComplianceScore,
-        status: analysisOutput.status,
-        summary: analysisOutput.summary,
+        analyzedContent: safeContent,
+        overallComplianceScore: finalScore,
+        status: finalStatus,
+        summary: compositeSummary,
         findings: analysisOutput.findings,
+        visualAnalysis: visualResult ? {
+          overallVisualScore: visualResult.overallVisualScore,
+          detectedColors: visualResult.detectedColors || [],
+          logoAnalysis: visualResult.logoAnalysis,
+          typographyAnalysis: visualResult.typographyAnalysis,
+          visualFindings: visualResult.visualFindings || [],
+        } : undefined,
         retrievedChunkIds: ragResult.guidelineChunkIds,
-        aiModelUsed: analysisOutput.aiModelUsed || 'gemini-2.5-flash',
+        aiModelUsed: visualResult ? 'gemini-2.5-flash-multimodal' : (analysisOutput.aiModelUsed || 'gemini-2.5-flash'),
       });
 
-      // 5. Update submission status based on findings
+      // 6. Update submission status based on findings
       const newStatus =
-        analysisOutput.findings.length === 0 || analysisOutput.overallComplianceScore >= 90
+        !hasViolations || finalScore >= 90
           ? 'pending_review'
           : 'needs_changes';
 
@@ -96,6 +187,33 @@ export class SubmissionController {
         message: 'Content submitted and analyzed successfully.',
         submission,
         analysis: report,
+      });
+    } catch (err: any) {
+      next(err);
+    }
+  }
+
+  /**
+   * Upload and extract copy from draft document files (.pdf, .txt).
+   * Enables seamless document-based submission workflow.
+   */
+  public static async uploadDraftDocument(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      if (!req.file) {
+        res.status(400).json({ success: false, error: 'No document file uploaded.' });
+        return;
+      }
+
+      const ext = req.file.originalname.toLowerCase().endsWith('.pdf') ? 'pdf' : 'txt';
+      const parsed = await DocumentParserService.extractText(req.file.buffer, ext);
+
+      res.json({
+        success: true,
+        filename: req.file.originalname,
+        fileType: ext,
+        extractedText: parsed.text,
+        charCount: parsed.charCount,
+        pageCount: parsed.pageCount,
       });
     } catch (err: any) {
       next(err);
@@ -268,20 +386,63 @@ export class SubmissionController {
         ragResult
       );
 
+      // Re-run visual analysis if submission has an attached visual asset
+      let visualResult: any = undefined;
+      if (submission.visualAsset && submission.visualAsset.dataUrl) {
+        const org = await Organisation.findById(orgId);
+        if (org) {
+          visualResult = await VisualAnalysisService.analyzeImage(
+            submission.visualAsset.dataUrl,
+            submission.visualAsset.fileType,
+            org,
+            submission.title,
+            submission.currentContent
+          );
+        }
+      }
+
+      let finalScore = analysisOutput.overallComplianceScore;
+      if (visualResult && submission.currentContent && submission.currentContent.trim().length >= 5) {
+        finalScore = Math.round(analysisOutput.overallComplianceScore * 0.55 + visualResult.overallVisualScore * 0.45);
+      } else if (visualResult && (!submission.currentContent || submission.currentContent.trim().length < 5)) {
+        finalScore = visualResult.overallVisualScore;
+      }
+
+      const hasViolations =
+        analysisOutput.findings.length > 0 || (visualResult && visualResult.visualFindings?.length > 0);
+
+      const finalStatus =
+        finalScore >= 90 && !hasViolations
+          ? 'passed'
+          : finalScore >= 70
+          ? 'warning'
+          : 'violations_found';
+
+      const compositeSummary = visualResult
+        ? `${analysisOutput.summary} Visual Audit: ${visualResult.summary}`
+        : analysisOutput.summary;
+
       const report = await AnalysisReport.create({
         submissionId: submission._id,
         organizationId: orgId,
         analyzedContent: submission.currentContent,
-        overallComplianceScore: analysisOutput.overallComplianceScore,
-        status: analysisOutput.status,
-        summary: analysisOutput.summary,
+        overallComplianceScore: finalScore,
+        status: finalStatus,
+        summary: compositeSummary,
         findings: analysisOutput.findings,
+        visualAnalysis: visualResult ? {
+          overallVisualScore: visualResult.overallVisualScore,
+          detectedColors: visualResult.detectedColors || [],
+          logoAnalysis: visualResult.logoAnalysis,
+          typographyAnalysis: visualResult.typographyAnalysis,
+          visualFindings: visualResult.visualFindings || [],
+        } : undefined,
         retrievedChunkIds: ragResult.guidelineChunkIds,
-        aiModelUsed: analysisOutput.aiModelUsed || 'gemini-2.5-flash',
+        aiModelUsed: visualResult ? 'gemini-2.5-flash-multimodal' : (analysisOutput.aiModelUsed || 'gemini-2.5-flash'),
       });
 
       const newStatus =
-        analysisOutput.findings.length === 0 || analysisOutput.overallComplianceScore >= 90
+        !hasViolations || finalScore >= 90
           ? 'pending_review'
           : 'needs_changes';
 

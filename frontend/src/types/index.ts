@@ -66,6 +66,50 @@ export interface Finding {
   evidenceStatus: EvidenceStatus;
 }
 
+export type VisualFindingCategory =
+  | 'Logo usage & placement'
+  | 'Color palette consistency'
+  | 'Typography inconsistency'
+  | 'Visual layout & contrast'
+  | 'Brand visual style violation'
+  | 'Other visual issue';
+
+export interface VisualFinding {
+  _id?: string;
+  category: VisualFindingCategory;
+  severity: FindingSeverity;
+  element: string;
+  explanation: string;
+  supportingEvidence: string;
+  recommendation: string;
+  confidence: number;
+  evidenceStatus: EvidenceStatus;
+}
+
+export interface DetectedColor {
+  hex: string;
+  name?: string;
+  percentage?: number;
+  isApprovedBrandColor: boolean;
+}
+
+export interface VisualAnalysisReport {
+  overallVisualScore: number;
+  detectedColors: DetectedColor[];
+  logoAnalysis: {
+    detected: boolean;
+    placement?: string;
+    complianceStatus: 'compliant' | 'warning' | 'violation' | 'not_detected';
+    details: string;
+  };
+  typographyAnalysis: {
+    fontStyleDetected?: string;
+    readabilityScore?: number;
+    details: string;
+  };
+  visualFindings: VisualFinding[];
+}
+
 export interface AnalysisReport {
   _id: string;
   submissionId: string;
@@ -73,6 +117,7 @@ export interface AnalysisReport {
   status: 'passed' | 'warning' | 'violations_found';
   summary: string;
   findings: Finding[];
+  visualAnalysis?: VisualAnalysisReport;
   retrievedChunkIds?: Array<{
     _id: string;
     chunkIndex: number;
@@ -84,6 +129,28 @@ export interface AnalysisReport {
   }>;
   aiModelUsed: string;
   createdAt: string;
+}
+
+export type SubmissionFormat = 'text' | 'document' | 'image' | 'multi_format';
+
+export interface VisualAsset {
+  filename: string;
+  fileType: string;
+  fileSize: number;
+  dataUrl: string;
+  dimensions?: {
+    width?: number;
+    height?: number;
+  };
+}
+
+export interface PublishingDetails {
+  channel?: 'webhook' | 'cms' | 'social_media' | 'internal';
+  webhookUrl?: string;
+  status: 'not_published' | 'published' | 'failed';
+  publishedAt?: string;
+  payloadPreview?: string;
+  error?: string;
 }
 
 export type ContentType =
@@ -114,11 +181,14 @@ export interface ContentSubmission {
   };
   title: string;
   contentType: ContentType;
+  submissionFormat?: SubmissionFormat;
   originalContent: string;
   currentContent: string;
+  visualAsset?: VisualAsset;
   status: SubmissionStatus;
   latestAnalysisId?: AnalysisReport;
   version: number;
+  publishingDetails?: PublishingDetails;
   contentHistory: Array<{
     content: string;
     modifiedAt: string;
@@ -126,6 +196,70 @@ export interface ContentSubmission {
   }>;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface GovernanceMetrics {
+  kpis: {
+    totalSubmissions: number;
+    averageComplianceScore: number;
+    averageVisualScore: number;
+    approvalRate: number;
+    totalViolationsDetected: number;
+    criticalViolationsCount: number;
+    guidelinesIndexedCount: number;
+    verifiedFactsCount: number;
+  };
+  statusDistribution: {
+    approved: number;
+    rejected: number;
+    needs_changes: number;
+    pending_review: number;
+    draft: number;
+  };
+  categoryBreakdown: Array<{
+    category: string;
+    count: number;
+    percentage: number;
+  }>;
+  severityBreakdown: {
+    Critical: number;
+    High: number;
+    Medium: number;
+    Low: number;
+  };
+  visualMetrics: {
+    totalVisualAssets: number;
+    averageVisualScore: number;
+    logoViolationCount: number;
+    colorViolationCount: number;
+    typographyViolationCount: number;
+  };
+  recurringViolations: Array<{
+    phraseOrRule: string;
+    category: string;
+    occurrences: number;
+    severity: string;
+    lastDetectedAt: string;
+    sampleContext: string;
+  }>;
+  guidelineGaps: Array<{
+    topicOrClaim: string;
+    frequency: number;
+    recommendation: string;
+    sampleText: string;
+  }>;
+  timelineTrend: Array<{
+    date: string;
+    submissionsCount: number;
+    averageScore: number;
+  }>;
+  policyRecommendations: Array<{
+    priority: 'Urgent' | 'High' | 'Medium' | 'Informational';
+    area: string;
+    title: string;
+    description: string;
+    impact: string;
+  }>;
 }
 
 export interface ReviewDecision {

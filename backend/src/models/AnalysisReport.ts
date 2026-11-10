@@ -25,6 +25,50 @@ export interface IFinding {
   evidenceStatus: EvidenceStatus;
 }
 
+export type VisualFindingCategory =
+  | 'Logo usage & placement'
+  | 'Color palette consistency'
+  | 'Typography inconsistency'
+  | 'Visual layout & contrast'
+  | 'Brand visual style violation'
+  | 'Other visual issue';
+
+export interface IVisualFinding {
+  _id?: mongoose.Types.ObjectId;
+  category: VisualFindingCategory;
+  severity: FindingSeverity;
+  element: string;
+  explanation: string;
+  supportingEvidence: string;
+  recommendation: string;
+  confidence: number;
+  evidenceStatus: EvidenceStatus;
+}
+
+export interface IDetectedColor {
+  hex: string;
+  name?: string;
+  percentage?: number;
+  isApprovedBrandColor: boolean;
+}
+
+export interface IVisualAnalysisReport {
+  overallVisualScore: number;
+  detectedColors: IDetectedColor[];
+  logoAnalysis: {
+    detected: boolean;
+    placement?: string;
+    complianceStatus: 'compliant' | 'warning' | 'violation' | 'not_detected';
+    details: string;
+  };
+  typographyAnalysis: {
+    fontStyleDetected?: string;
+    readabilityScore?: number;
+    details: string;
+  };
+  visualFindings: IVisualFinding[];
+}
+
 export interface IAnalysisReport extends Document {
   submissionId: mongoose.Types.ObjectId;
   organizationId: mongoose.Types.ObjectId;
@@ -33,6 +77,7 @@ export interface IAnalysisReport extends Document {
   status: 'passed' | 'warning' | 'violations_found';
   summary: string;
   findings: IFinding[];
+  visualAnalysis?: IVisualAnalysisReport;
   retrievedChunkIds: mongoose.Types.ObjectId[];
   aiModelUsed: string;
   processingTimeMs: number;
@@ -74,6 +119,70 @@ const FindingSchema = new Schema<IFinding>(
   { _id: true }
 );
 
+const VisualFindingSchema = new Schema<IVisualFinding>(
+  {
+    category: {
+      type: String,
+      enum: [
+        'Logo usage & placement',
+        'Color palette consistency',
+        'Typography inconsistency',
+        'Visual layout & contrast',
+        'Brand visual style violation',
+        'Other visual issue',
+      ],
+      required: true,
+    },
+    severity: {
+      type: String,
+      enum: ['Critical', 'High', 'Medium', 'Low'],
+      required: true,
+    },
+    element: { type: String, required: true },
+    explanation: { type: String, required: true },
+    supportingEvidence: { type: String, default: 'Brand visual guidelines' },
+    recommendation: { type: String, required: true },
+    confidence: { type: Number, min: 0, max: 1, default: 0.9 },
+    evidenceStatus: {
+      type: String,
+      enum: ['verified_violation', 'unsupported_claim', 'potential_issue', 'compliant'],
+      required: true,
+    },
+  },
+  { _id: true }
+);
+
+const VisualAnalysisSchema = new Schema<IVisualAnalysisReport>(
+  {
+    overallVisualScore: { type: Number, min: 0, max: 100, required: true },
+    detectedColors: [
+      {
+        hex: { type: String, required: true },
+        name: { type: String },
+        percentage: { type: Number },
+        isApprovedBrandColor: { type: Boolean, default: false },
+      },
+    ],
+    logoAnalysis: {
+      detected: { type: Boolean, default: false },
+      placement: { type: String },
+      complianceStatus: {
+        type: String,
+        enum: ['compliant', 'warning', 'violation', 'not_detected'],
+        default: 'not_detected',
+      },
+      details: { type: String, default: '' },
+    },
+    typographyAnalysis: {
+      fontStyleDetected: { type: String },
+      readabilityScore: { type: Number },
+      details: { type: String, default: '' },
+    },
+    visualFindings: [VisualFindingSchema],
+  },
+  { _id: false }
+);
+
 const AnalysisReportSchema = new Schema<IAnalysisReport>(
   {
     submissionId: { type: Schema.Types.ObjectId, ref: 'ContentSubmission', required: true, index: true },
@@ -87,6 +196,7 @@ const AnalysisReportSchema = new Schema<IAnalysisReport>(
     },
     summary: { type: String, required: true },
     findings: [FindingSchema],
+    visualAnalysis: { type: VisualAnalysisSchema },
     retrievedChunkIds: [{ type: Schema.Types.ObjectId, ref: 'GuidelineChunk' }],
     aiModelUsed: { type: String, default: 'gemini-2.5-flash' },
     processingTimeMs: { type: Number, default: 0 },
