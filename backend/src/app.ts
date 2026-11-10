@@ -64,6 +64,7 @@ export function createApp(): Express {
   app.use('/api', generalLimiter);
 
   // 6. Routes
+  app.use('/', healthRoutes);
   app.use('/api', healthRoutes);
   app.use('/api/auth', authRoutes);
   app.use('/api/documents', documentRoutes);

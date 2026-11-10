@@ -16,7 +16,7 @@ BrandLens AI is an enterprise AI-powered brand governance platform that enforces
 
 - **Frontend Application**: [https://brand-lens-ai-one.vercel.app/](https://brand-lens-ai-one.vercel.app/)
 - **Backend API**: [https://brandlens-ai-emjp.onrender.com](https://brandlens-ai-emjp.onrender.com)
-- **API Health Check**: [https://brandlens-ai-emjp.onrender.com/health](https://brandlens-ai-emjp.onrender.com/health)
+- **API Health Check**: [https://brandlens-ai-emjp.onrender.com/api/health](https://brandlens-ai-emjp.onrender.com/api/health)
 - **GitHub Repository**: [https://github.com/dhruv10-06/BrandLens-AI](https://github.com/dhruv10-06/BrandLens-AI)
 
 ---
