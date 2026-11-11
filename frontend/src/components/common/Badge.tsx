@@ -4,26 +4,26 @@ import { FindingSeverity, SubmissionStatus, EvidenceStatus } from '../../types/i
 export const SeverityBadge: React.FC<{ severity: FindingSeverity }> = ({ severity }) => {
   const config = {
     Critical: {
-      style: 'bg-rose-50 text-rose-800 border-rose-200/90 ring-rose-500/10',
+      style: 'bg-rose-50/90 text-rose-800 border-rose-200/90 ring-rose-500/10',
       dot: 'bg-rose-600',
     },
     High: {
-      style: 'bg-orange-50 text-orange-800 border-orange-200/90 ring-orange-500/10',
+      style: 'bg-orange-50/90 text-orange-800 border-orange-200/90 ring-orange-500/10',
       dot: 'bg-orange-500',
     },
     Medium: {
-      style: 'bg-amber-50 text-amber-800 border-amber-200/90 ring-amber-500/10',
+      style: 'bg-amber-50/90 text-amber-800 border-amber-200/90 ring-amber-500/10',
       dot: 'bg-amber-500',
     },
     Low: {
-      style: 'bg-sky-50 text-sky-800 border-sky-200/90 ring-sky-500/10',
+      style: 'bg-sky-50/90 text-sky-800 border-sky-200/90 ring-sky-500/10',
       dot: 'bg-sky-500',
     },
   }[severity];
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ring-1 ring-inset ${config.style}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ring-1 ring-inset ${config.style}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
       <span>{severity}</span>
@@ -35,8 +35,8 @@ export const StatusBadge: React.FC<{ status: SubmissionStatus }> = ({ status }) 
   const config = {
     draft: {
       label: 'Draft',
-      style: 'bg-stone-100 text-stone-700 border-stone-200',
-      dot: 'bg-stone-400',
+      style: 'bg-ivory-100 text-graphite-600 border-[#EAE8E3]',
+      dot: 'bg-graphite-400',
     },
     analysing: {
       label: 'Auditing Content...',
@@ -50,8 +50,8 @@ export const StatusBadge: React.FC<{ status: SubmissionStatus }> = ({ status }) 
     },
     pending_review: {
       label: 'Pending Human Sign-off',
-      style: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-      dot: 'bg-indigo-600',
+      style: 'bg-lavender-50 text-brand-700 border-lavender-200',
+      dot: 'bg-brand-600',
     },
     approved: {
       label: 'Approved & Compliant',
@@ -65,13 +65,13 @@ export const StatusBadge: React.FC<{ status: SubmissionStatus }> = ({ status }) 
     },
   }[status] || {
     label: status,
-    style: 'bg-stone-100 text-stone-700 border-stone-200',
-    dot: 'bg-stone-400',
+    style: 'bg-ivory-100 text-graphite-600 border-[#EAE8E3]',
+    dot: 'bg-graphite-400',
   };
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${config.style}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${config.style}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
       <span>{config.label}</span>
@@ -87,7 +87,7 @@ export const EvidenceBadge: React.FC<{ status: EvidenceStatus }> = ({ status }) 
     },
     unsupported_claim: {
       label: 'Unsupported Claim',
-      style: 'bg-purple-50 text-purple-800 border-purple-200',
+      style: 'bg-lavender-50 text-lavender-800 border-lavender-200',
     },
     potential_issue: {
       label: 'Potential Tone Drift',
@@ -99,12 +99,12 @@ export const EvidenceBadge: React.FC<{ status: EvidenceStatus }> = ({ status }) 
     },
   }[status] || {
     label: status,
-    style: 'bg-stone-100 text-stone-800 border-stone-200',
+    style: 'bg-ivory-100 text-graphite-800 border-[#EAE8E3]',
   };
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${config.style}`}
+      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider border font-mono ${config.style}`}
     >
       {config.label}
     </span>

@@ -1,53 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --bg-canvas: #F8F8F6;
+    --bg-canvas: #FCFBF9;
     --bg-surface: #FFFFFF;
-    --border-subtle: #E7E6E2;
-    --text-primary: #182338;
-    --text-secondary: #64748B;
-    --brand-primary: #4F46E5;
-    --brand-accent: #0D9488;
+    --bg-ivory: #F8F6F2;
+    --border-subtle: #EAE8E3;
+    --border-focus: #5145CD;
+    --text-primary: #1C1B26;
+    --text-secondary: #5C5975;
+    --text-muted: #9996B3;
+    --brand-primary: #5145CD;
+    --brand-accent: #7C4BEB;
+    --champagne-accent: #D4B785;
   }
 
   body {
-    @apply antialiased text-slate-900 selection:bg-brand-600 selection:text-white;
-    background-color: #F8F8F6;
+    @apply antialiased text-graphite-900 selection:bg-brand-600 selection:text-white;
+    background-color: #FCFBF9;
     font-family: 'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    letter-spacing: -0.011em;
+    letter-spacing: -0.012em;
+    color: #1C1B26;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.025em;
+    letter-spacing: -0.026em;
   }
 }
 
 @layer components {
-  /* Premium Enterprise Card Shell */
+  /* Luxury Light Editorial Card Primitive */
   .enterprise-card {
-    @apply bg-white rounded-xl border border-stone-200/90 shadow-card transition-all duration-200;
+    @apply bg-white rounded-2xl border border-[#EAE8E3] shadow-card transition-all duration-200;
   }
 
   .enterprise-card-interactive {
-    @apply bg-white rounded-xl border border-stone-200/90 shadow-card transition-all duration-200 hover:border-stone-300 hover:shadow-card-hover;
+    @apply bg-white rounded-2xl border border-[#EAE8E3] shadow-card transition-all duration-200 hover:border-[#DDD5C2] hover:shadow-card-hover;
   }
 
-  /* Section Header Badge */
+  /* Editorial Pill Badge */
   .section-tag {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wide uppercase;
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase font-mono bg-ivory-100 text-graphite-700 border border-[#EAE8E3];
   }
 
-  /* Enterprise Table Header */
+  /* Editorial Table Header */
   .table-header-cell {
-    @apply px-4 py-3 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider bg-stone-50/70 border-b border-stone-200/80;
+    @apply px-4 py-3.5 text-left text-[11px] font-bold text-graphite-500 uppercase tracking-wider bg-ivory-50/80 border-b border-[#EAE8E3];
   }
 
-  /* Enterprise Table Row */
+  /* Editorial Table Row */
   .table-row-cell {
-    @apply px-4 py-3.5 text-xs text-slate-700 border-b border-stone-100;
+    @apply px-4 py-3.5 text-xs text-graphite-800 border-b border-ivory-200/60;
   }
 }
 
@@ -60,16 +67,16 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #DFDDE9;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #BFBDD4;
 }
 
 /* Accessible focus outline */
 :focus-visible {
-  outline: 2px solid #4F46E5;
+  outline: 2px solid #5145CD;
   outline-offset: 2px;
 }
 

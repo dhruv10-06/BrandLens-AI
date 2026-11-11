@@ -34,34 +34,34 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Subtle ambient lighting effect */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-brand-600/15 via-indigo-600/5 to-transparent blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[#FCFBF9] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Luxury ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-lavender-200/40 via-champagne-100/30 to-transparent blur-3xl pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center relative z-10">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 via-brand-500 to-indigo-400 mx-auto flex items-center justify-center text-white shadow-lg shadow-brand-500/25 mb-4 ring-1 ring-white/20">
-          <ShieldCheck className="w-8 h-8" />
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-700 via-brand-600 to-lavender-500 mx-auto flex items-center justify-center text-white shadow-card mb-4 ring-1 ring-white/60">
+          <ShieldCheck className="w-8 h-8 text-white" />
         </div>
-        <h2 className="text-3xl font-extrabold text-white tracking-tight">
+        <h2 className="text-3xl font-extrabold text-graphite-900 tracking-tight">
           Create BrandLens Workspace
         </h2>
-        <p className="mt-2 text-xs sm:text-sm text-slate-400 font-medium">
+        <p className="mt-2 text-xs sm:text-sm text-graphite-500 font-medium">
           Set up brand governance and AI compliance for your organisation
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0 relative z-10">
-        <div className="bg-white py-8 px-6 sm:px-10 rounded-2xl shadow-elevated border border-slate-200/80">
+        <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl shadow-card border border-[#EAE8E3]">
           {error && (
-            <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5">
-              <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-              <span>{error}</span>
+            <div className="mb-5 p-3.5 rounded-xl bg-rose-50/90 border border-rose-200 text-xs text-rose-800 flex items-start gap-2.5 shadow-subtle">
+              <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
+              <span className="font-semibold">{error}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-graphite-700 uppercase tracking-wide mb-1.5 font-mono text-[11px]">
                 Full Name
               </label>
               <input
@@ -70,12 +70,12 @@ export const RegisterPage: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Sarah Chen"
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 placeholder:text-graphite-400 transition-colors font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-graphite-700 uppercase tracking-wide mb-1.5 font-mono text-[11px]">
                 Work Email
               </label>
               <input
@@ -84,12 +84,12 @@ export const RegisterPage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="sarah@company.com"
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 placeholder:text-graphite-400 transition-colors font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-graphite-700 uppercase tracking-wide mb-1.5 font-mono text-[11px]">
                 Organisation / Brand Name
               </label>
               <input
@@ -98,19 +98,19 @@ export const RegisterPage: React.FC = () => {
                 value={orgName}
                 onChange={(e) => setOrgName(e.target.value)}
                 placeholder="Acme Corp"
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 placeholder:text-graphite-400 transition-colors font-medium"
               />
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 flex items-start gap-2.5">
+            <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#EAE8E3] text-[11px] text-graphite-600 flex items-start gap-2.5">
               <Building2 className="w-4 h-4 text-brand-600 flex-shrink-0 mt-0.5" />
               <span>
-                New workspaces register your initial user as a <strong className="text-slate-800">Content Creator</strong>. Reviewer roles are granted by organisation administrators.
+                New workspaces register your initial user as a <strong className="text-graphite-900 font-bold">Content Creator</strong>. Reviewer roles are granted by organisation administrators.
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-graphite-700 uppercase tracking-wide mb-1.5 font-mono text-[11px]">
                 Password (min 8 characters)
               </label>
               <input
@@ -120,7 +120,7 @@ export const RegisterPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 placeholder:text-graphite-400 transition-colors font-medium"
               />
             </div>
 
@@ -137,9 +137,9 @@ export const RegisterPage: React.FC = () => {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-slate-500">
+          <p className="mt-6 text-center text-xs text-graphite-500">
             Already registered?{' '}
-            <Link to="/login" className="font-semibold text-brand-600 hover:text-brand-500 transition-colors">
+            <Link to="/login" className="font-bold text-brand-600 hover:text-brand-700 transition-colors">
               Sign in to your account
             </Link>
           </p>

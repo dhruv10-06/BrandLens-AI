@@ -11,12 +11,12 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const variantStyles = {
-    default: 'bg-white rounded-xl border border-stone-200/90 shadow-card',
+    default: 'bg-white rounded-2xl border border-[#EAE8E3] shadow-card',
     interactive:
-      'bg-white rounded-xl border border-stone-200/90 shadow-card hover:border-stone-300 hover:shadow-card-hover transition-all duration-200',
+      'bg-white rounded-2xl border border-[#EAE8E3] shadow-card hover:border-[#DDD5C2] hover:shadow-card-hover transition-all duration-200',
     accent:
-      'bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl shadow-elevated border border-slate-800',
-    subtle: 'bg-stone-50/80 rounded-xl border border-stone-200/80 shadow-subtle',
+      'bg-gradient-to-br from-graphite-950 via-[#2A244D] to-graphite-900 text-white rounded-2xl shadow-elevated border border-graphite-800',
+    subtle: 'bg-ivory-50/90 rounded-2xl border border-[#EAE8E3] shadow-subtle',
   }[variant];
 
   return (
@@ -32,7 +32,7 @@ export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
-    <div className={`p-5 sm:p-6 border-b border-stone-100 flex items-center justify-between gap-4 ${className}`} {...props}>
+    <div className={`p-5 sm:p-6 border-b border-[#F2EFE8] flex items-center justify-between gap-4 ${className}`} {...props}>
       {children}
     </div>
   );
@@ -56,7 +56,7 @@ export const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
-    <div className={`p-4 sm:p-5 border-t border-stone-100 bg-stone-50/40 rounded-b-xl flex items-center justify-between gap-4 ${className}`} {...props}>
+    <div className={`p-4 sm:p-5 border-t border-[#F2EFE8] bg-ivory-50/60 rounded-b-2xl flex items-center justify-between gap-4 ${className}`} {...props}>
       {children}
     </div>
   );

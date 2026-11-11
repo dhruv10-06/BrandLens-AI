@@ -17,7 +17,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
         stroke: '#059669',
         trackStroke: '#D1FAE5',
         text: 'text-emerald-700',
-        bg: 'bg-emerald-50',
+        bg: 'bg-emerald-50/80',
         border: 'border-emerald-200',
         label: 'Brand Compliant',
       };
@@ -27,7 +27,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
         stroke: '#D97706',
         trackStroke: '#FEF3C7',
         text: 'text-amber-700',
-        bg: 'bg-amber-50',
+        bg: 'bg-amber-50/80',
         border: 'border-amber-200',
         label: 'Advisory Warnings',
       };
@@ -36,7 +36,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
       stroke: '#E11D48',
       trackStroke: '#FFE4E6',
       text: 'text-rose-700',
-      bg: 'bg-rose-50',
+      bg: 'bg-rose-50/80',
       border: 'border-rose-200',
       label: 'Violations Detected',
     };
@@ -48,9 +48,9 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
   if (size === 'sm') {
     return (
       <div
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border font-semibold text-xs ${bg} ${border} ${text}`}
+        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border font-bold text-xs ${bg} ${border} ${text} shadow-subtle`}
       >
-        <span className="font-mono font-bold tabular-nums">{score}%</span>
+        <span className="font-mono tabular-nums">{score}%</span>
         <span className="text-[10px] uppercase font-bold tracking-wider opacity-90">({label})</span>
       </div>
     );
@@ -59,19 +59,19 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
   const dimensions = size === 'lg' ? { box: 'w-24 h-24', text: 'text-3xl' } : { box: 'w-16 h-16', text: 'text-xl' };
 
   return (
-    <div className="flex items-center gap-4 p-4 rounded-xl border border-stone-200/90 bg-white shadow-card">
+    <div className="flex items-center gap-4 p-4 rounded-2xl border border-[#EAE8E3] bg-white shadow-card">
       <div className={`relative ${dimensions.box} flex items-center justify-center flex-shrink-0`}>
         <svg className={`${dimensions.box} -rotate-90 transform`} viewBox="0 0 36 36">
           <path
             style={{ stroke: trackStroke }}
-            strokeWidth="3.5"
+            strokeWidth="3.2"
             fill="none"
             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
           />
           <path
             strokeDasharray="100, 100"
             strokeDashoffset={strokeDashoffset}
-            strokeWidth="3.5"
+            strokeWidth="3.2"
             strokeLinecap="round"
             stroke={stroke}
             fill="none"
@@ -84,11 +84,11 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
         </span>
       </div>
       <div>
-        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        <div className="text-[10px] font-bold text-graphite-400 uppercase tracking-wider font-mono">
           Compliance Rating
         </div>
         <div className={`text-base font-extrabold tracking-tight ${text}`}>{label}</div>
-        <div className="text-[11px] text-slate-500 mt-0.5">{labelSubtitle}</div>
+        <div className="text-[11px] text-graphite-500 mt-0.5">{labelSubtitle}</div>
       </div>
     </div>
   );

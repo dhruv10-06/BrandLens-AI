@@ -20,27 +20,27 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-bold tracking-tight transition-all duration-150 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
+    'inline-flex items-center justify-center font-bold tracking-tight transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
 
   const sizeStyles = {
-    sm: 'h-8 px-3 text-xs gap-1.5',
-    md: 'h-9 px-4 text-xs gap-2',
-    lg: 'h-11 px-5 text-sm gap-2.5',
+    sm: 'h-8 px-3 text-xs gap-1.5 rounded-lg font-semibold',
+    md: 'h-9 px-4 text-xs gap-2 rounded-xl font-bold',
+    lg: 'h-11 px-5 text-sm gap-2.5 rounded-xl font-bold',
   }[size];
 
   const variantStyles = {
     primary:
-      'bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-sm hover:shadow focus-visible:ring-brand-500',
+      'bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-sm hover:shadow-card focus-visible:ring-brand-500 ring-1 ring-white/10',
     secondary:
-      'bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white shadow-sm hover:shadow focus-visible:ring-slate-800',
+      'bg-graphite-900 hover:bg-graphite-800 active:bg-graphite-950 text-white shadow-sm hover:shadow-card focus-visible:ring-graphite-800',
     outline:
-      'bg-white hover:bg-stone-50 active:bg-stone-100 text-slate-700 border border-stone-200/90 shadow-subtle hover:border-stone-300 focus-visible:ring-stone-400',
+      'bg-white hover:bg-ivory-100 active:bg-ivory-200 text-graphite-800 border border-[#EAE8E3] shadow-subtle hover:border-[#DDD5C2] focus-visible:ring-ivory-400',
     ghost:
-      'bg-transparent hover:bg-stone-100 active:bg-stone-200/80 text-slate-600 hover:text-slate-900 focus-visible:ring-stone-400',
+      'bg-transparent hover:bg-ivory-200/70 active:bg-ivory-300/80 text-graphite-600 hover:text-graphite-900 focus-visible:ring-ivory-400',
     destructive:
       'bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white shadow-sm focus-visible:ring-rose-500',
     accent:
-      'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white shadow-sm hover:shadow focus-visible:ring-indigo-500',
+      'bg-lavender-600 hover:bg-lavender-700 active:bg-lavender-800 text-white shadow-sm hover:shadow-card focus-visible:ring-lavender-500',
   }[variant];
 
   return (

@@ -42,38 +42,38 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Subtle ambient lighting effect */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-brand-600/15 via-indigo-600/5 to-transparent blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[#FCFBF9] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Luxury ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-lavender-200/40 via-champagne-100/30 to-transparent blur-3xl pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center relative z-10">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 via-brand-500 to-indigo-400 mx-auto flex items-center justify-center text-white shadow-lg shadow-brand-500/25 mb-4 ring-1 ring-white/20">
-          <ShieldCheck className="w-8 h-8" />
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-700 via-brand-600 to-lavender-500 mx-auto flex items-center justify-center text-white shadow-card mb-4 ring-1 ring-white/60">
+          <ShieldCheck className="w-8 h-8 text-white" />
         </div>
-        <h2 className="text-3xl font-extrabold text-white tracking-tight">
-          BrandLens <span className="text-brand-400">AI</span>
+        <h2 className="text-3xl font-extrabold text-graphite-900 tracking-tight">
+          BrandLens <span className="text-brand-600">AI</span>
         </h2>
-        <p className="mt-2 text-xs sm:text-sm text-slate-400 font-medium">
-          Enterprise Multimodal Brand Compliance & Governance
+        <p className="mt-2 text-xs sm:text-sm text-graphite-500 font-medium">
+          Enterprise Multimodal Brand Compliance &amp; Governance
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0 relative z-10">
-        <div className="bg-white py-8 px-6 sm:px-10 rounded-2xl shadow-elevated border border-slate-200/80">
+        <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl shadow-card border border-[#EAE8E3]">
           {error && (
-            <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5">
-              <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-              <span>{error}</span>
+            <div className="mb-5 p-3.5 rounded-xl bg-rose-50/90 border border-rose-200 text-xs text-rose-800 flex items-start gap-2.5 shadow-subtle">
+              <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
+              <span className="font-semibold">{error}</span>
             </div>
           )}
 
           {/* Secure Demonstrator Access: Separate fixed-role accounts */}
-          <div className="mb-6 p-4 rounded-xl bg-slate-50 border border-slate-200/90">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 uppercase tracking-wider mb-1.5">
+          <div className="mb-6 p-4 rounded-2xl bg-[#FAF8F5] border border-[#EAE8E3]">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-graphite-900 uppercase tracking-wider mb-1.5 font-mono">
               <Sparkles className="w-3.5 h-3.5 text-brand-600" />
               <span>CodeNexus India Evaluator Access</span>
             </div>
-            <p className="text-[11px] text-slate-600 mb-3.5 leading-relaxed">
+            <p className="text-[11px] text-graphite-600 mb-3.5 leading-relaxed">
               Authenticate into separate fixed-role demo accounts with pre-indexed brand guidelines and sample violation drafts. Roles are non-switchable once logged in.
             </p>
             <div className="space-y-2.5">
@@ -81,9 +81,9 @@ export const LoginPage: React.FC = () => {
                 type="button"
                 onClick={() => handleDemoSignIn('creator')}
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all shadow-subtle hover:shadow-card disabled:opacity-60"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 rounded-xl transition-all shadow-sm hover:shadow-card disabled:opacity-60"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 font-bold">
                   <UserCheck className="w-4 h-4" />
                   <span>Demo Creator Account</span>
                 </div>
@@ -96,13 +96,13 @@ export const LoginPage: React.FC = () => {
                 type="button"
                 onClick={() => handleDemoSignIn('reviewer')}
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-slate-950 bg-amber-400 hover:bg-amber-300 rounded-xl transition-all shadow-subtle hover:shadow-card disabled:opacity-60"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-graphite-950 bg-champagne-300 hover:bg-champagne-200 rounded-xl transition-all shadow-sm hover:shadow-card disabled:opacity-60"
               >
                 <div className="flex items-center gap-2">
-                  <Lock className="w-4 h-4" />
+                  <Lock className="w-4 h-4 text-graphite-800" />
                   <span>Demo Reviewer Account</span>
                 </div>
-                <span className="text-[10px] font-mono bg-amber-500/50 px-2 py-0.5 rounded text-slate-950 font-semibold">
+                <span className="text-[10px] font-mono bg-champagne-400/60 px-2 py-0.5 rounded text-graphite-950 font-bold">
                   reviewer@brandlens.demo
                 </span>
               </button>
@@ -111,10 +111,10 @@ export const LoginPage: React.FC = () => {
 
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200" />
+              <div className="w-full border-t border-[#EAE8E3]" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2.5 text-slate-400 font-semibold text-[10px] tracking-wider">
+              <span className="bg-white px-3 text-graphite-400 font-bold text-[10px] tracking-wider font-mono">
                 Or sign in with credentials
               </span>
             </div>
@@ -122,7 +122,7 @@ export const LoginPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-graphite-700 uppercase tracking-wide mb-1.5 font-mono text-[11px]">
                 Email Address
               </label>
               <input
@@ -131,12 +131,12 @@ export const LoginPage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 placeholder:text-graphite-400 transition-colors font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-graphite-700 uppercase tracking-wide mb-1.5 font-mono text-[11px]">
                 Password
               </label>
               <input
@@ -145,26 +145,26 @@ export const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 placeholder:text-graphite-400 transition-colors font-medium"
               />
             </div>
 
             <Button
               type="submit"
-              variant="primary"
+              variant="secondary"
               size="lg"
               disabled={isSubmitting}
               isLoading={isSubmitting}
-              className="w-full !bg-slate-900 hover:!bg-slate-800 text-white mt-2"
+              className="w-full mt-2"
               icon={<ArrowRight className="w-4 h-4" />}
             >
               {isSubmitting ? 'Authenticating...' : 'Sign In'}
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-slate-500">
+          <p className="mt-6 text-center text-xs text-graphite-500">
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold text-brand-600 hover:text-brand-500 transition-colors">
+            <Link to="/register" className="font-bold text-brand-600 hover:text-brand-700 transition-colors">
               Create an organisation workspace
             </Link>
           </p>

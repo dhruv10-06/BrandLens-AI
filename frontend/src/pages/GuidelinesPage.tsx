@@ -17,8 +17,6 @@ import {
   Sliders,
   X,
   Layers,
-  Sparkles,
-  Info,
 } from 'lucide-react';
 
 export const GuidelinesPage: React.FC = () => {
@@ -146,16 +144,16 @@ export const GuidelinesPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#EAE8E3]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1.5">
             <span className="section-tag">Governance Knowledge Base</span>
-            <span className="text-[11px] text-slate-400 font-mono">RAG Vector Index</span>
+            <span className="text-[11px] text-graphite-400 font-mono">RAG Vector Index</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            Approved Brand Guidelines & Rules
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-graphite-900 tracking-tight">
+            Approved Brand Guidelines &amp; Rules
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-graphite-500 mt-1">
             Manage official guideline documents (PDF/TXT), prohibited terms, and verified brand facts used in semantic retrieval.
           </p>
         </div>
@@ -183,36 +181,36 @@ export const GuidelinesPage: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-slate-200">
+      <div className="border-b border-[#EAE8E3]">
         <nav className="flex space-x-8">
           <button
             onClick={() => setActiveTab('documents')}
-            className={`py-3 text-sm font-semibold border-b-2 flex items-center gap-2.5 transition ${
+            className={`py-3 text-sm font-bold border-b-2 flex items-center gap-2.5 transition ${
               activeTab === 'documents'
                 ? 'border-brand-600 text-brand-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-graphite-500 hover:text-graphite-800'
             }`}
           >
             <BookOpen className="w-4 h-4" />
             <span>Uploaded Documents</span>
             <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
-              activeTab === 'documents' ? 'bg-brand-50 text-brand-700' : 'bg-slate-100 text-slate-600'
+              activeTab === 'documents' ? 'bg-lavender-100 text-brand-700 font-bold' : 'bg-ivory-100 text-graphite-600'
             }`}>
               {documents.length}
             </span>
           </button>
           <button
             onClick={() => setActiveTab('facts')}
-            className={`py-3 text-sm font-semibold border-b-2 flex items-center gap-2.5 transition ${
+            className={`py-3 text-sm font-bold border-b-2 flex items-center gap-2.5 transition ${
               activeTab === 'facts'
                 ? 'border-brand-600 text-brand-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-graphite-500 hover:text-graphite-800'
             }`}
           >
             <Sliders className="w-4 h-4" />
-            <span>Terminology & Verified Facts</span>
+            <span>Terminology &amp; Verified Facts</span>
             <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
-              activeTab === 'facts' ? 'bg-brand-50 text-brand-700' : 'bg-slate-100 text-slate-600'
+              activeTab === 'facts' ? 'bg-lavender-100 text-brand-700 font-bold' : 'bg-ivory-100 text-graphite-600'
             }`}>
               {facts.length}
             </span>
@@ -222,17 +220,17 @@ export const GuidelinesPage: React.FC = () => {
 
       {/* Tab 1: Documents List */}
       {activeTab === 'documents' && (
-        <div className="bg-white rounded-xl border border-slate-200/80 shadow-subtle overflow-hidden">
+        <div className="bg-white rounded-3xl border border-[#EAE8E3] shadow-card overflow-hidden">
           {isLoading ? (
-            <div className="p-12 text-center text-sm text-slate-400">Loading guideline documents...</div>
+            <div className="p-12 text-center text-sm text-graphite-400 font-mono">Loading guideline documents...</div>
           ) : documents.length === 0 ? (
             <div className="p-16 text-center space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mx-auto">
+              <div className="w-12 h-12 rounded-2xl bg-ivory-100 border border-[#EAE8E3] flex items-center justify-center text-graphite-400 mx-auto">
                 <BookOpen className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-slate-800">No brand guideline documents uploaded</h3>
-                <p className="text-sm text-slate-500 max-w-md mx-auto mt-1">
+                <h3 className="text-base font-bold text-graphite-900 tracking-tight">No brand guideline documents uploaded</h3>
+                <p className="text-xs sm:text-sm text-graphite-500 max-w-md mx-auto mt-1">
                   Upload your brand style guide (PDF) or TXT messaging rules to activate RAG semantic retrieval during AI compliance analysis.
                 </p>
               </div>
@@ -249,31 +247,31 @@ export const GuidelinesPage: React.FC = () => {
               )}
             </div>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-[#F2EFE8]">
               {documents.map((doc) => (
                 <div
                   key={doc._id}
-                  className="p-5 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/50 transition-colors"
+                  className="p-5 sm:px-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-ivory-50/60 transition-colors"
                 >
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100/80 flex items-center justify-center text-brand-600 flex-shrink-0">
+                  <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-2xl bg-lavender-50 border border-lavender-100 flex items-center justify-center text-brand-600 flex-shrink-0">
                       <FileText className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold text-slate-900 tracking-tight">{doc.originalName}</h4>
-                      <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-slate-500">
-                        <span className="uppercase font-mono text-[10px] font-semibold text-brand-700 bg-brand-50 border border-brand-200/50 px-2 py-0.5 rounded">
+                      <h4 className="text-sm font-bold text-graphite-900 tracking-tight">{doc.originalName}</h4>
+                      <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-graphite-500 font-mono">
+                        <span className="uppercase text-[10px] font-bold text-brand-700 bg-lavender-50 border border-lavender-200 px-2 py-0.5 rounded">
                           {doc.fileType}
                         </span>
-                        <span className="text-slate-300">•</span>
-                        <span className="font-mono text-slate-600">{(doc.fileSize / 1024).toFixed(1)} KB</span>
-                        <span className="text-slate-300">•</span>
-                        <span className="inline-flex items-center gap-1 font-mono text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded text-[11px] font-medium">
+                        <span className="text-graphite-300">•</span>
+                        <span className="text-graphite-600">{(doc.fileSize / 1024).toFixed(1)} KB</span>
+                        <span className="text-graphite-300">•</span>
+                        <span className="inline-flex items-center gap-1 text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[11px] font-bold">
                           <Layers className="w-3 h-3" />
                           {doc.chunkCount} RAG Vector Chunks
                         </span>
-                        <span className="text-slate-300">•</span>
-                        <span>Uploaded by {doc.uploadedBy?.name || 'Admin'}</span>
+                        <span className="text-graphite-300">•</span>
+                        <span className="font-sans text-graphite-500">Uploaded by {doc.uploadedBy?.name || 'Admin'}</span>
                       </div>
                     </div>
                   </div>
@@ -290,7 +288,7 @@ export const GuidelinesPage: React.FC = () => {
                     {isReviewer && (
                       <button
                         onClick={() => handleDeleteDocument(doc._id, doc.originalName)}
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        className="p-2 text-graphite-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
                         title="Deactivate and remove from analysis"
                         aria-label="Delete document"
                       >
@@ -310,42 +308,42 @@ export const GuidelinesPage: React.FC = () => {
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Prohibited Terminology Section */}
-            <div className="bg-white rounded-xl border border-slate-200/80 shadow-subtle p-5 flex flex-col">
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-bold text-red-700 uppercase tracking-wider">
-                  <ShieldAlert className="w-4 h-4 text-red-600" />
+            <div className="bg-white rounded-3xl border border-[#EAE8E3] shadow-card p-6 flex flex-col">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#F2EFE8]">
+                <div className="flex items-center gap-2 text-xs font-bold text-rose-700 uppercase tracking-wider font-mono">
+                  <ShieldAlert className="w-4 h-4 text-rose-600" />
                   <span>Prohibited Terminology</span>
                 </div>
-                <span className="text-xs font-mono font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                <span className="text-xs font-mono font-bold text-graphite-500 bg-ivory-100 px-2 py-0.5 rounded border border-[#EAE8E3]">
                   {facts.filter((f) => f.type === 'prohibited_terminology').length} rules
                 </span>
               </div>
               <div className="space-y-2.5 flex-1">
                 {facts.filter((f) => f.type === 'prohibited_terminology').length === 0 ? (
-                  <p className="text-xs text-slate-400 py-4 text-center italic">No prohibited terminology defined yet.</p>
+                  <p className="text-xs text-graphite-400 py-4 text-center italic">No prohibited terminology defined yet.</p>
                 ) : (
                   facts.filter((f) => f.type === 'prohibited_terminology').map((f) => (
                     <div
                       key={f._id}
-                      className="p-3.5 rounded-lg bg-red-50/40 border border-red-100 text-xs flex items-start justify-between gap-3 hover:bg-red-50/70 transition-colors"
+                      className="p-3.5 rounded-xl bg-rose-50/50 border border-rose-100 text-xs flex items-start justify-between gap-3 hover:bg-rose-50/80 transition-colors"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-red-900 bg-red-100/80 px-2 py-0.5 rounded">
+                          <span className="font-mono font-bold text-rose-900 bg-rose-100/80 px-2 py-0.5 rounded">
                             "{f.key}"
                           </span>
                           {f.context && (
-                            <span className="text-[10px] text-slate-500 font-mono bg-white/80 border border-slate-200/80 px-1.5 py-0.5 rounded">
+                            <span className="text-[10px] text-graphite-500 font-mono bg-white/90 border border-rose-200/60 px-1.5 py-0.5 rounded">
                               {f.context}
                             </span>
                           )}
                         </div>
-                        <p className="text-slate-700 leading-relaxed">{f.value}</p>
+                        <p className="text-graphite-700 leading-relaxed font-sans">{f.value}</p>
                       </div>
                       {isReviewer && (
                         <button
                           onClick={() => handleDeleteFact(f._id)}
-                          className="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-red-100/50 transition-colors"
+                          className="text-graphite-400 hover:text-rose-600 p-1 rounded-lg hover:bg-rose-100/50 transition-colors"
                           title="Delete rule"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -358,42 +356,42 @@ export const GuidelinesPage: React.FC = () => {
             </div>
 
             {/* Approved Terminology Section */}
-            <div className="bg-white rounded-xl border border-slate-200/80 shadow-subtle p-5 flex flex-col">
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-bold text-brand-700 uppercase tracking-wider">
+            <div className="bg-white rounded-3xl border border-[#EAE8E3] shadow-card p-6 flex flex-col">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#F2EFE8]">
+                <div className="flex items-center gap-2 text-xs font-bold text-brand-700 uppercase tracking-wider font-mono">
                   <CheckCircle2 className="w-4 h-4 text-brand-600" />
                   <span>Approved Terminology</span>
                 </div>
-                <span className="text-xs font-mono font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                <span className="text-xs font-mono font-bold text-graphite-500 bg-ivory-100 px-2 py-0.5 rounded border border-[#EAE8E3]">
                   {facts.filter((f) => f.type === 'approved_terminology').length} rules
                 </span>
               </div>
               <div className="space-y-2.5 flex-1">
                 {facts.filter((f) => f.type === 'approved_terminology').length === 0 ? (
-                  <p className="text-xs text-slate-400 py-4 text-center italic">No approved terminology defined yet.</p>
+                  <p className="text-xs text-graphite-400 py-4 text-center italic">No approved terminology defined yet.</p>
                 ) : (
                   facts.filter((f) => f.type === 'approved_terminology').map((f) => (
                     <div
                       key={f._id}
-                      className="p-3.5 rounded-lg bg-brand-50/40 border border-brand-100 text-xs flex items-start justify-between gap-3 hover:bg-brand-50/70 transition-colors"
+                      className="p-3.5 rounded-xl bg-lavender-50/50 border border-lavender-100 text-xs flex items-start justify-between gap-3 hover:bg-lavender-50/80 transition-colors"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-brand-900 bg-brand-100/80 px-2 py-0.5 rounded">
+                          <span className="font-mono font-bold text-brand-900 bg-lavender-100/80 px-2 py-0.5 rounded">
                             "{f.key}"
                           </span>
                           {f.context && (
-                            <span className="text-[10px] text-slate-500 font-mono bg-white/80 border border-slate-200/80 px-1.5 py-0.5 rounded">
+                            <span className="text-[10px] text-graphite-500 font-mono bg-white/90 border border-lavender-200/60 px-1.5 py-0.5 rounded">
                               {f.context}
                             </span>
                           )}
                         </div>
-                        <p className="text-slate-700 leading-relaxed">{f.value}</p>
+                        <p className="text-graphite-700 leading-relaxed font-sans">{f.value}</p>
                       </div>
                       {isReviewer && (
                         <button
                           onClick={() => handleDeleteFact(f._id)}
-                          className="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-brand-100/50 transition-colors"
+                          className="text-graphite-400 hover:text-rose-600 p-1 rounded-lg hover:bg-rose-100/50 transition-colors"
                           title="Delete rule"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -406,33 +404,33 @@ export const GuidelinesPage: React.FC = () => {
             </div>
 
             {/* Verified Facts Section */}
-            <div className="bg-white rounded-xl border border-slate-200/80 shadow-subtle p-5 flex flex-col">
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wider">
+            <div className="bg-white rounded-3xl border border-[#EAE8E3] shadow-card p-6 flex flex-col">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#F2EFE8]">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wider font-mono">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  <span>Verified Product Facts & Metrics</span>
+                  <span>Verified Product Facts &amp; Metrics</span>
                 </div>
-                <span className="text-xs font-mono font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                <span className="text-xs font-mono font-bold text-graphite-500 bg-ivory-100 px-2 py-0.5 rounded border border-[#EAE8E3]">
                   {facts.filter((f) => f.type === 'fact').length} facts
                 </span>
               </div>
               <div className="space-y-2.5 flex-1">
                 {facts.filter((f) => f.type === 'fact').length === 0 ? (
-                  <p className="text-xs text-slate-400 py-4 text-center italic">No verified facts defined yet.</p>
+                  <p className="text-xs text-graphite-400 py-4 text-center italic">No verified facts defined yet.</p>
                 ) : (
                   facts.filter((f) => f.type === 'fact').map((f) => (
                     <div
                       key={f._id}
-                      className="p-3.5 rounded-lg bg-emerald-50/40 border border-emerald-100 text-xs flex items-start justify-between gap-3 hover:bg-emerald-50/70 transition-colors"
+                      className="p-3.5 rounded-xl bg-emerald-50/50 border border-emerald-100 text-xs flex items-start justify-between gap-3 hover:bg-emerald-50/80 transition-colors"
                     >
                       <div className="space-y-1">
-                        <span className="font-semibold text-emerald-950 block">{f.key}</span>
-                        <p className="text-slate-700 leading-relaxed">{f.value}</p>
+                        <span className="font-bold text-emerald-950 block">{f.key}</span>
+                        <p className="text-graphite-700 leading-relaxed font-sans">{f.value}</p>
                       </div>
                       {isReviewer && (
                         <button
                           onClick={() => handleDeleteFact(f._id)}
-                          className="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-emerald-100/50 transition-colors"
+                          className="text-graphite-400 hover:text-rose-600 p-1 rounded-lg hover:bg-rose-100/50 transition-colors"
                           title="Delete fact"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -445,33 +443,33 @@ export const GuidelinesPage: React.FC = () => {
             </div>
 
             {/* Tone Rules Section */}
-            <div className="bg-white rounded-xl border border-slate-200/80 shadow-subtle p-5 flex flex-col">
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider">
+            <div className="bg-white rounded-3xl border border-[#EAE8E3] shadow-card p-6 flex flex-col">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#F2EFE8]">
+                <div className="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider font-mono">
                   <Sliders className="w-4 h-4 text-amber-600" />
                   <span>Mandatory Tone Requirements</span>
                 </div>
-                <span className="text-xs font-mono font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                <span className="text-xs font-mono font-bold text-graphite-500 bg-ivory-100 px-2 py-0.5 rounded border border-[#EAE8E3]">
                   {facts.filter((f) => f.type === 'tone_rule').length} rules
                 </span>
               </div>
               <div className="space-y-2.5 flex-1">
                 {facts.filter((f) => f.type === 'tone_rule').length === 0 ? (
-                  <p className="text-xs text-slate-400 py-4 text-center italic">No tone rules defined yet.</p>
+                  <p className="text-xs text-graphite-400 py-4 text-center italic">No tone rules defined yet.</p>
                 ) : (
                   facts.filter((f) => f.type === 'tone_rule').map((f) => (
                     <div
                       key={f._id}
-                      className="p-3.5 rounded-lg bg-amber-50/40 border border-amber-100 text-xs flex items-start justify-between gap-3 hover:bg-amber-50/70 transition-colors"
+                      className="p-3.5 rounded-xl bg-amber-50/50 border border-amber-100 text-xs flex items-start justify-between gap-3 hover:bg-amber-50/80 transition-colors"
                     >
                       <div className="space-y-1">
-                        <span className="font-semibold text-amber-950 block">{f.key}</span>
-                        <p className="text-slate-700 leading-relaxed">{f.value}</p>
+                        <span className="font-bold text-amber-950 block">{f.key}</span>
+                        <p className="text-graphite-700 leading-relaxed font-sans">{f.value}</p>
                       </div>
                       {isReviewer && (
                         <button
                           onClick={() => handleDeleteFact(f._id)}
-                          className="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-amber-100/50 transition-colors"
+                          className="text-graphite-400 hover:text-rose-600 p-1 rounded-lg hover:bg-rose-100/50 transition-colors"
                           title="Delete tone rule"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -488,35 +486,35 @@ export const GuidelinesPage: React.FC = () => {
 
       {/* Upload Document Modal */}
       {isUploadModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-modal border border-slate-200">
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-graphite-950/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-modal border border-[#EAE8E3]">
+            <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-[#F2EFE8]">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600">
+                <div className="w-9 h-9 rounded-xl bg-lavender-50 border border-lavender-100 flex items-center justify-center text-brand-600">
                   <Upload className="w-4 h-4" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">
+                <h3 className="text-base font-bold text-graphite-900">
                   Upload Brand Guideline
                 </h3>
               </div>
               <button
                 onClick={() => setIsUploadModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
+                className="text-graphite-400 hover:text-graphite-600 p-1 rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {uploadError && (
-              <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5">
-                <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+              <div className="mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-start gap-2.5">
+                <AlertCircle className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />
                 <span>{uploadError}</span>
               </div>
             )}
 
             <form onSubmit={handleFileUpload} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-2">
+                <label className="block text-xs font-bold text-graphite-700 mb-2 font-mono text-[11px]">
                   Select Document File (.pdf or .txt, max 10MB)
                 </label>
                 <input
@@ -524,18 +522,18 @@ export const GuidelinesPage: React.FC = () => {
                   accept=".pdf,.txt"
                   required
                   onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                  className="block w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer"
+                  className="block w-full text-xs text-graphite-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-lavender-50 file:text-brand-700 hover:file:bg-lavender-100 cursor-pointer"
                 />
               </div>
 
               {selectedFile && (
-                <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-slate-600 space-y-1">
-                  <div>Name: <span className="font-semibold text-slate-900">{selectedFile.name}</span></div>
-                  <div>Size: <span className="font-mono text-slate-800">{(selectedFile.size / 1024).toFixed(1)} KB</span></div>
+                <div className="p-3.5 bg-ivory-50 border border-[#EAE8E3] rounded-xl text-xs text-graphite-600 space-y-1">
+                  <div>Name: <span className="font-bold text-graphite-900">{selectedFile.name}</span></div>
+                  <div>Size: <span className="font-mono text-graphite-800">{(selectedFile.size / 1024).toFixed(1)} KB</span></div>
                 </div>
               )}
 
-              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#F2EFE8]">
                 <Button
                   type="button"
                   variant="outline"
@@ -561,20 +559,20 @@ export const GuidelinesPage: React.FC = () => {
 
       {/* Manual Fact/Rule Modal */}
       {isFactModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-modal border border-slate-200">
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-graphite-950/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-modal border border-[#EAE8E3]">
+            <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-[#F2EFE8]">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600">
+                <div className="w-9 h-9 rounded-xl bg-lavender-50 border border-lavender-100 flex items-center justify-center text-brand-600">
                   <Plus className="w-4 h-4" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">
+                <h3 className="text-base font-bold text-graphite-900">
                   Add Brand Governance Rule
                 </h3>
               </div>
               <button
                 onClick={() => setIsFactModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
+                className="text-graphite-400 hover:text-graphite-600 p-1 rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -582,23 +580,23 @@ export const GuidelinesPage: React.FC = () => {
 
             <form onSubmit={handleCreateFact} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold text-graphite-700 mb-1.5 font-mono text-[11px]">
                   Rule Category
                 </label>
                 <select
                   value={factType}
                   onChange={(e: any) => setFactType(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+                  className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#EAE8E3] bg-[#FCFBF9] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 font-bold text-graphite-800"
                 >
                   <option value="prohibited_terminology">Prohibited Terminology</option>
                   <option value="approved_terminology">Approved Terminology</option>
                   <option value="fact">Verified Product Fact / Metric</option>
-                  <option value="tone_rule">Tone & Voice Requirement</option>
+                  <option value="tone_rule">Tone &amp; Voice Requirement</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold text-graphite-700 mb-1.5 font-mono text-[11px]">
                   Term / Key Name
                 </label>
                 <input
@@ -613,12 +611,12 @@ export const GuidelinesPage: React.FC = () => {
                       ? 'e.g. ApexFlow Platform'
                       : 'e.g. Uptime SLA'
                   }
-                  className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+                  className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold text-graphite-700 mb-1.5 font-mono text-[11px]">
                   Guidance / Preferred Alternative / Verified Fact
                 </label>
                 <textarea
@@ -631,12 +629,12 @@ export const GuidelinesPage: React.FC = () => {
                       ? 'e.g. Never use cheap; replace with cost-effective or high enterprise ROI.'
                       : 'e.g. Verified 99.99% enterprise uptime SLA across all regions.'
                   }
-                  className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors resize-none"
+                  className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 font-medium resize-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold text-graphite-700 mb-1.5 font-mono text-[11px]">
                   Applicable Context / Channel (Optional)
                 </label>
                 <input
@@ -644,11 +642,11 @@ export const GuidelinesPage: React.FC = () => {
                   value={factContext}
                   onChange={(e) => setFactContext(e.target.value)}
                   placeholder="e.g. Social media, sales decks, global"
-                  className="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-colors"
+                  className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 font-medium"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#F2EFE8]">
                 <Button
                   type="button"
                   variant="outline"
@@ -674,47 +672,47 @@ export const GuidelinesPage: React.FC = () => {
 
       {/* Chunks Preview Modal */}
       {inspectDoc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col p-6 shadow-modal border border-slate-200">
-            <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-graphite-950/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col p-6 sm:p-7 shadow-modal border border-[#EAE8E3]">
+            <div className="flex items-center justify-between pb-3.5 border-b border-[#F2EFE8]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600">
+                <div className="w-9 h-9 rounded-xl bg-lavender-50 border border-lavender-100 flex items-center justify-center text-brand-600">
                   <Layers className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">
+                  <h3 className="text-sm font-bold text-graphite-900">
                     Vector Chunks: {inspectDoc.doc.originalName}
                   </h3>
-                  <p className="text-xs text-slate-500 font-mono">
+                  <p className="text-xs text-graphite-500 font-mono">
                     {inspectDoc.chunks.length} chunks indexed with 768-dim embeddings for RAG retrieval
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setInspectDoc(null)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
+                className="text-graphite-400 hover:text-graphite-600 p-1 rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto py-4 space-y-3">
+            <div className="flex-1 overflow-y-auto py-4 space-y-3 font-mono">
               {inspectDoc.chunks.map((chunk, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
-                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                    <span className="font-mono text-brand-700 bg-brand-50 border border-brand-200/50 px-2 py-0.5 rounded">
+                <div key={idx} className="p-4 rounded-2xl bg-ivory-50 border border-[#EAE8E3] text-xs">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-graphite-500 uppercase tracking-wider mb-2">
+                    <span className="text-brand-700 bg-lavender-50 border border-lavender-200 px-2 py-0.5 rounded">
                       Chunk #{chunk.chunkIndex + 1}
                     </span>
-                    <span className="font-mono text-slate-400">{chunk.content.length} characters</span>
+                    <span className="text-graphite-400">{chunk.content.length} characters</span>
                   </div>
-                  <p className="text-slate-800 leading-relaxed font-sans whitespace-pre-wrap">
+                  <p className="text-graphite-800 leading-relaxed font-sans whitespace-pre-wrap">
                     {chunk.content}
                   </p>
                 </div>
               ))}
             </div>
 
-            <div className="pt-3 border-t border-slate-100 flex justify-end">
+            <div className="pt-3 border-t border-[#F2EFE8] flex justify-end">
               <Button
                 variant="outline"
                 size="md"
