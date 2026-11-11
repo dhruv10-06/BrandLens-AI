@@ -270,7 +270,7 @@ export const DashboardPage: React.FC = () => {
                   )}
                   <Link to={`/submissions/${sub._id}/analysis`}>
                     <Button variant="outline" size="sm">
-                      Audit Dossier
+                      AI Audit Report
                     </Button>
                   </Link>
                 </div>

@@ -151,7 +151,7 @@ export const SubmissionsListPage: React.FC = () => {
                   )}
                   <Link to={`/submissions/${sub._id}/analysis`}>
                     <Button variant="outline" size="sm" iconRight={<ArrowRight className="w-3.5 h-3.5" />}>
-                      Audit Dossier
+                      AI Audit Report
                     </Button>
                   </Link>
                 </div>

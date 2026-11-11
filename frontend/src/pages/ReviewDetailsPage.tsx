@@ -324,7 +324,7 @@ export const ReviewDetailsPage: React.FC = () => {
               to={`/submissions/${submission._id}/analysis`}
               className="text-xs font-semibold text-forest-800 hover:text-forest-900 transition font-mono underline underline-offset-2"
             >
-              Open Full Analysis Report &rarr;
+              Open Full AI Audit Report &rarr;
             </Link>
           </div>
 

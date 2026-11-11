@@ -168,7 +168,7 @@ export const AnalysisResultsPage: React.FC = () => {
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-espresso-600 gap-3">
         <div className="w-8 h-8 border-2 border-forest-800 border-t-transparent rounded-full animate-spin" />
         <span className="text-xs font-semibold tracking-wider text-espresso-700 font-mono">
-          Loading Analysis Results...
+          Loading AI Audit Report...
         </span>
       </div>
     );
@@ -256,6 +256,9 @@ export const AnalysisResultsPage: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-3 max-w-xl">
             <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-forest-900 bg-[#F5EFE4] px-2.5 py-0.5 rounded border border-[#DDD2BF] font-mono">
+                AI Audit Report
+              </span>
               <span className="text-[10px] font-bold uppercase tracking-widest text-espresso-700 bg-[#F5EFE4] px-2.5 py-0.5 rounded border border-[#DDD2BF] font-mono">
                 {submission.contentType.replace('_', ' ')}
               </span>
@@ -495,7 +498,7 @@ export const AnalysisResultsPage: React.FC = () => {
                 <div className="p-8 bg-[#FDFBF7] rounded-xl border border-dashed border-[#DDD2BF] text-center space-y-2">
                   <AlertCircle className="w-8 h-8 text-brass-700 mx-auto" />
                   <h4 className="text-sm font-bold font-serif text-espresso-950">
-                    No Analysis Report Generated Yet
+                    No AI Audit Report Generated Yet
                   </h4>
                   <p className="text-xs text-espresso-700 max-w-sm mx-auto leading-relaxed">
                     This submission is currently saved as a draft. Click <strong>"Re-Analyze Revised Copy"</strong> in the workspace to evaluate brand governance compliance.
