@@ -170,7 +170,7 @@ export class SubmissionController {
             visualFindings: visualResult.visualFindings || [],
           } : undefined,
           retrievedChunkIds: ragResult.guidelineChunkIds,
-          aiModelUsed: visualResult ? 'gemini-2.5-flash-multimodal' : (analysisOutput.aiModelUsed || 'gemini-2.5-flash'),
+          aiModelUsed: visualResult ? `${AnalysisService.MODEL_NAME}-multimodal` : (analysisOutput.aiModelUsed || AnalysisService.MODEL_NAME),
         });
 
         // 6. Update submission status based on findings
@@ -529,7 +529,7 @@ export class SubmissionController {
             visualFindings: visualResult.visualFindings || [],
           } : undefined,
           retrievedChunkIds: ragResult.guidelineChunkIds,
-          aiModelUsed: visualResult ? 'gemini-2.5-flash-multimodal' : (analysisOutput.aiModelUsed || 'gemini-2.5-flash'),
+          aiModelUsed: visualResult ? `${AnalysisService.MODEL_NAME}-multimodal` : (analysisOutput.aiModelUsed || AnalysisService.MODEL_NAME),
         });
 
         const newStatus =

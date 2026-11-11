@@ -198,7 +198,7 @@ const AnalysisReportSchema = new Schema<IAnalysisReport>(
     findings: [FindingSchema],
     visualAnalysis: { type: VisualAnalysisSchema },
     retrievedChunkIds: [{ type: Schema.Types.ObjectId, ref: 'GuidelineChunk' }],
-    aiModelUsed: { type: String, default: 'gemini-2.5-flash' },
+    aiModelUsed: { type: String, default: 'gemini-3.8-flash' },
     processingTimeMs: { type: Number, default: 0 },
   },
   { timestamps: true }

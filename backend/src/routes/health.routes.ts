@@ -20,7 +20,7 @@ router.get('/health', (req: Request, res: Response) => {
     },
     aiService: {
       provider: 'Google Gemini',
-      model: 'gemini-2.5-flash',
+      model: ENV.GEMINI_MODEL,
       configured: Boolean(ENV.GEMINI_API_KEY),
     },
   });

@@ -50,7 +50,9 @@ export const VisualAnalysisResponseSchema = z.object({
 export type VisualAnalysisResult = z.infer<typeof VisualAnalysisResponseSchema>;
 
 export class VisualAnalysisService {
-  private static readonly MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  public static get MODEL_NAME(): string {
+    return process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+  }
   private static readonly REQUEST_TIMEOUT_MS = 30000;
 
   /**
@@ -227,7 +229,6 @@ Return a single JSON object with this exact structure:
               },
             ],
             generationConfig: {
-              temperature: 0.1,
               responseMimeType: 'application/json',
             },
           }),
@@ -242,44 +243,49 @@ Return a single JSON object with this exact structure:
       }
 
       const data: any = await response.json();
-      const parts: any[] = data?.candidates?.[0]?.content?.parts || [];
-
-      // Extract JSON text, skipping internal thought/reasoning blocks
-      let rawText = '';
-      for (const p of parts) {
-        if (p.text && !p.thought) {
-          rawText = p.text;
-          break;
-        }
-      }
-      if (!rawText && parts.length > 0) {
-        rawText = parts[parts.length - 1].text || '';
-      }
-
-      if (!rawText) {
-        const finishReason = data?.candidates?.[0]?.finishReason;
-        throw new Error(`Gemini Multimodal returned an empty response candidate (finishReason: ${finishReason || 'none'}).`);
-      }
-
-      let cleaned = rawText.trim();
-      const jsonMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-      if (jsonMatch) {
-        cleaned = jsonMatch[1].trim();
-      }
-
-      let parsedJSON: any;
-      try {
-        parsedJSON = JSON.parse(cleaned);
-      } catch (err: any) {
-        const simpleCleaned = rawText.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
-        parsedJSON = JSON.parse(simpleCleaned);
-      }
-
-      return VisualAnalysisResponseSchema.parse(parsedJSON);
+      return this.parseGeminiMultimodalResponse(data);
     } catch (err: any) {
       clearTimeout(timeoutId);
       throw err;
     }
+  }
+
+  /**
+   * Safely parses Gemini multimodal candidate parts, skipping internal reasoning/thought tokens,
+   * extracting JSON from markdown codeblocks, and validating against VisualAnalysisResponseSchema.
+   */
+  public static parseGeminiMultimodalResponse(data: any): VisualAnalysisResult {
+    const parts: any[] = data?.candidates?.[0]?.content?.parts || [];
+
+    // Extract JSON text, skipping internal thought/reasoning blocks
+    const nonThoughtParts = parts.filter((p) => p.text && !p.thought);
+    let rawText = '';
+    if (nonThoughtParts.length > 0) {
+      rawText = nonThoughtParts.map((p) => p.text).join('\n');
+    } else if (parts.length > 0) {
+      rawText = parts.map((p) => p.text || '').join('\n');
+    }
+
+    if (!rawText) {
+      const finishReason = data?.candidates?.[0]?.finishReason;
+      throw new Error(`Gemini Multimodal returned an empty response candidate (finishReason: ${finishReason || 'none'}).`);
+    }
+
+    let cleaned = rawText.trim();
+    const jsonMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (jsonMatch) {
+      cleaned = jsonMatch[1].trim();
+    }
+
+    let parsedJSON: any;
+    try {
+      parsedJSON = JSON.parse(cleaned);
+    } catch (err: any) {
+      const simpleCleaned = rawText.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
+      parsedJSON = JSON.parse(simpleCleaned);
+    }
+
+    return VisualAnalysisResponseSchema.parse(parsedJSON);
   }
 
   /**

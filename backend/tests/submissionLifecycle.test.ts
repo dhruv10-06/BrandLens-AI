@@ -167,7 +167,7 @@ describe('Submission Lifecycle & Self-Healing Regression Tests', () => {
       summary: 'Fully compliant brand copy.',
       findings: [],
       retrievedChunkIds: [],
-      aiModelUsed: 'gemini-2.5-flash',
+      aiModelUsed: 'gemini-3.8-flash',
     });
 
     await ContentSubmission.updateOne(

@@ -34,7 +34,9 @@ export const AIAnalysisReportSchema = z.object({
 export type AIAnalysisReport = z.infer<typeof AIAnalysisReportSchema>;
 
 export class AnalysisService {
-  private static readonly MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  public static get MODEL_NAME(): string {
+    return process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+  }
   private static readonly REQUEST_TIMEOUT_MS = 25000;
 
   /**
@@ -180,7 +182,6 @@ Return a single JSON object with the following structure:
               },
             ],
             generationConfig: {
-              temperature: 0.1, // low temperature for consistent, grounded compliance checking
               responseMimeType: 'application/json',
             },
           }),
@@ -195,42 +196,7 @@ Return a single JSON object with the following structure:
       }
 
       const data: any = await response.json();
-      const parts: any[] = data?.candidates?.[0]?.content?.parts || [];
-
-      // Extract JSON text, skipping internal thought/reasoning blocks
-      let rawJson = '';
-      for (const p of parts) {
-        if (p.text && !p.thought) {
-          rawJson = p.text;
-          break;
-        }
-      }
-      if (!rawJson && parts.length > 0) {
-        rawJson = parts[parts.length - 1].text || '';
-      }
-
-      if (!rawJson) {
-        const finishReason = data?.candidates?.[0]?.finishReason;
-        throw new Error(`Gemini API returned an empty candidate text response (finishReason: ${finishReason || 'none'}).`);
-      }
-
-      // Parse JSON safely with markdown codeblock extraction
-      let parsedObj: any;
-      let cleaned = rawJson.trim();
-      const jsonMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-      if (jsonMatch) {
-        cleaned = jsonMatch[1].trim();
-      }
-      try {
-        parsedObj = JSON.parse(cleaned);
-      } catch (err: any) {
-        const simpleCleaned = rawJson.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
-        parsedObj = JSON.parse(simpleCleaned);
-      }
-
-      // Validate against Zod schema
-      const validated = AIAnalysisReportSchema.parse(parsedObj);
-      return validated;
+      return this.parseGeminiResponse(data);
     } catch (err: any) {
       clearTimeout(timeoutId);
       if (err.name === 'AbortError') {
@@ -238,6 +204,46 @@ Return a single JSON object with the following structure:
       }
       throw err;
     }
+  }
+
+  /**
+   * Safely parses Gemini candidate parts, skipping internal reasoning/thought tokens,
+   * extracting JSON from markdown codeblocks, and validating against AIAnalysisReportSchema.
+   */
+  public static parseGeminiResponse(data: any): AIAnalysisReport {
+    const parts: any[] = data?.candidates?.[0]?.content?.parts || [];
+
+    // Extract JSON text, skipping internal thought/reasoning blocks
+    const nonThoughtParts = parts.filter((p) => p.text && !p.thought);
+    let rawJson = '';
+    if (nonThoughtParts.length > 0) {
+      rawJson = nonThoughtParts.map((p) => p.text).join('\n');
+    } else if (parts.length > 0) {
+      rawJson = parts.map((p) => p.text || '').join('\n');
+    }
+
+    if (!rawJson) {
+      const finishReason = data?.candidates?.[0]?.finishReason;
+      throw new Error(`Gemini API returned an empty candidate text response (finishReason: ${finishReason || 'none'}).`);
+    }
+
+    // Parse JSON safely with markdown codeblock extraction
+    let parsedObj: any;
+    let cleaned = rawJson.trim();
+    const jsonMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (jsonMatch) {
+      cleaned = jsonMatch[1].trim();
+    }
+    try {
+      parsedObj = JSON.parse(cleaned);
+    } catch (err: any) {
+      const simpleCleaned = rawJson.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
+      parsedObj = JSON.parse(simpleCleaned);
+    }
+
+    // Validate against Zod schema
+    const validated = AIAnalysisReportSchema.parse(parsedObj);
+    return validated;
   }
 
   /**

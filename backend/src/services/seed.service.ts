@@ -273,7 +273,7 @@ Claims regarding platform metrics must strictly adhere to verified benchmarks: "
         visualFindings: visualResult.visualFindings,
       },
       retrievedChunkIds: ragResult.guidelineChunkIds,
-      aiModelUsed: 'gemini-2.5-flash-multimodal',
+      aiModelUsed: 'gemini-3.8-flash-multimodal',
       processingTimeMs: 920,
     });
 
@@ -313,7 +313,7 @@ Claims regarding platform metrics must strictly adhere to verified benchmarks: "
       summary: 'Content aligns smoothly with approved brand guidelines and tone parameters. No critical violations detected.',
       findings: [],
       retrievedChunkIds: ragResult.guidelineChunkIds,
-      aiModelUsed: 'gemini-2.5-flash',
+      aiModelUsed: 'gemini-3.8-flash',
       processingTimeMs: 640,
     });
 
