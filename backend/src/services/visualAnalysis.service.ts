@@ -53,7 +53,10 @@ export class VisualAnalysisService {
   public static get MODEL_NAME(): string {
     return process.env.GEMINI_MODEL || 'gemini-3.8-flash';
   }
-  private static readonly REQUEST_TIMEOUT_MS = 30000;
+  public static get REQUEST_TIMEOUT_MS(): number {
+    const parsed = parseInt(process.env.GEMINI_TIMEOUT_MS || '', 10);
+    return Number.isFinite(parsed) && parsed >= 5000 ? parsed : 60000;
+  }
 
   /**
    * Run Visual Brand Compliance analysis on an image buffer or base64 data URL.
@@ -246,6 +249,9 @@ Return a single JSON object with this exact structure:
       return this.parseGeminiMultimodalResponse(data);
     } catch (err: any) {
       clearTimeout(timeoutId);
+      if (err.name === 'AbortError') {
+        throw new Error(`Gemini Multimodal API request timed out after ${this.REQUEST_TIMEOUT_MS / 1000} seconds.`);
+      }
       throw err;
     }
   }

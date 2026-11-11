@@ -317,5 +317,51 @@ describe('Gemini 3.8 Flash Migration & Response Parsing Tests', () => {
       }
     });
   });
+
+  describe('5. Timeout Configuration Handling for Gemini 3.8 Flash', () => {
+    const originalEnvTimeout = process.env.GEMINI_TIMEOUT_MS;
+
+    beforeEach(() => {
+      delete process.env.GEMINI_TIMEOUT_MS;
+    });
+
+    afterEach(() => {
+      if (originalEnvTimeout !== undefined) {
+        process.env.GEMINI_TIMEOUT_MS = originalEnvTimeout;
+      } else {
+        delete process.env.GEMINI_TIMEOUT_MS;
+      }
+    });
+
+    it('defaults REQUEST_TIMEOUT_MS to 60000ms (60 seconds) for both text and visual services', () => {
+      delete process.env.GEMINI_TIMEOUT_MS;
+      expect(AnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+      expect(VisualAnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+    });
+
+    it('dynamically respects GEMINI_TIMEOUT_MS when configured in environment', () => {
+      process.env.GEMINI_TIMEOUT_MS = '75000';
+      expect(AnalysisService.REQUEST_TIMEOUT_MS).toBe(75000);
+      expect(VisualAnalysisService.REQUEST_TIMEOUT_MS).toBe(75000);
+    });
+
+    it('safely falls back to 60000ms when GEMINI_TIMEOUT_MS is invalid, non-numeric, or too small', () => {
+      process.env.GEMINI_TIMEOUT_MS = 'invalid_string';
+      expect(AnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+      expect(VisualAnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+
+      process.env.GEMINI_TIMEOUT_MS = '-1000';
+      expect(AnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+      expect(VisualAnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+
+      process.env.GEMINI_TIMEOUT_MS = '0';
+      expect(AnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+      expect(VisualAnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+
+      process.env.GEMINI_TIMEOUT_MS = '1000'; // Less than 5000ms minimum threshold
+      expect(AnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+      expect(VisualAnalysisService.REQUEST_TIMEOUT_MS).toBe(60000);
+    });
+  });
 });
 

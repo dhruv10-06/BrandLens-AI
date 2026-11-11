@@ -208,7 +208,7 @@ describe('Submission Lifecycle & Self-Healing Regression Tests', () => {
 
     await ContentSubmission.updateOne(
       { _id: orphanedSub._id },
-      { $set: { updatedAt: new Date(Date.now() - 45000), createdAt: new Date(Date.now() - 45000) } },
+      { $set: { updatedAt: new Date(Date.now() - 75000), createdAt: new Date(Date.now() - 75000) } },
       { timestamps: false }
     );
 

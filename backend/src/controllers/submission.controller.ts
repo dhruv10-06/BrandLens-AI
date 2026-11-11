@@ -269,10 +269,11 @@ export class SubmissionController {
         submission.latestAnalysisId = report;
       }
     } else {
-      // No report found. If submission was created/updated > 30 seconds ago, it is stuck
+      // No report found. If submission was created/updated > timeout period ago, it is stuck
       const lastModified = submission.updatedAt ? new Date(submission.updatedAt).getTime() : 0;
       const ageMs = Date.now() - lastModified;
-      if (ageMs > 30000) {
+      const stuckThresholdMs = Math.max(AnalysisService.REQUEST_TIMEOUT_MS, 60000);
+      if (ageMs > stuckThresholdMs) {
         await ContentSubmission.updateOne(
           { _id: submission._id },
           { $set: { status: 'draft' } }

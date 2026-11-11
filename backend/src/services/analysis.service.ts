@@ -37,7 +37,10 @@ export class AnalysisService {
   public static get MODEL_NAME(): string {
     return process.env.GEMINI_MODEL || 'gemini-3.8-flash';
   }
-  private static readonly REQUEST_TIMEOUT_MS = 25000;
+  public static get REQUEST_TIMEOUT_MS(): number {
+    const parsed = parseInt(process.env.GEMINI_TIMEOUT_MS || '', 10);
+    return Number.isFinite(parsed) && parsed >= 5000 ? parsed : 60000;
+  }
 
   /**
    * Evaluates submitted content against retrieved RAG evidence using Gemini.
