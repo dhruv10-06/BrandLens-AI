@@ -4,8 +4,9 @@ import { reviewApi } from '../api/review.api.ts';
 import { ContentSubmission } from '../types/index.ts';
 import { StatusBadge } from '../components/common/Badge.tsx';
 import { ScoreGauge } from '../components/common/ScoreGauge.tsx';
+import { Button } from '../components/common/Button.tsx';
 import { useAuth } from '../context/AuthContext.tsx';
-import { CheckSquare, ShieldAlert, ArrowRight, User, Clock, AlertTriangle } from 'lucide-react';
+import { CheckSquare, ArrowRight, User, Clock, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 export const ReviewQueuePage: React.FC = () => {
   const { user } = useAuth();
@@ -32,67 +33,73 @@ export const ReviewQueuePage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200/80">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-bold uppercase tracking-wider mb-2">
             <CheckSquare className="w-3.5 h-3.5" />
             <span>Human Governance Gate</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Brand Review Queue
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Submissions requiring human sign-off, approval, or rejection before publication.
           </p>
         </div>
+
+        <Button variant="outline" size="sm" onClick={fetchQueue}>
+          Refresh Queue
+        </Button>
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5">
-          <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-          <span>{error}</span>
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start gap-2.5 shadow-subtle">
+          <AlertTriangle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
+          <span className="font-semibold">{error}</span>
         </div>
       )}
 
       {/* Queue Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-stone-200/90 shadow-card overflow-hidden">
         {isLoading ? (
-          <div className="p-12 text-center text-xs text-slate-400">Loading review queue...</div>
+          <div className="p-16 text-center text-xs text-slate-400">Loading review queue...</div>
         ) : queue.length === 0 ? (
-          <div className="p-12 text-center space-y-2">
-            <CheckSquare className="w-8 h-8 text-emerald-500 mx-auto" />
-            <h3 className="text-sm font-bold text-slate-800">Review Queue Clear</h3>
-            <p className="text-xs text-slate-400">
-              No submissions are currently pending brand sign-off.
+          <div className="p-16 text-center space-y-3">
+            <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 mx-auto flex items-center justify-center">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-900 tracking-tight">Review Queue Clear</h3>
+            <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+              No submissions are currently pending brand sign-off. Outbound content is currently up to date.
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-stone-100">
             {queue.map((sub) => {
               const isOwnContent = sub.creatorId?._id === user?.id;
               return (
                 <div
                   key={sub._id}
-                  className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/50 transition"
+                  className="p-5 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-stone-50/60 transition-colors"
                 >
                   <div className="space-y-1.5 max-w-xl">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-bold text-slate-900">{sub.title}</span>
-                      <span className="text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded capitalize">
+                      <span className="text-sm font-bold text-slate-900 tracking-tight">{sub.title}</span>
+                      <span className="text-[10px] font-bold text-slate-600 bg-stone-100 px-2 py-0.5 rounded border border-stone-200/60 uppercase tracking-wide font-mono">
                         {sub.contentType.replace('_', ' ')}
                       </span>
                       <StatusBadge status={sub.status} />
                       {isOwnContent && (
-                        <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full font-mono">
                           Your Own Content (Separation of duties applies)
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed italic">
                       "{sub.currentContent}"
                     </p>
-                    <div className="text-[11px] text-slate-400 flex items-center gap-3">
-                      <span className="flex items-center gap-1">
+                    <div className="text-[11px] text-slate-400 flex items-center gap-3 pt-0.5 font-mono">
+                      <span className="flex items-center gap-1 text-slate-600">
                         <User className="w-3 h-3 text-slate-400" />
                         {sub.creatorId?.name}
                       </span>
@@ -108,12 +115,10 @@ export const ReviewQueuePage: React.FC = () => {
                     {sub.latestAnalysisId?.overallComplianceScore !== undefined && (
                       <ScoreGauge score={sub.latestAnalysisId.overallComplianceScore} size="sm" />
                     )}
-                    <Link
-                      to={`/review/${sub._id}`}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition"
-                    >
-                      <span>Review & Decide</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                    <Link to={`/review/${sub._id}`}>
+                      <Button variant="accent" size="sm" iconRight={<ArrowRight className="w-3.5 h-3.5" />}>
+                        Review & Decide
+                      </Button>
                     </Link>
                   </div>
                 </div>
@@ -125,4 +130,3 @@ export const ReviewQueuePage: React.FC = () => {
     </div>
   );
 };
-

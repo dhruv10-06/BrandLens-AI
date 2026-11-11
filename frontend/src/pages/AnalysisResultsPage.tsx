@@ -5,6 +5,7 @@ import { ContentSubmission, AnalysisReport, Finding, FindingSeverity, VisualFind
 import { ScoreGauge } from '../components/common/ScoreGauge.tsx';
 import { StatusBadge, SeverityBadge } from '../components/common/Badge.tsx';
 import { FindingCard } from '../components/analysis/FindingCard.tsx';
+import { Button } from '../components/common/Button.tsx';
 import { useAuth } from '../context/AuthContext.tsx';
 import {
   AlertTriangle,
@@ -26,6 +27,7 @@ import {
   Layers,
   AlertCircle,
   HelpCircle,
+  Clock,
 } from 'lucide-react';
 
 export const AnalysisResultsPage: React.FC = () => {
@@ -99,10 +101,13 @@ export const AnalysisResultsPage: React.FC = () => {
     try {
       const res = await submissionsApi.updateContent(id, {
         content: editableContent,
-        reason: 'Manual edits or applied suggestions in brand editor',
+        reason: 'Creator manual revisions applied via governance workspace',
       });
       setSubmission(res.submission);
-      setActionMessage({ type: 'success', text: 'Draft revisions saved successfully.' });
+      setActionMessage({
+        type: 'success',
+        text: 'Changes saved to submission record. Click "Re-Analyze Revised Copy" to update governance scores.',
+      });
     } catch (err: any) {
       setActionMessage({
         type: 'error',
@@ -113,37 +118,38 @@ export const AnalysisResultsPage: React.FC = () => {
     }
   };
 
-  // Re-run RAG and Visual analysis on revised content
+  // Trigger AI re-analysis on updated content
   const handleReanalyze = async () => {
     if (!id) return;
     setIsReanalyzing(true);
     setActionMessage(null);
     try {
-      // First save current content
-      await submissionsApi.updateContent(id, {
-        content: editableContent,
-        reason: 'Pre-reanalysis content update',
-      });
-      // Then trigger reanalysis
+      if (editableContent !== submission?.currentContent) {
+        await submissionsApi.updateContent(id, {
+          content: editableContent,
+          reason: 'Auto-saved prior to re-analysis',
+        });
+      }
+
       const res = await submissionsApi.reanalyzeSubmission(id);
       setSubmission(res.submission);
       setAnalysis(res.analysis);
       setAppliedCorrections([]);
       setActionMessage({
         type: 'success',
-        text: 'Re-analysis complete! Brand compliance score, text findings, and visual metrics have been updated.',
+        text: 'Re-analysis complete! Brand governance score and audit findings have been updated.',
       });
     } catch (err: any) {
       setActionMessage({
         type: 'error',
-        text: err.response?.data?.error || 'Re-analysis failed.',
+        text: err.response?.data?.error || 'Re-analysis failed. Please check network connectivity.',
       });
     } finally {
       setIsReanalyzing(false);
     }
   };
 
-  // Submit to Review Queue
+  // Submit to human review queue
   const handleSubmitForReview = async () => {
     if (!id) return;
     setIsSubmittingReview(true);
@@ -153,12 +159,12 @@ export const AnalysisResultsPage: React.FC = () => {
       setSubmission(res.submission);
       setActionMessage({
         type: 'success',
-        text: 'Content submitted to the Brand Review Queue for human reviewer sign-off!',
+        text: 'Content submitted to the reviewer queue for formal human publication authorization.',
       });
     } catch (err: any) {
       setActionMessage({
         type: 'error',
-        text: err.response?.data?.error || 'Failed to submit for review.',
+        text: err.response?.data?.error || 'Failed to route submission for review.',
       });
     } finally {
       setIsSubmittingReview(false);
@@ -167,17 +173,22 @@ export const AnalysisResultsPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="p-12 text-center text-xs text-slate-400 space-y-3">
-        <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p>Loading brand governance findings...</p>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-slate-500 gap-3">
+        <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs font-semibold tracking-wide text-slate-600">Retrieving Brand Governance Audit...</span>
       </div>
     );
   }
 
   if (!submission) {
     return (
-      <div className="p-8 text-center text-sm text-slate-500">
-        Submission not found.
+      <div className="p-8 rounded-xl bg-white border border-stone-200 text-center max-w-md mx-auto my-12 shadow-card">
+        <AlertTriangle className="w-8 h-8 text-amber-500 mx-auto mb-2" />
+        <h3 className="text-sm font-bold text-slate-900">Submission Not Found</h3>
+        <p className="text-xs text-slate-500 mt-1">This submission could not be retrieved from your workspace.</p>
+        <Link to="/submissions" className="mt-4 inline-block">
+          <Button variant="outline" size="sm">Back to Submissions</Button>
+        </Link>
       </div>
     );
   }
@@ -209,40 +220,37 @@ export const AnalysisResultsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Back and Reviewer Action Bridge */}
+      {/* Top Navigation Bridge */}
       <div className="flex items-center justify-between">
         <Link
           to="/submissions"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Submissions</span>
         </Link>
 
         {isReviewerRole && !isCreatorOfSubmission && (
-          <Link
-            to={`/review/${submission._id}`}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition"
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Open Reviewer Sign-Off Deck</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+          <Link to={`/review/${submission._id}`}>
+            <Button variant="accent" size="sm" icon={<ShieldCheck className="w-3.5 h-3.5" />} iconRight={<ChevronRight className="w-3.5 h-3.5" />}>
+              Open Reviewer Sign-Off Deck
+            </Button>
           </Link>
         )}
       </div>
 
       {actionMessage && (
         <div
-          className={`p-4 rounded-xl border text-xs flex items-center justify-between gap-3 ${
+          className={`p-4 rounded-xl border text-xs flex items-center justify-between gap-3 shadow-subtle ${
             actionMessage.type === 'success'
               ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-              : 'bg-red-50 border-red-200 text-red-800'
+              : 'bg-rose-50 border-rose-200 text-rose-800'
           }`}
         >
-          <span>{actionMessage.text}</span>
+          <span className="font-semibold">{actionMessage.text}</span>
           <button
             onClick={() => setActionMessage(null)}
-            className="text-xs font-bold underline ml-2"
+            className="text-xs font-bold underline ml-2 hover:opacity-80 transition"
           >
             Dismiss
           </button>
@@ -250,26 +258,26 @@ export const AnalysisResultsPage: React.FC = () => {
       )}
 
       {/* Overview Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-stone-200/90 shadow-card p-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-xl">
+          <div className="space-y-2.5 max-w-xl">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 bg-stone-100 px-2 py-0.5 rounded border border-stone-200/60 font-mono">
                 {submission.contentType.replace('_', ' ')}
               </span>
               <StatusBadge status={submission.status} />
               {submission.submissionFormat && (
-                <span className="text-[11px] font-bold uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-mono">
                   {submission.submissionFormat}
                 </span>
               )}
-              <span className="text-xs text-slate-400">• Version {submission.version}</span>
+              <span className="text-xs text-slate-400 font-mono">• Version {submission.version}</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
               {submission.title}
             </h1>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              {analysis?.summary || 'Draft saved. Click "Re-Analyze Revised Copy" above to run brand compliance checks.'}
+            <p className="text-xs text-slate-600 leading-relaxed font-normal">
+              {analysis?.summary || 'Draft saved. Click "Re-Analyze Revised Copy" below to run brand compliance checks.'}
             </p>
           </div>
 
@@ -278,9 +286,9 @@ export const AnalysisResultsPage: React.FC = () => {
               <ScoreGauge score={analysis.overallComplianceScore} size="md" />
             )}
             {visualAnalysis && (
-              <div className="p-3 rounded-2xl bg-purple-50 border border-purple-100 text-center">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-purple-600">Visual Score</div>
-                <div className="text-2xl font-extrabold text-purple-900 mt-0.5">
+              <div className="p-4 rounded-xl bg-purple-50/80 border border-purple-200 text-center shadow-subtle min-w-[130px]">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-purple-700">Visual Score</div>
+                <div className="text-2xl font-extrabold font-mono text-purple-900 mt-0.5 tabular-nums">
                   {visualAnalysis.overallVisualScore}%
                 </div>
                 <div className="text-[10px] text-purple-700 font-medium">Multimodal Audit</div>
@@ -290,22 +298,22 @@ export const AnalysisResultsPage: React.FC = () => {
         </div>
 
         {/* Severity Metrics Strip */}
-        <div className="mt-6 pt-5 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3 rounded-xl bg-red-50/50 border border-red-100 flex items-center justify-between">
-            <span className="text-xs font-bold text-red-800">Critical Issues</span>
-            <span className="text-base font-extrabold text-red-700">{severityCounts.Critical}</span>
+        <div className="mt-6 pt-5 border-t border-stone-100 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-3.5 rounded-xl bg-rose-50/60 border border-rose-200/80 flex items-center justify-between">
+            <span className="text-xs font-bold text-rose-800">Critical Issues</span>
+            <span className="text-base font-extrabold font-mono text-rose-700 tabular-nums">{severityCounts.Critical}</span>
           </div>
-          <div className="p-3 rounded-xl bg-orange-50/50 border border-orange-100 flex items-center justify-between">
+          <div className="p-3.5 rounded-xl bg-orange-50/60 border border-orange-200/80 flex items-center justify-between">
             <span className="text-xs font-bold text-orange-800">High Severity</span>
-            <span className="text-base font-extrabold text-orange-700">{severityCounts.High}</span>
+            <span className="text-base font-extrabold font-mono text-orange-700 tabular-nums">{severityCounts.High}</span>
           </div>
-          <div className="p-3 rounded-xl bg-amber-50/50 border border-amber-100 flex items-center justify-between">
+          <div className="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/80 flex items-center justify-between">
             <span className="text-xs font-bold text-amber-800">Medium Severity</span>
-            <span className="text-base font-extrabold text-amber-700">{severityCounts.Medium}</span>
+            <span className="text-base font-extrabold font-mono text-amber-700 tabular-nums">{severityCounts.Medium}</span>
           </div>
-          <div className="p-3 rounded-xl bg-blue-50/50 border border-blue-100 flex items-center justify-between">
-            <span className="text-xs font-bold text-blue-800">Low / Minor</span>
-            <span className="text-base font-extrabold text-blue-700">{severityCounts.Low}</span>
+          <div className="p-3.5 rounded-xl bg-sky-50/60 border border-sky-200/80 flex items-center justify-between">
+            <span className="text-xs font-bold text-sky-800">Low / Minor</span>
+            <span className="text-base font-extrabold font-mono text-sky-700 tabular-nums">{severityCounts.Low}</span>
           </div>
         </div>
       </div>
@@ -316,18 +324,18 @@ export const AnalysisResultsPage: React.FC = () => {
         <div className="lg:col-span-6 space-y-4">
           {/* Visual Creative Showcase Card (if attached) */}
           {submission.visualAsset && (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3">
+            <div className="bg-white rounded-xl border border-stone-200/90 shadow-card p-5 space-y-3.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ImageIcon className="w-4 h-4 text-purple-600" />
-                  <span className="text-xs font-bold text-slate-900">Uploaded Visual Creative</span>
+                  <span className="text-xs font-bold text-slate-900 tracking-tight">Uploaded Visual Creative</span>
                 </div>
                 <span className="text-[11px] text-slate-400 font-mono">
                   {submission.visualAsset.filename}
                 </span>
               </div>
 
-              <div className="rounded-xl overflow-hidden bg-slate-950 border border-slate-200 flex items-center justify-center p-2">
+              <div className="rounded-xl overflow-hidden bg-slate-950 border border-slate-200 flex items-center justify-center p-2.5 shadow-subtle">
                 <img
                   src={submission.visualAsset.dataUrl}
                   alt={submission.visualAsset.filename}
@@ -336,24 +344,24 @@ export const AnalysisResultsPage: React.FC = () => {
               </div>
 
               {visualAnalysis && (
-                <div className="pt-2 grid grid-cols-3 gap-2 text-center text-xs">
-                  <div className="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="pt-2 grid grid-cols-3 gap-2.5 text-center text-xs">
+                  <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80">
                     <span className="text-[10px] text-slate-400 uppercase font-bold block">Logo Check</span>
-                    <span className={`text-xs font-extrabold ${
-                      visualAnalysis.logoAnalysis.complianceStatus === 'compliant' ? 'text-emerald-700' : 'text-red-700'
+                    <span className={`text-xs font-extrabold uppercase font-mono ${
+                      visualAnalysis.logoAnalysis.complianceStatus === 'compliant' ? 'text-emerald-700' : 'text-rose-700'
                     }`}>
-                      {visualAnalysis.logoAnalysis.complianceStatus.toUpperCase()}
+                      {visualAnalysis.logoAnalysis.complianceStatus}
                     </span>
                   </div>
-                  <div className="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80">
                     <span className="text-[10px] text-slate-400 uppercase font-bold block">Colors Found</span>
-                    <span className="text-xs font-extrabold text-slate-800">
+                    <span className="text-xs font-extrabold text-slate-800 font-mono">
                       {visualAnalysis.detectedColors.length} Swatches
                     </span>
                   </div>
-                  <div className="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80">
                     <span className="text-[10px] text-slate-400 uppercase font-bold block">Legibility</span>
-                    <span className="text-xs font-extrabold text-indigo-700">
+                    <span className="text-xs font-extrabold text-indigo-700 font-mono tabular-nums">
                       {visualAnalysis.typographyAnalysis.readabilityScore || 90}/100
                     </span>
                   </div>
@@ -362,79 +370,80 @@ export const AnalysisResultsPage: React.FC = () => {
             </div>
           )}
 
-          {/* Copy Editor (Shown if there is written content) */}
+          {/* Copy Revision Workspace (if written content exists) */}
           {submission.currentContent && submission.submissionFormat !== 'image' && (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div className="bg-white rounded-xl border border-stone-200/90 shadow-card p-5 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-stone-100">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">Copy Revision Workspace</h3>
+                  <h3 className="text-sm font-bold text-slate-900 tracking-tight">Copy Revision Workspace</h3>
                   <p className="text-[11px] text-slate-400">
-                    Click 'Apply Correction' or edit manually, then re-analyze copy.
+                    Apply automated suggestions or edit directly, then re-analyze copy
                   </p>
                 </div>
 
-                <button
-                  type="button"
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={handleSaveEdits}
-                  disabled={isSaving}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition"
+                  isLoading={isSaving}
+                  icon={<Save className="w-3.5 h-3.5" />}
                 >
-                  <Save className="w-3.5 h-3.5" />
-                  <span>{isSaving ? 'Saving...' : 'Save Draft'}</span>
-                </button>
+                  Save Draft
+                </Button>
               </div>
 
               <textarea
                 rows={10}
                 value={editableContent}
                 onChange={(e) => setEditableContent(e.target.value)}
-                className="w-full p-4 text-xs font-sans rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 leading-relaxed font-mono resize-y"
+                className="w-full p-4 text-xs font-sans rounded-xl border border-stone-200/90 focus:outline-none focus:ring-2 focus:ring-brand-500 bg-stone-50/40 text-slate-900 leading-relaxed font-mono resize-y"
               />
 
               {/* Actions Toolbar */}
               <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                <button
-                  type="button"
+                <Button
+                  variant="secondary"
+                  size="md"
                   onClick={handleReanalyze}
-                  disabled={isReanalyzing}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition shadow-sm disabled:opacity-50"
+                  isLoading={isReanalyzing}
+                  icon={<RefreshCw className={`w-3.5 h-3.5 ${isReanalyzing ? 'animate-spin' : ''}`} />}
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${isReanalyzing ? 'animate-spin' : ''}`} />
-                  <span>{isReanalyzing ? 'Re-analyzing...' : 'Re-Analyze Revised Copy'}</span>
-                </button>
+                  Re-Analyze Revised Copy
+                </Button>
 
-                <button
-                  type="button"
+                <Button
+                  variant="primary"
+                  size="md"
                   onClick={handleSubmitForReview}
-                  disabled={isSubmittingReview || submission.status === 'approved'}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs transition shadow-sm disabled:opacity-50"
+                  isLoading={isSubmittingReview}
+                  disabled={submission.status === 'approved'}
+                  icon={<Send className="w-3.5 h-3.5" />}
                 >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Submit to Review Queue</span>
-                </button>
+                  Submit to Review Queue
+                </Button>
               </div>
             </div>
           )}
 
           {/* Original Content Reference Accordion */}
-          <div className="bg-slate-50 rounded-xl border border-slate-200 p-4 text-xs">
+          <div className="bg-stone-50/80 rounded-xl border border-stone-200/80 p-4 text-xs">
             <div className="font-bold text-slate-700 mb-1">Original Submission Reference:</div>
-            <p className="text-slate-500 italic line-clamp-3">"{submission.originalContent}"</p>
+            <p className="text-slate-500 italic line-clamp-3 leading-relaxed">"{submission.originalContent}"</p>
           </div>
         </div>
 
         {/* Right Column: AI Findings Cards & Visual Diagnostics */}
         <div className="lg:col-span-6 space-y-4">
           {/* Tab Switcher between Written Findings and Visual Diagnostics */}
-          <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+          <div className="flex items-center justify-between border-b border-stone-200/80 pb-2.5">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setActiveTab('copy')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   activeTab === 'copy'
                     ? 'bg-brand-600 text-white shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-100'
+                    : 'text-slate-600 hover:bg-stone-100'
                 }`}
               >
                 <span>Copy Findings ({findings.length})</span>
@@ -444,10 +453,10 @@ export const AnalysisResultsPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setActiveTab('visual')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                     activeTab === 'visual'
                       ? 'bg-purple-600 text-white shadow-sm'
-                      : 'text-slate-600 hover:bg-slate-100'
+                      : 'text-slate-600 hover:bg-stone-100'
                   }`}
                 >
                   <Palette className="w-3.5 h-3.5" />
@@ -457,15 +466,15 @@ export const AnalysisResultsPage: React.FC = () => {
             </div>
 
             {/* Severity Filter Pills */}
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg text-[11px] font-semibold">
+            <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-lg text-[11px] font-semibold">
               {(['All', 'Critical', 'High', 'Medium', 'Low'] as const).map((sev) => (
                 <button
                   key={sev}
                   type="button"
                   onClick={() => setSeverityFilter(sev)}
-                  className={`px-2 py-0.5 rounded transition ${
+                  className={`px-2.5 py-0.5 rounded-md transition ${
                     severityFilter === sev
-                      ? 'bg-white text-slate-900 shadow-xs'
+                      ? 'bg-white text-slate-900 shadow-subtle font-bold'
                       : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
@@ -479,17 +488,17 @@ export const AnalysisResultsPage: React.FC = () => {
           {activeTab === 'copy' && (
             <div className="space-y-3">
               {!analysis ? (
-                <div className="p-8 bg-white rounded-2xl border border-dashed border-slate-300 text-center space-y-2">
+                <div className="p-8 bg-white rounded-xl border border-dashed border-stone-300 text-center space-y-2">
                   <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
                   <h4 className="text-sm font-bold text-slate-900">
                     No Analysis Report Generated Yet
                   </h4>
-                  <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
                     This submission is currently saved as a draft. Click <strong>"Re-Analyze Revised Copy"</strong> in the workspace to evaluate brand governance compliance.
                   </p>
                 </div>
               ) : filteredTextFindings.length === 0 ? (
-                <div className="p-8 bg-white rounded-2xl border border-slate-200 text-center space-y-2">
+                <div className="p-8 bg-white rounded-xl border border-stone-200 text-center space-y-2 shadow-card">
                   <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
                   <h4 className="text-sm font-bold text-slate-900">
                     {severityFilter === 'All'
@@ -497,7 +506,7 @@ export const AnalysisResultsPage: React.FC = () => {
                       : `No ${severityFilter} severity issues found.`}
                   </h4>
                   <p className="text-xs text-slate-400">
-                    Draft text adheres cleanly to indexed guidelines, approved terminology, and verified facts.
+                    Draft text adheres cleanly to indexed guidelines, approved terminology, and verified brand facts.
                   </p>
                 </div>
               ) : (
@@ -517,32 +526,32 @@ export const AnalysisResultsPage: React.FC = () => {
           {activeTab === 'visual' && visualAnalysis && (
             <div className="space-y-4">
               {/* Palette & Swatches Analysis Card */}
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+              <div className="p-5 rounded-xl bg-white border border-stone-200/90 shadow-card space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                     <Palette className="w-4 h-4 text-purple-600" />
                     <span>Detected Color Palette vs Brand Standard</span>
                   </span>
-                  <span className="text-[11px] text-slate-400">Multimodal Swatch Inspection</span>
+                  <span className="text-[11px] text-slate-400 font-mono">Multimodal Swatch Inspection</span>
                 </div>
 
                 <div className="flex flex-wrap gap-2.5 pt-1">
                   {visualAnalysis.detectedColors.map((color, idx) => (
                     <div
                       key={idx}
-                      className="p-2 rounded-xl border border-slate-200 bg-slate-50 flex items-center gap-2"
+                      className="p-2.5 rounded-xl border border-stone-200 bg-stone-50/70 flex items-center gap-2.5 shadow-subtle"
                     >
                       <div
-                        className="w-6 h-6 rounded-lg border border-black/10 shadow-xs flex-shrink-0"
+                        className="w-6 h-6 rounded-lg border border-black/10 shadow-subtle flex-shrink-0"
                         style={{ backgroundColor: color.hex }}
                       />
                       <div className="text-[11px] leading-tight">
-                        <div className="font-mono font-bold text-slate-800">{color.hex}</div>
-                        <div className="text-[10px] text-slate-500">
+                        <div className="font-mono font-bold text-slate-900">{color.hex}</div>
+                        <div className="text-[10px] mt-0.5">
                           {color.isApprovedBrandColor ? (
                             <span className="text-emerald-700 font-semibold">Approved Brand Color</span>
                           ) : (
-                            <span className="text-red-600 font-semibold">Unapproved Shade</span>
+                            <span className="text-rose-600 font-semibold">Unapproved Shade</span>
                           )}
                         </div>
                       </div>
@@ -552,35 +561,35 @@ export const AnalysisResultsPage: React.FC = () => {
               </div>
 
               {/* Logo Usage Card */}
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+              <div className="p-5 rounded-xl bg-white border border-stone-200/90 shadow-card space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-indigo-600" />
                     <span>Logo Placement & Clear Space</span>
                   </span>
-                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
+                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded font-mono ${
                     visualAnalysis.logoAnalysis.complianceStatus === 'compliant'
                       ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-red-100 text-red-800'
+                      : 'bg-rose-100 text-rose-800'
                   }`}>
                     {visualAnalysis.logoAnalysis.complianceStatus}
                   </span>
                 </div>
-                <p className="text-xs text-slate-600">{visualAnalysis.logoAnalysis.details}</p>
+                <p className="text-xs text-slate-600 leading-relaxed">{visualAnalysis.logoAnalysis.details}</p>
               </div>
 
               {/* Typography Diagnostics */}
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+              <div className="p-5 rounded-xl bg-white border border-stone-200/90 shadow-card space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                     <Type className="w-4 h-4 text-blue-600" />
                     <span>Typography & Contrast Legibility</span>
                   </span>
-                  <span className="text-xs font-extrabold text-indigo-600">
+                  <span className="text-xs font-extrabold text-indigo-600 font-mono">
                     {visualAnalysis.typographyAnalysis.fontStyleDetected || 'Standard'}
                   </span>
                 </div>
-                <p className="text-xs text-slate-600">{visualAnalysis.typographyAnalysis.details}</p>
+                <p className="text-xs text-slate-600 leading-relaxed">{visualAnalysis.typographyAnalysis.details}</p>
               </div>
 
               {/* Visual Findings List */}
@@ -590,14 +599,14 @@ export const AnalysisResultsPage: React.FC = () => {
                 </h4>
 
                 {filteredVisualFindings.length === 0 ? (
-                  <div className="p-6 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-400">
+                  <div className="p-6 bg-white rounded-xl border border-stone-200 text-center text-xs text-slate-400 shadow-card">
                     No visual violations detected. Creative conforms cleanly with brand palettes and typography!
                   </div>
                 ) : (
                   filteredVisualFindings.map((vf, idx) => (
                     <div
                       key={idx}
-                      className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2.5"
+                      className="p-4 rounded-xl bg-white border border-stone-200/90 shadow-card space-y-2.5"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="space-y-0.5">
@@ -611,12 +620,12 @@ export const AnalysisResultsPage: React.FC = () => {
 
                       <p className="text-xs text-slate-600 leading-relaxed">{vf.explanation}</p>
 
-                      <div className="p-2.5 rounded-xl bg-purple-50/70 border border-purple-100 text-xs text-purple-900">
+                      <div className="p-3 rounded-xl bg-purple-50/70 border border-purple-100 text-xs text-purple-950 font-medium">
                         <span className="font-bold">Recommendation: </span>
                         <span>{vf.recommendation}</span>
                       </div>
 
-                      <div className="text-[10px] text-slate-400 pt-1 border-t border-slate-100">
+                      <div className="text-[10px] text-slate-400 pt-1 border-t border-stone-100 font-mono">
                         Evidence standard: {vf.supportingEvidence}
                       </div>
                     </div>

@@ -3,35 +3,68 @@ import React from 'react';
 interface ScoreGaugeProps {
   score: number;
   size?: 'sm' | 'md' | 'lg';
+  labelSubtitle?: string;
 }
 
-export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 'md' }) => {
+export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
+  score,
+  size = 'md',
+  labelSubtitle = 'Audited against approved brand guidelines',
+}) => {
   const getColor = (val: number) => {
-    if (val >= 90) return { stroke: '#10b981', text: 'text-emerald-700', bg: 'bg-emerald-50', label: 'Compliant' };
-    if (val >= 70) return { stroke: '#f59e0b', text: 'text-amber-700', bg: 'bg-amber-50', label: 'Warnings' };
-    return { stroke: '#ef4444', text: 'text-red-700', bg: 'bg-red-50', label: 'Violations Detected' };
+    if (val >= 90) {
+      return {
+        stroke: '#059669',
+        trackStroke: '#D1FAE5',
+        text: 'text-emerald-700',
+        bg: 'bg-emerald-50',
+        border: 'border-emerald-200',
+        label: 'Brand Compliant',
+      };
+    }
+    if (val >= 70) {
+      return {
+        stroke: '#D97706',
+        trackStroke: '#FEF3C7',
+        text: 'text-amber-700',
+        bg: 'bg-amber-50',
+        border: 'border-amber-200',
+        label: 'Advisory Warnings',
+      };
+    }
+    return {
+      stroke: '#E11D48',
+      trackStroke: '#FFE4E6',
+      text: 'text-rose-700',
+      bg: 'bg-rose-50',
+      border: 'border-rose-200',
+      label: 'Violations Detected',
+    };
   };
 
-  const { stroke, text, bg, label } = getColor(score);
-  const strokeDashoffset = 100 - score;
+  const { stroke, trackStroke, text, bg, border, label } = getColor(score);
+  const strokeDashoffset = 100 - Math.min(Math.max(score, 0), 100);
 
   if (size === 'sm') {
     return (
-      <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border font-semibold text-xs ${bg} ${text}`}>
-        <span>{score}%</span>
-        <span className="text-[10px] uppercase font-bold tracking-wider">({label})</span>
+      <div
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border font-semibold text-xs ${bg} ${border} ${text}`}
+      >
+        <span className="font-mono font-bold tabular-nums">{score}%</span>
+        <span className="text-[10px] uppercase font-bold tracking-wider opacity-90">({label})</span>
       </div>
     );
   }
 
+  const dimensions = size === 'lg' ? { box: 'w-24 h-24', text: 'text-3xl' } : { box: 'w-16 h-16', text: 'text-xl' };
+
   return (
-    <div className={`flex items-center gap-4 p-4 rounded-xl border border-slate-200/80 bg-white shadow-sm`}>
-      <div className="relative w-16 h-16 flex items-center justify-center">
-        <svg className="w-16 h-16 -rotate-90 transform" viewBox="0 0 36 36">
+    <div className="flex items-center gap-4 p-4 rounded-xl border border-stone-200/90 bg-white shadow-card">
+      <div className={`relative ${dimensions.box} flex items-center justify-center flex-shrink-0`}>
+        <svg className={`${dimensions.box} -rotate-90 transform`} viewBox="0 0 36 36">
           <path
-            className="text-slate-100"
+            style={{ stroke: trackStroke }}
             strokeWidth="3.5"
-            stroke="currentColor"
             fill="none"
             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
           />
@@ -42,21 +75,21 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 'md' }) =>
             strokeLinecap="round"
             stroke={stroke}
             fill="none"
+            className="transition-all duration-700 ease-out"
             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
           />
         </svg>
-        <span className={`absolute text-lg font-extrabold ${text}`}>
+        <span className={`absolute font-extrabold font-mono tabular-nums tracking-tight ${dimensions.text} ${text}`}>
           {score}
         </span>
       </div>
       <div>
-        <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-          Brand Compliance Score
+        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+          Compliance Rating
         </div>
-        <div className={`text-base font-bold ${text}`}>{label}</div>
-        <div className="text-xs text-slate-400">Audited against approved brand guidelines</div>
+        <div className={`text-base font-extrabold tracking-tight ${text}`}>{label}</div>
+        <div className="text-[11px] text-slate-500 mt-0.5">{labelSubtitle}</div>
       </div>
     </div>
   );
 };
-

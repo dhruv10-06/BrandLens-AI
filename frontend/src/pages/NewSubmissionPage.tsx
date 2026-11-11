@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { submissionsApi } from '../api/submissions.api.ts';
 import { ContentType, SubmissionFormat, VisualAsset } from '../types/index.ts';
+import { Button } from '../components/common/Button.tsx';
 import {
   FilePlus2,
   Sparkles,
@@ -16,9 +17,10 @@ import {
   FileText,
   UploadCloud,
   X,
-  Layers,
   Palette,
   CheckCircle2,
+  Layers,
+  HelpCircle,
 } from 'lucide-react';
 
 export const NewSubmissionPage: React.FC = () => {
@@ -37,8 +39,8 @@ export const NewSubmissionPage: React.FC = () => {
   const navigate = useNavigate();
 
   const contentTypes = [
-    { id: 'social_media', label: 'Social Media Post', icon: MessageSquare, desc: 'Twitter/X, LinkedIn, Meta announcements' },
-    { id: 'advertisement', label: 'Advertisement Copy', icon: Megaphone, desc: 'Paid search, display ads, landing page hooks' },
+    { id: 'social_media', label: 'Social Media', icon: MessageSquare, desc: 'Twitter/X, LinkedIn, Meta announcements' },
+    { id: 'advertisement', label: 'Advertisement', icon: Megaphone, desc: 'Paid search, display ads, landing page hooks' },
     { id: 'blog', label: 'Blog Article', icon: Newspaper, desc: 'Long-form editorial and technical articles' },
     { id: 'email', label: 'Customer Email', icon: Mail, desc: 'Newsletters, product updates, transactional copy' },
     { id: 'press_release', label: 'Press Release', icon: FilePlus2, desc: 'Corporate PR, funding or partner announcements' },
@@ -188,153 +190,133 @@ export const NewSubmissionPage: React.FC = () => {
       setError(
         err.response?.data?.error ||
           err.message ||
-          'Failed to submit content for analysis. Please check your network and Gemini API configuration.'
+          'Failed to submit content for analysis. Please check your network and AI configuration.'
       );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const charCount = content.length;
-  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
-
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header with Quick Presets */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Studio Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200/80">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold mb-2">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Multi-Format Brand Governance Gateway</span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-bold uppercase tracking-wider mb-2">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>AI Governance Studio</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-            Submit Content for Governance Review
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            New Content Submission
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Audit written copy, document drafts, and visual creative assets against approved guidelines and brand palettes.
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Submit campaign copy or visual creative assets for real-time automated brand compliance auditing.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        {/* 1-Click Evaluator Presets */}
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
           <button
             type="button"
             onClick={handleLoadViolationsSample}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 hover:bg-amber-100 text-xs font-semibold transition shadow-sm"
-            title="Preloads a multi-format campaign containing intentional written violations and prohibited visual colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200/90 text-xs font-bold transition shadow-subtle"
+            title="Load sample copy with intentional brand rule violations"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span>Load Test Violations Campaign</span>
+            <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
+            <span>Load Violation Sample</span>
           </button>
           <button
             type="button"
             onClick={handleLoadCompliantSample}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 hover:bg-emerald-100 text-xs font-semibold transition"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/90 text-xs font-bold transition shadow-subtle"
+            title="Load enterprise compliant copy sample"
           >
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Load Compliant Copy</span>
+            <span>Load Compliant Sample</span>
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5">
-          <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-          <span>{error}</span>
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start gap-2.5 shadow-subtle">
+          <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
+          <span className="font-medium leading-relaxed">{error}</span>
         </div>
       )}
 
-      {/* Submission Form */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
-        {/* Title */}
-        <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-            Campaign / Creative Title
-          </label>
-          <input
-            type="text"
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Q2 Product Announcement or Enterprise Workflow Pilot Social Banner"
-            className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Step 1: Content Type & Title */}
+        <div className="bg-white p-5 sm:p-6 rounded-xl border border-stone-200/90 shadow-card space-y-5">
+          <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+            <div>
+              <h2 className="text-sm font-bold text-slate-900 tracking-tight">1. Campaign Context & Channel</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Categorize your outbound copy to apply channel-specific brand rules</p>
+            </div>
+            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-stone-100 text-slate-600 font-mono">
+              Step 1 of 3
+            </span>
+          </div>
 
-        {/* Content Type Selector */}
-        <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-            Target Publication Channel
-          </label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {contentTypes.map((t) => {
-              const Icon = t.icon;
-              const isSelected = contentType === t.id;
-              return (
-                <button
-                  type="button"
-                  key={t.id}
-                  onClick={() => setContentType(t.id as ContentType)}
-                  className={`p-3 rounded-xl border text-left transition-all ${
-                    isSelected
-                      ? 'border-brand-600 bg-brand-50/70 text-brand-900 ring-2 ring-brand-500/20 shadow-sm'
-                      : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
-                  }`}
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <Icon className={`w-4 h-4 ${isSelected ? 'text-brand-600' : 'text-slate-400'}`} />
-                    <span className="text-xs font-bold">{t.label}</span>
-                  </div>
-                  <p className="text-[11px] text-slate-400 line-clamp-1">{t.desc}</p>
-                </button>
-              );
-            })}
+          <div>
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">
+              Campaign or Asset Title
+            </label>
+            <input
+              type="text"
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. Q3 Enterprise Intelligence Announcement"
+              className="w-full px-4 py-2.5 text-sm rounded-xl border border-stone-200/90 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-stone-50/40 text-slate-900 font-medium placeholder:text-slate-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-2">
+              Content Format / Publishing Channel
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {contentTypes.map((t) => {
+                const Icon = t.icon;
+                const isSelected = contentType === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setContentType(t.id as ContentType)}
+                    className={`p-3.5 rounded-xl border text-left transition-all duration-150 flex flex-col justify-between ${
+                      isSelected
+                        ? 'border-brand-600 bg-brand-50/60 ring-2 ring-brand-500/30 shadow-subtle'
+                        : 'border-stone-200/80 bg-white hover:border-stone-300 hover:bg-stone-50/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-1.5">
+                      <Icon className={`w-4 h-4 ${isSelected ? 'text-brand-600' : 'text-slate-400'}`} />
+                      {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-brand-600" />}
+                    </div>
+                    <div>
+                      <div className={`text-xs font-bold tracking-tight ${isSelected ? 'text-brand-900' : 'text-slate-800'}`}>
+                        {t.label}
+                      </div>
+                      <div className="text-[10px] text-slate-500 mt-0.5 line-clamp-1">
+                        {t.desc}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        {/* Format Selector Tabs */}
-        <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-            Submission Ingestion Mode
-          </label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            {[
-              { id: 'text', label: 'Written Copy', icon: FileText, desc: 'Paste or type marketing text' },
-              { id: 'document', label: 'Draft Document', icon: UploadCloud, desc: 'Extract text from PDF or TXT' },
-              { id: 'image', label: 'Visual Creative', icon: ImageIcon, desc: 'Image palette & logo check' },
-              { id: 'multi_format', label: 'Multi-Format', icon: Layers, desc: 'Combined copy & visual creative' },
-            ].map((f) => {
-              const Icon = f.icon;
-              const isSelected = submissionFormat === f.id;
-              return (
-                <button
-                  type="button"
-                  key={f.id}
-                  onClick={() => setSubmissionFormat(f.id as SubmissionFormat)}
-                  className={`p-3 rounded-xl border text-left transition-all ${
-                    isSelected
-                      ? 'border-indigo-600 bg-indigo-50/70 text-indigo-950 ring-2 ring-indigo-500/20 font-bold'
-                      : 'border-slate-200 hover:border-slate-300 text-slate-600 bg-slate-50/50'
-                  }`}
-                >
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <Icon className={`w-4 h-4 ${isSelected ? 'text-indigo-600' : 'text-slate-400'}`} />
-                    <span className="text-xs">{f.label}</span>
-                  </div>
-                  <p className="text-[10px] text-slate-400">{f.desc}</p>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Document Draft Extraction Panel (if in document mode) */}
-        {(submissionFormat === 'document' || submissionFormat === 'multi_format') && (
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-800 flex items-center gap-2">
-                <UploadCloud className="w-4 h-4 text-indigo-600" />
-                <span>Upload Draft File to Ingest Content (.pdf, .txt)</span>
-              </span>
+        {/* Step 2: Content Copy & Document Upload */}
+        <div className="bg-white p-5 sm:p-6 rounded-xl border border-stone-200/90 shadow-card space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-stone-100">
+            <div>
+              <h2 className="text-sm font-bold text-slate-900 tracking-tight">2. Marketing Copy & Text</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Type your draft directly or extract text from an approved draft document</p>
+            </div>
+            <div className="flex items-center gap-2">
               <input
                 ref={docInputRef}
                 type="file"
@@ -346,124 +328,120 @@ export const NewSubmissionPage: React.FC = () => {
                 type="button"
                 onClick={() => docInputRef.current?.click()}
                 disabled={isUploadingDoc}
-                className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 text-xs font-semibold text-slate-700 transition"
               >
-                {isUploadingDoc ? 'Extracting Text...' : 'Choose Document'}
+                <FileText className="w-3.5 h-3.5 text-slate-500" />
+                <span>{isUploadingDoc ? 'Extracting Text...' : 'Extract from PDF / TXT'}</span>
               </button>
             </div>
-            <p className="text-[11px] text-slate-500">
-              The engine automatically extracts plain readable copy from your draft and places it in the editor below for governance review.
-            </p>
           </div>
-        )}
 
-        {/* Content Body Editor (Shown unless visual-only) */}
-        {submissionFormat !== 'image' && (
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                Draft Copy Body
-              </label>
-              <div className="text-[11px] text-slate-400 font-mono">
-                {wordCount} words • {charCount} / 25,000 chars
-              </div>
-            </div>
             <textarea
               rows={6}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Paste or write your marketing copy, tweet, email, or blog draft here to compare against brand guidelines..."
-              className="w-full p-4 text-sm font-sans rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 leading-relaxed resize-y"
+              placeholder="Paste or write your marketing copy here for brand compliance auditing..."
+              className="w-full p-4 text-sm rounded-xl border border-stone-200/90 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-stone-50/40 text-slate-900 font-sans placeholder:text-slate-400 leading-relaxed"
             />
+            <div className="flex items-center justify-between mt-1.5 text-[11px] text-slate-400 font-mono">
+              <span>Audited against tone guidelines and prohibited terminology</span>
+              <span>{content.length} / 25,000 chars</span>
+            </div>
           </div>
-        )}
+        </div>
 
-        {/* Visual Creative Attachment Panel (Shown for image or multi_format) */}
-        {(submissionFormat === 'image' || submissionFormat === 'multi_format') && (
-          <div className="space-y-3">
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Visual Creative Asset (Multimodal AI Analysis)
-            </label>
-
-            {visualAsset ? (
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center gap-4">
-                <div className="w-36 h-24 rounded-lg bg-slate-900 border border-slate-300 flex items-center justify-center overflow-hidden flex-shrink-0">
-                  <img
-                    src={visualAsset.dataUrl}
-                    alt={visualAsset.filename}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="flex-1 space-y-1 text-center sm:text-left">
-                  <div className="text-xs font-bold text-slate-900">{visualAsset.filename}</div>
-                  <div className="text-[11px] text-slate-500">
-                    {visualAsset.fileType} • {Math.round(visualAsset.fileSize / 1024)} KB
-                    {visualAsset.dimensions?.width && ` • ${visualAsset.dimensions.width}×${visualAsset.dimensions.height}px`}
-                  </div>
-                  <div className="inline-flex items-center gap-1 text-[11px] text-emerald-700 font-semibold mt-1">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                    <span>Attached for Multimodal Brand Inspection</span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setVisualAsset(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition"
-                  title="Remove visual asset"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+        {/* Step 3: Multimodal Creative Visual Asset Upload */}
+        <div className="bg-white p-5 sm:p-6 rounded-xl border border-stone-200/90 shadow-card space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-bold text-slate-900 tracking-tight">3. Creative Visual Asset</h2>
+                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+                  Multimodal
+                </span>
               </div>
-            ) : (
-              <div
-                onClick={() => imageInputRef.current?.click()}
-                className="p-8 rounded-2xl border-2 border-dashed border-slate-300 hover:border-indigo-500 bg-slate-50/50 hover:bg-indigo-50/30 text-center cursor-pointer transition space-y-2"
+              <p className="text-xs text-slate-500 mt-0.5">Attach banner, ad creative, or social media image for color, logo, and typography auditing</p>
+            </div>
+            {visualAsset && (
+              <button
+                type="button"
+                onClick={() => setVisualAsset(null)}
+                className="text-xs text-rose-600 hover:text-rose-700 font-semibold flex items-center gap-1"
               >
-                <input
-                  ref={imageInputRef}
-                  type="file"
-                  accept="image/png,image/jpeg,image/svg+xml,image/webp"
-                  onChange={handleImageFileChange}
-                  className="hidden"
+                <X className="w-3.5 h-3.5" />
+                <span>Remove</span>
+              </button>
+            )}
+          </div>
+
+          {visualAsset ? (
+            <div className="p-4 rounded-xl border border-stone-200 bg-stone-50/60 flex flex-col sm:flex-row items-center gap-4">
+              <div className="w-32 h-24 rounded-lg overflow-hidden bg-slate-900 border border-stone-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+                <img
+                  src={visualAsset.dataUrl}
+                  alt={visualAsset.filename}
+                  className="w-full h-full object-contain"
                 />
-                <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 mx-auto flex items-center justify-center">
-                  <ImageIcon className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-bold text-slate-800">
-                  Click or drag visual creative here (.png, .jpg, .svg, .webp)
-                </div>
-                <p className="text-[11px] text-slate-500">
-                  Gemini Multimodal AI will audit visible logos, color palette consistency, typography, and visual brand rules.
-                </p>
               </div>
-            )}
-          </div>
-        )}
+              <div className="flex-1 space-y-1.5 text-center sm:text-left">
+                <div className="text-xs font-bold text-slate-900 tracking-tight">{visualAsset.filename}</div>
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-[11px] text-slate-500 font-mono">
+                  <span className="bg-white px-2 py-0.5 rounded border border-stone-200">
+                    {visualAsset.fileType}
+                  </span>
+                  <span className="bg-white px-2 py-0.5 rounded border border-stone-200">
+                    {(visualAsset.fileSize / 1024).toFixed(1)} KB
+                  </span>
+                  {visualAsset.dimensions && (
+                    <span className="bg-white px-2 py-0.5 rounded border border-stone-200 font-semibold text-slate-700">
+                      {visualAsset.dimensions.width}×{visualAsset.dimensions.height}px
+                    </span>
+                  )}
+                </div>
+                <div className="text-[11px] text-emerald-700 flex items-center justify-center sm:justify-start gap-1 font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Valid creative asset resolution (&ge; 32×32px)</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              onClick={() => imageInputRef.current?.click()}
+              className="border-2 border-dashed border-stone-200 hover:border-brand-400 hover:bg-brand-50/20 rounded-xl p-8 text-center cursor-pointer transition-all duration-150 group"
+            >
+              <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                onChange={handleImageFileChange}
+                className="hidden"
+              />
+              <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 text-brand-600 mx-auto flex items-center justify-center group-hover:scale-105 transition-transform">
+                <ImageIcon className="w-6 h-6" />
+              </div>
+              <div className="mt-3 text-xs font-bold text-slate-900">
+                Click to upload creative image asset
+              </div>
+              <p className="text-[11px] text-slate-500 mt-1">
+                PNG, JPG, SVG, WebP up to 10MB (Minimum 32×32 pixels required)
+              </p>
+            </div>
+          )}
+        </div>
 
-        {/* Submit Button */}
-        <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <Sparkles className="w-4 h-4 text-brand-500" />
-            <span>Semantic RAG & Multimodal AI will audit this submission</span>
-          </div>
-
-          <button
+        {/* Action Row */}
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <Button
             type="submit"
-            disabled={isSubmitting || (!content.trim() && !visualAsset)}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs transition shadow-sm disabled:opacity-50"
+            variant="primary"
+            size="lg"
+            isLoading={isSubmitting}
+            icon={<Sparkles className="w-4 h-4" />}
+            className="w-full sm:w-auto min-w-[220px]"
           >
-            {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Running Governance Audit...</span>
-              </>
-            ) : (
-              <>
-                <Send className="w-3.5 h-3.5" />
-                <span>Submit & Run AI Analysis</span>
-              </>
-            )}
-          </button>
+            {isSubmitting ? 'Auditing Content...' : 'Run Brand Governance Audit'}
+          </Button>
         </div>
       </form>
     </div>
