@@ -37,10 +37,10 @@ export const ReviewQueuePage: React.FC = () => {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5EFE4] border border-[#DDD2BF] text-forest-900 text-[11px] font-bold uppercase tracking-widest font-mono">
             <CheckSquare className="w-3.5 h-3.5 text-brass-700" />
-            <span>Human Adjudication Gate</span>
+            <span>Human Review Gate</span>
           </div>
           <h1 className="text-3xl font-bold font-serif text-espresso-950 tracking-tight">
-            Brand Governance Adjudication Chamber
+            Brand Review Queue
           </h1>
           <p className="text-xs sm:text-sm text-espresso-700">
             Campaign submissions requiring formal executive sign-off, authorized approval, or rejection before publication.

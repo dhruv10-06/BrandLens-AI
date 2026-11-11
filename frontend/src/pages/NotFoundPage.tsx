@@ -11,13 +11,13 @@ export const NotFoundPage: React.FC = () => {
       </div>
       <div className="space-y-2">
         <div className="text-xs font-mono font-bold text-forest-900 uppercase tracking-widest">
-          Chamber Error 404
+          Error 404
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold font-serif text-espresso-950 tracking-tight">
           Uncharted Brand Territory
         </h1>
         <p className="text-sm text-espresso-700 max-w-sm mx-auto leading-relaxed font-sans">
-          The brand governance resource, guideline, or submission you are looking for does not exist or has been relocated within the atelier.
+          The brand governance resource, guideline, or submission you are looking for does not exist or has been relocated within the workspace.
         </p>
       </div>
       <Link to="/">
@@ -26,7 +26,7 @@ export const NotFoundPage: React.FC = () => {
           size="md"
           icon={<ArrowLeft className="w-4 h-4 text-brass-400" />}
         >
-          Return to Atelier Desk
+          Return to Dashboard
         </Button>
       </Link>
     </div>

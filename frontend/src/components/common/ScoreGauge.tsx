@@ -9,7 +9,7 @@ interface ScoreGaugeProps {
 export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
   score,
   size = 'md',
-  labelSubtitle = 'Audited against sovereign brand codex',
+  labelSubtitle = 'Audited against approved brand guidelines',
 }) => {
   const getColor = (val: number) => {
     if (val >= 90) {
@@ -19,7 +19,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
         text: 'text-forest-900',
         bg: 'bg-forest-50/90',
         border: 'border-forest-300',
-        label: 'Sovereign Grade',
+        label: 'Brand Compliant',
       };
     }
     if (val >= 70) {
@@ -29,7 +29,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
         text: 'text-brass-900',
         bg: 'bg-brass-50/90',
         border: 'border-brass-300',
-        label: 'Advisory Variance',
+        label: 'Advisory Warnings',
       };
     }
     return {
@@ -38,7 +38,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
       text: 'text-oxblood-900',
       bg: 'bg-oxblood-50/90',
       border: 'border-oxblood-300',
-      label: 'Breach Detected',
+      label: 'Violations Detected',
     };
   };
 
@@ -85,7 +85,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
       </div>
       <div>
         <div className="text-[10px] font-bold text-espresso-600 uppercase tracking-widest font-mono">
-          Adherence Index
+          Compliance Rating
         </div>
         <div className={`text-base font-bold tracking-tight ${text}`}>{label}</div>
         <div className="text-[11px] text-espresso-700 mt-0.5">{labelSubtitle}</div>

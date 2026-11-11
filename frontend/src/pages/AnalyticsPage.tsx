@@ -45,7 +45,7 @@ export const AnalyticsPage: React.FC = () => {
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-espresso-600 gap-3">
         <div className="w-8 h-8 border-2 border-forest-800 border-t-transparent rounded-full animate-spin" />
         <span className="text-xs font-semibold tracking-wider text-espresso-700 font-mono">
-          Synthesizing Brand Governance Telemetry...
+          Loading Brand Governance Analytics...
         </span>
       </div>
     );
@@ -55,7 +55,7 @@ export const AnalyticsPage: React.FC = () => {
     return (
       <div className="p-8 rounded-2xl bg-[#FDFBF7] border border-[#E2D7C5] text-center max-w-md mx-auto my-12 shadow-parchment">
         <AlertTriangle className="w-8 h-8 text-oxblood-700 mx-auto mb-2" />
-        <h3 className="text-sm font-bold font-serif text-espresso-950">Failed to Load Telemetry</h3>
+        <h3 className="text-sm font-bold font-serif text-espresso-950">Failed to Load Analytics</h3>
         <p className="text-xs text-espresso-700 mt-1">{error || 'Unknown error occurred'}</p>
         <Button variant="primary" size="sm" onClick={fetchAnalytics} className="mt-4">
           Retry Aggregation
@@ -83,13 +83,13 @@ export const AnalyticsPage: React.FC = () => {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5EFE4] border border-[#DDD2BF] text-forest-900 text-[11px] font-bold uppercase tracking-widest font-mono">
             <BarChart3 className="w-3.5 h-3.5 text-brass-700" />
-            <span>Organization Telemetry &amp; Insights</span>
+            <span>Organization Analytics &amp; Insights</span>
           </div>
           <h1 className="text-3xl font-bold font-serif text-espresso-950 tracking-tight">
-            Brand Governance Telemetry
+            Brand Analytics
           </h1>
           <p className="text-xs sm:text-sm text-espresso-700">
-            Real-time compliance telemetry, recurring violation trends, guideline gap detection, and visual compliance statistics.
+            Real-time compliance analytics, recurring violation trends, guideline gap detection, and visual compliance statistics.
           </p>
         </div>
 
@@ -99,7 +99,7 @@ export const AnalyticsPage: React.FC = () => {
           onClick={fetchAnalytics}
           icon={<RefreshCw className="w-3.5 h-3.5 text-brass-700" />}
         >
-          Refresh Telemetry
+          Refresh Analytics
         </Button>
       </div>
 

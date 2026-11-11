@@ -34,7 +34,7 @@ export const Sidebar: React.FC = () => {
       <div className="p-4 space-y-6">
         <div>
           <div className="text-[10px] font-bold uppercase tracking-widest text-espresso-600 px-3 mb-2.5 font-mono">
-            Sovereign Navigation
+            Workspace Navigation
           </div>
           <nav className="space-y-1">
             {navItems.map((item) => (
@@ -68,7 +68,7 @@ export const Sidebar: React.FC = () => {
         <div className="p-4 rounded-xl bg-[#FDFBF7] border border-[#E2D7C5] text-xs space-y-2 shadow-parchment-sm">
           <div className="flex items-center gap-2 text-forest-800 font-bold text-xs tracking-tight font-serif">
             <ShieldCheck className="w-4 h-4 text-brass-700" />
-            <span>Sovereign Brand Codex</span>
+            <span>Brand Guidelines</span>
           </div>
           <p className="text-espresso-700 leading-relaxed text-[11px]">
             Every creative asset is vetted against vectorized brand guidelines and verified factual assertions with zero halluncination tolerance.

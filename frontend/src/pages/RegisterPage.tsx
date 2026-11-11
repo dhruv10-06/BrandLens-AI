@@ -54,7 +54,7 @@ export const RegisterPage: React.FC = () => {
 
           <div className="space-y-4 pt-6">
             <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.15] text-cream-50">
-              Establish your enterprise brand governance chamber.
+              Establish your enterprise brand governance workspace.
             </h1>
             <p className="text-sm text-forest-200 leading-relaxed max-w-md font-sans">
               Connect your brand guidelines, configure autonomous AI guardrails, and grant your creative team safe pre-flight publication confidence.
@@ -178,7 +178,7 @@ export const RegisterPage: React.FC = () => {
               className="w-full mt-3"
               iconRight={<ArrowRight className="w-4 h-4 text-brass-400" />}
             >
-              {isSubmitting ? 'Provisioning Workspace...' : 'Initialize Brand Chamber'}
+              {isSubmitting ? 'Provisioning Workspace...' : 'Create Organization Workspace'}
             </Button>
           </form>
 

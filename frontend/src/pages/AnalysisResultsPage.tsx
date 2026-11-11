@@ -168,7 +168,7 @@ export const AnalysisResultsPage: React.FC = () => {
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-espresso-600 gap-3">
         <div className="w-8 h-8 border-2 border-forest-800 border-t-transparent rounded-full animate-spin" />
         <span className="text-xs font-semibold tracking-wider text-espresso-700 font-mono">
-          Retrieving Sovereign Brand Dossier...
+          Loading Analysis Results...
         </span>
       </div>
     );
@@ -221,13 +221,13 @@ export const AnalysisResultsPage: React.FC = () => {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-espresso-700 hover:text-espresso-950 transition-colors font-mono"
         >
           <ArrowLeft className="w-4 h-4 text-brass-700" />
-          <span>Return to Content Portfolio</span>
+          <span>Back to Submissions</span>
         </Link>
 
         {isReviewerRole && !isCreatorOfSubmission && (
           <Link to={`/review/${submission._id}`}>
             <Button variant="accent" size="sm" icon={<ShieldCheck className="w-3.5 h-3.5" />} iconRight={<ChevronRight className="w-3.5 h-3.5" />}>
-              Open Adjudication Deck
+              Open Review Workspace
             </Button>
           </Link>
         )}
@@ -251,7 +251,7 @@ export const AnalysisResultsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Sovereign Dossier Overview Banner */}
+      {/* Overview Banner */}
       <div className="bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment p-6 sm:p-8">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-3 max-w-xl">
@@ -419,7 +419,7 @@ export const AnalysisResultsPage: React.FC = () => {
                   disabled={submission.status === 'approved'}
                   icon={<Send className="w-3.5 h-3.5 text-brass-400" />}
                 >
-                  Submit to Review Chamber
+                  Submit to Review Queue
                 </Button>
               </div>
             </div>

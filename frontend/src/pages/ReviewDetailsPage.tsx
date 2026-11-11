@@ -137,7 +137,7 @@ export const ReviewDetailsPage: React.FC = () => {
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-espresso-700 hover:text-espresso-950 mb-2 transition-colors font-mono"
           >
             <ArrowLeft className="w-4 h-4 text-brass-700" />
-            <span>Return to Adjudication Queue</span>
+            <span>Return to Review Queue</span>
           </Link>
           <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-2xl sm:text-3xl font-bold font-serif text-espresso-950 tracking-tight">
@@ -324,7 +324,7 @@ export const ReviewDetailsPage: React.FC = () => {
               to={`/submissions/${submission._id}/analysis`}
               className="text-xs font-semibold text-forest-800 hover:text-forest-900 transition font-mono underline underline-offset-2"
             >
-              Open Full Analysis Deck &rarr;
+              Open Full Analysis Report &rarr;
             </Link>
           </div>
 

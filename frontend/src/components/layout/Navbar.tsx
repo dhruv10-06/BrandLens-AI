@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
           {user?.organization && (
             <div className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#F5EFE4] border border-[#DDD2BF] text-xs text-espresso-800 font-medium shadow-parchment-sm">
               <Building2 className="w-3.5 h-3.5 text-brass-700" />
-              <span className="text-espresso-600 font-mono text-[11px]">Chamber:</span>
+              <span className="text-espresso-600 font-mono text-[11px]">Workspace:</span>
               <span className="font-bold text-espresso-950 font-serif">{user.organization.name}</span>
             </div>
           )}
@@ -54,7 +54,7 @@ export const Navbar: React.FC = () => {
                       : 'bg-forest-100 text-forest-900 border-forest-300'
                   }`}
                 >
-                  {user?.role} Tier
+                  {user?.role} Role
                 </span>
               </div>
 

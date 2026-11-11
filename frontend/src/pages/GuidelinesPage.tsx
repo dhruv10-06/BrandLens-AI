@@ -149,10 +149,10 @@ export const GuidelinesPage: React.FC = () => {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5EFE4] border border-[#DDD2BF] text-forest-900 text-[11px] font-bold uppercase tracking-widest font-mono">
             <Compass className="w-3.5 h-3.5 text-brass-700" />
-            <span>Sovereign Knowledge Vault • Vector RAG</span>
+            <span>Brand Knowledge Base • Vector RAG</span>
           </div>
           <h1 className="text-3xl font-bold font-serif text-espresso-950 tracking-tight">
-            Brand Codex &amp; Canonical Rules
+            Brand Guidelines &amp; Canonical Rules
           </h1>
           <p className="text-xs sm:text-sm text-espresso-700">
             Manage official guideline documents (PDF/TXT), prohibited terms, and verified brand facts used in semantic retrieval.
@@ -193,7 +193,7 @@ export const GuidelinesPage: React.FC = () => {
             }`}
           >
             <BookOpen className="w-4 h-4 text-brass-700" />
-            <span>Uploaded Codex Documents</span>
+            <span>Uploaded Guideline Documents</span>
             <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
               activeTab === 'documents' ? 'bg-forest-100 text-forest-900 font-bold' : 'bg-[#EAE1D2] text-espresso-800'
             }`}>
@@ -667,7 +667,7 @@ export const GuidelinesPage: React.FC = () => {
                   disabled={isSavingFact}
                   isLoading={isSavingFact}
                 >
-                  {isSavingFact ? 'Saving Rule...' : 'Save Rule to Codex'}
+                  {isSavingFact ? 'Saving Rule...' : 'Save Rule'}
                 </Button>
               </div>
             </form>

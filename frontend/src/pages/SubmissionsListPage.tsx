@@ -44,7 +44,7 @@ export const SubmissionsListPage: React.FC = () => {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5EFE4] border border-[#DDD2BF] text-forest-900 text-[11px] font-bold uppercase tracking-widest font-mono">
             <Layers className="w-3.5 h-3.5 text-brass-700" />
-            <span>Creative Content Portfolio</span>
+            <span>Content Submissions</span>
           </div>
           <h1 className="text-3xl font-bold font-serif text-espresso-950 tracking-tight">
             Brand Governance Submissions
@@ -56,7 +56,7 @@ export const SubmissionsListPage: React.FC = () => {
 
         <Link to="/submissions/new" className="self-start sm:self-auto">
           <Button variant="primary" size="md" icon={<Plus className="w-4 h-4 text-brass-400" />}>
-            New Campaign Submission
+            New Content Submission
           </Button>
         </Link>
       </div>
@@ -95,7 +95,7 @@ export const SubmissionsListPage: React.FC = () => {
       {/* Submissions Table / List */}
       <div className="bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment overflow-hidden">
         {isLoading ? (
-          <div className="p-16 text-center text-xs text-espresso-600 font-mono">Loading submissions portfolio...</div>
+          <div className="p-16 text-center text-xs text-espresso-600 font-mono">Loading submissions...</div>
         ) : filtered.length === 0 ? (
           <div className="p-16 text-center space-y-3">
             <div className="w-12 h-12 rounded-xl bg-[#F5EFE4] border border-[#DDD2BF] text-espresso-600 mx-auto flex items-center justify-center">

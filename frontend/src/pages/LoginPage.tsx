@@ -55,7 +55,7 @@ export const LoginPage: React.FC = () => {
                 BrandLens <span className="text-brass-400 italic font-normal">Atelier</span>
               </span>
               <p className="text-[10px] text-forest-300 uppercase tracking-widest font-mono">
-                Sovereign Governance Chamber
+                Brand Governance
               </p>
             </div>
           </div>
@@ -79,10 +79,10 @@ export const LoginPage: React.FC = () => {
               <Compass className="w-4 h-4 text-brass-400 flex-shrink-0 mt-1" />
               <div>
                 <h4 className="text-xs font-bold text-cream-50 uppercase tracking-wider font-mono">
-                  01 / Vectorized Brand Codex
+                  01 / Brand Knowledge Base
                 </h4>
                 <p className="text-xs text-forest-300 leading-relaxed">
-                  Real-time semantic retrieval against vectorized guideline rules and authorized factual assertions.
+                  Real-time semantic retrieval against vectorized guideline rules and verified brand facts.
                 </p>
               </div>
             </div>
@@ -90,10 +90,10 @@ export const LoginPage: React.FC = () => {
               <Award className="w-4 h-4 text-brass-400 flex-shrink-0 mt-1" />
               <div>
                 <h4 className="text-xs font-bold text-cream-50 uppercase tracking-wider font-mono">
-                  02 / Dual-Key Human Adjudication
+                  02 / Human Review Gate
                 </h4>
                 <p className="text-xs text-forest-300 leading-relaxed">
-                  Strict cryptographic separation of duties ensuring impartial pre-publication approval.
+                  Strict separation of duties ensuring creator content receives impartial reviewer sign-off.
                 </p>
               </div>
             </div>
@@ -113,10 +113,10 @@ export const LoginPage: React.FC = () => {
               Authentication Portal
             </div>
             <h2 className="font-serif text-3xl font-bold text-espresso-950 tracking-tight">
-              Sign In to Your Atelier
+              Sign In to Your Workspace
             </h2>
             <p className="text-xs text-espresso-700 mt-1">
-              Enter your enterprise credentials or access instant evaluator chambers below.
+              Enter your credentials or select a demo account below.
             </p>
           </div>
 
@@ -132,7 +132,7 @@ export const LoginPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-xs font-bold text-espresso-900 uppercase tracking-wider font-mono">
                 <Sparkles className="w-3.5 h-3.5 text-brass-700" />
-                <span>One-Tap Evaluator Chambers</span>
+                <span>Quick Access Demo Accounts</span>
               </div>
               <span className="text-[10px] uppercase font-bold text-brass-800 bg-brass-100 px-2 py-0.5 rounded border border-brass-300 font-mono">
                 Fixed Role
@@ -150,7 +150,7 @@ export const LoginPage: React.FC = () => {
               >
                 <div className="flex items-center gap-1.5 font-bold text-xs mb-1">
                   <UserCheck className="w-3.5 h-3.5 text-brass-400" />
-                  <span>Senior Creator</span>
+                  <span>Creator</span>
                 </div>
                 <span className="text-[10px] font-mono text-forest-200">
                   creator@brandlens.demo
@@ -165,7 +165,7 @@ export const LoginPage: React.FC = () => {
               >
                 <div className="flex items-center gap-1.5 font-bold text-xs mb-1">
                   <Lock className="w-3.5 h-3.5 text-brass-800" />
-                  <span>Executive Reviewer</span>
+                  <span>Reviewer</span>
                 </div>
                 <span className="text-[10px] font-mono text-espresso-800 font-semibold">
                   reviewer@brandlens.demo
@@ -223,7 +223,7 @@ export const LoginPage: React.FC = () => {
               className="w-full mt-3"
               iconRight={<ArrowRight className="w-4 h-4 text-brass-400" />}
             >
-              {isSubmitting ? 'Verifying Credentials...' : 'Enter Atelier Chamber'}
+              {isSubmitting ? 'Verifying Credentials...' : 'Sign In'}
             </Button>
           </form>
 

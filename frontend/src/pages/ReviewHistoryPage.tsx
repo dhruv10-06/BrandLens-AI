@@ -63,7 +63,7 @@ export const ReviewHistoryPage: React.FC = () => {
             <span>Immutable Governance Audit Trail</span>
           </div>
           <h1 className="text-3xl font-bold font-serif text-espresso-950 tracking-tight">
-            Historical Brand Adjudication Ledger
+            Brand Review Decisions
           </h1>
           <p className="text-xs sm:text-sm text-espresso-700">
             Historical record of human reviewer sign-off determinations, justifications, and publication authorizations.
@@ -71,7 +71,7 @@ export const ReviewHistoryPage: React.FC = () => {
         </div>
 
         <Button variant="outline" size="sm" onClick={fetchHistory}>
-          Refresh Ledger
+          Refresh History
         </Button>
       </div>
 
@@ -132,7 +132,7 @@ export const ReviewHistoryPage: React.FC = () => {
                       to={`/review/${record.submissionId._id}`}
                       className="text-xs font-semibold text-forest-800 hover:text-forest-900 flex items-center gap-1 transition-colors font-mono underline underline-offset-2"
                     >
-                      <span>Inspect Audit Deck</span>
+                      <span>Inspect Audit Report</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>

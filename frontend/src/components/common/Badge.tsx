@@ -94,7 +94,7 @@ export const EvidenceBadge: React.FC<{ status: EvidenceStatus }> = ({ status }) 
       style: 'bg-olive-100 text-olive-900 border-olive-300',
     },
     compliant: {
-      label: 'Codex Compliant',
+      label: 'Brand Compliant',
       style: 'bg-forest-100 text-forest-900 border-forest-300',
     },
   }[status] || {

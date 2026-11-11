@@ -59,7 +59,7 @@ export const DashboardPage: React.FC = () => {
         <div className="relative z-10 max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAF7F0] border border-[#DDD2BF] text-forest-900 text-xs font-semibold font-mono">
             <Sparkles className="w-3.5 h-3.5 text-brass-700" />
-            <span>Sovereign Brand Governance • Chamber Active</span>
+            <span>Brand Governance • Active</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-serif text-espresso-950 tracking-tight leading-[1.15]">
             Welcome to the Atelier, {user?.name}
@@ -76,26 +76,26 @@ export const DashboardPage: React.FC = () => {
             </Link>
             <Link to="/analytics">
               <Button variant="accent" size="md" icon={<BarChart3 className="w-4 h-4" />}>
-                Brand Telemetry
+                Brand Analytics
               </Button>
             </Link>
             <Link to="/guidelines">
               <Button variant="outline" size="md" icon={<BookOpen className="w-4 h-4 text-brass-700" />}>
-                Inspect Brand Codex
+                Inspect Brand Guidelines
               </Button>
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Asymmetric Governance Triptych: The Sovereign Health Index & Urgent Case Docket */}
+      {/* Asymmetric Governance Overview & Case Docket */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column (7 cols): The Sovereign Brand Integrity Corpus */}
+        {/* Left Column (7 cols): Brand Knowledge Base & Metrics */}
         <div className="lg:col-span-7 bg-[#FDFBF7] p-7 sm:p-8 rounded-2xl border border-[#E2D7C5] shadow-parchment flex flex-col justify-between space-y-6">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-bold uppercase tracking-widest text-brass-800 font-mono">
-                Sovereign Knowledge Corpus
+                Brand Knowledge Base
               </span>
               <span className="inline-flex items-center gap-1.5 text-xs text-forest-900 font-semibold font-mono">
                 <span className="w-2 h-2 rounded-full bg-forest-800 animate-pulse" />
@@ -103,18 +103,18 @@ export const DashboardPage: React.FC = () => {
               </span>
             </div>
             <h2 className="text-2xl font-bold font-serif text-espresso-950 tracking-tight">
-              Enterprise Governance Fleet
+              Governance Overview
             </h2>
             <p className="text-xs text-espresso-700 leading-relaxed">
-              Real-time telemetry across all indexed guideline documents, canonical terminology, and audited creative assets.
+              Real-time compliance overview across all indexed guideline documents, brand rules, and audited creative assets.
             </p>
           </div>
 
-          {/* Three Telemetry Facets */}
+          {/* Three Analytics Facets */}
           <div className="grid grid-cols-3 gap-4 py-4 border-y border-[#EDE6D8]">
             <div className="space-y-1">
               <span className="text-[10px] uppercase font-bold text-espresso-600 font-mono tracking-wider">
-                Codex Docs
+                Guideline Docs
               </span>
               <div className="text-3xl font-bold font-mono text-espresso-950 tabular-nums">
                 {stats.documents}
@@ -213,12 +213,12 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* The Content Portfolio Ledger (Recent Submissions) */}
+      {/* Recent Submissions */}
       <div className="bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment overflow-hidden">
         <div className="p-6 sm:px-8 border-b border-[#EDE6D8] flex items-center justify-between">
           <div>
             <h2 className="text-lg font-bold font-serif text-espresso-950 tracking-tight">
-              Recent Content Portfolio
+              Recent Submissions
             </h2>
             <p className="text-xs text-espresso-700 mt-0.5">
               Campaign copy and creative assets undergoing pre-publication governance

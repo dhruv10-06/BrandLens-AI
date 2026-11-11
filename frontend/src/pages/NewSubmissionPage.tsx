@@ -200,10 +200,10 @@ export const NewSubmissionPage: React.FC = () => {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5EFE4] text-forest-900 text-[11px] font-bold uppercase tracking-widest font-mono border border-[#DDD2BF]">
             <Compass className="w-3.5 h-3.5 text-brass-700" />
-            <span>Creative Atelier Studio</span>
+            <span>AI Content Studio</span>
           </div>
           <h1 className="text-3xl font-bold font-serif text-espresso-950 tracking-tight">
-            New Campaign Submission
+            New Content Submission
           </h1>
           <p className="text-xs sm:text-sm text-espresso-700">
             Submit campaign copy or visual creative assets for real-time automated brand compliance auditing.
@@ -450,7 +450,7 @@ export const NewSubmissionPage: React.FC = () => {
             icon={<Sparkles className="w-4 h-4 text-brass-400" />}
             className="w-full sm:w-auto min-w-[240px]"
           >
-            {isSubmitting ? 'Auditing Content in Codex...' : 'Initiate Brand Governance Audit'}
+            {isSubmitting ? 'Auditing Content...' : 'Run Brand Governance Audit'}
           </Button>
         </div>
       </form>
