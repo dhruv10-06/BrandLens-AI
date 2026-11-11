@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ENV, isProd } from '../config/env.js';
 import { RAGRetrievalResult } from './rag.service.js';
+import { executeGeminiRequestWithRetry } from '../utils/geminiRetry.js';
 
 // Strict Zod schema for individual findings
 export const FindingSchema = z.object({
@@ -165,48 +166,27 @@ Return a single JSON object with the following structure:
   ]
 }`;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), this.REQUEST_TIMEOUT_MS);
-
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${this.MODEL_NAME}:generateContent?key=${ENV.GEMINI_API_KEY}`,
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.MODEL_NAME}:generateContent?key=${ENV.GEMINI_API_KEY}`;
+    const body = {
+      contents: [
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          signal: controller.signal,
-          body: JSON.stringify({
-            contents: [
-              {
-                role: 'user',
-                parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }],
-              },
-            ],
-            generationConfig: {
-              responseMimeType: 'application/json',
-            },
-          }),
-        }
-      );
+          role: 'user',
+          parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }],
+        },
+      ],
+      generationConfig: {
+        responseMimeType: 'application/json',
+      },
+    };
 
-      clearTimeout(timeoutId);
+    const data = await executeGeminiRequestWithRetry({
+      url,
+      body,
+      timeoutMs: this.REQUEST_TIMEOUT_MS,
+      serviceName: 'Gemini API',
+    });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Gemini API Error (Status ${response.status}): ${errorText}`);
-      }
-
-      const data: any = await response.json();
-      return this.parseGeminiResponse(data);
-    } catch (err: any) {
-      clearTimeout(timeoutId);
-      if (err.name === 'AbortError') {
-        throw new Error(`Gemini API request timed out after ${this.REQUEST_TIMEOUT_MS / 1000} seconds.`);
-      }
-      throw err;
-    }
+    return this.parseGeminiResponse(data);
   }
 
   /**
