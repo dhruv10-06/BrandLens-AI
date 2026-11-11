@@ -3,6 +3,7 @@ import { ENV, isProd } from '../config/env.js';
 import { IOrganisation } from '../models/Organisation.js';
 import { executeGeminiRequestWithRetry } from '../utils/geminiRetry.js';
 import { VISUAL_ANALYSIS_JSON_SCHEMA } from '../utils/aiSchemas.js';
+import { validateImageDimensions } from '../utils/imageValidator.js';
 
 export const VisualFindingSchema = z.object({
   category: z.enum([
@@ -77,6 +78,14 @@ export class VisualAnalysisService {
     title?: string,
     associatedCopy?: string
   ): Promise<VisualAnalysisResult> {
+    // Defense-in-depth: Validate image format, integrity, and minimum dimensions
+    const dims = validateImageDimensions(imageBase64, mimeType);
+    if (dims.width < 32 || dims.height < 32) {
+      throw new Error(
+        `Image dimensions (${dims.width}×${dims.height}px) do not meet the minimum requirement of 32×32 pixels for visual brand compliance analysis.`
+      );
+    }
+
     // Strip data URL prefix if present (e.g. data:image/png;base64,...)
     const cleanBase64 = imageBase64.replace(/^data:image\/[a-zA-Z+]+;base64,/, '');
 

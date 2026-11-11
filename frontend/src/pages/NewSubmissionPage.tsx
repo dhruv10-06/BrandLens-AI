@@ -111,6 +111,13 @@ export const NewSubmissionPage: React.FC = () => {
       const dataUrl = reader.result as string;
       const img = new Image();
       img.onload = () => {
+        if (img.width < 32 || img.height < 32) {
+          setError(
+            `Image dimensions (${img.width}×${img.height}px) do not meet the minimum requirement of 32×32 pixels.`
+          );
+          if (imageInputRef.current) imageInputRef.current.value = '';
+          return;
+        }
         setVisualAsset({
           filename: file.name,
           fileType: file.type,
@@ -121,6 +128,10 @@ export const NewSubmissionPage: React.FC = () => {
         if (submissionFormat === 'text') {
           setSubmissionFormat('multi_format');
         }
+      };
+      img.onerror = () => {
+        setError('Corrupted or invalid image file. Please upload a valid PNG, JPG, WebP, GIF, or SVG.');
+        if (imageInputRef.current) imageInputRef.current.value = '';
       };
       img.src = dataUrl;
     };

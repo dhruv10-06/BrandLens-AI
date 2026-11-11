@@ -398,7 +398,7 @@ describe('Gemini API Resilience, Retry & Error Handling Tests', () => {
       };
 
       const result = await VisualAnalysisService.analyzeImage(
-        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAAElFTkSuQmCC',
         'image/png',
         fakeOrg
       );

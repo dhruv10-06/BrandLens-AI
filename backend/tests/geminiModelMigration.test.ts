@@ -300,7 +300,7 @@ describe('Gemini 3.8 Flash Migration & Response Parsing Tests', () => {
         };
 
         await VisualAnalysisService.analyzeImage(
-          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAAElFTkSuQmCC',
           'image/png',
           fakeOrg
         );

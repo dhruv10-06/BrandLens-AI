@@ -8,6 +8,7 @@ import { RAGService } from '../services/rag.service.js';
 import { AnalysisService } from '../services/analysis.service.js';
 import { VisualAnalysisService } from '../services/visualAnalysis.service.js';
 import { DocumentParserService } from '../services/documentParser.service.js';
+import { validateImageDimensions } from '../utils/imageValidator.js';
 
 const VisualAssetSchema = z.object({
   filename: z.string().min(1),
@@ -63,6 +64,26 @@ export class SubmissionController {
   public static async createSubmission(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { title, contentType, submissionFormat, content, visualAsset } = CreateSubmissionSchema.parse(req.body);
+
+      // Validate visual asset dimensions and integrity before creating submission
+      if (visualAsset && visualAsset.dataUrl) {
+        try {
+          const validatedDims = validateImageDimensions(
+            visualAsset.dataUrl,
+            visualAsset.fileType,
+            visualAsset.fileSize,
+            visualAsset.dimensions
+          );
+          visualAsset.dimensions = { width: validatedDims.width, height: validatedDims.height };
+        } catch (valErr: any) {
+          res.status(400).json({
+            success: false,
+            error: valErr.message || 'Invalid creative asset image.',
+          });
+          return;
+        }
+      }
+
       const orgId = new mongoose.Types.ObjectId(req.user!.organizationId);
       const userId = new mongoose.Types.ObjectId(req.user!.id);
 
@@ -462,6 +483,25 @@ export class SubmissionController {
           error: 'Access denied: You can only re-analyze your own content submissions.',
         });
         return;
+      }
+
+      // Validate visual asset dimensions before re-analyzing
+      if (submission.visualAsset && submission.visualAsset.dataUrl) {
+        try {
+          const validatedDims = validateImageDimensions(
+            submission.visualAsset.dataUrl,
+            submission.visualAsset.fileType,
+            submission.visualAsset.fileSize,
+            submission.visualAsset.dimensions
+          );
+          submission.visualAsset.dimensions = { width: validatedDims.width, height: validatedDims.height };
+        } catch (valErr: any) {
+          res.status(400).json({
+            success: false,
+            error: valErr.message || 'Invalid creative asset image.',
+          });
+          return;
+        }
       }
 
       const previousStatus = submission.status;

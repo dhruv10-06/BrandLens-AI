@@ -352,7 +352,7 @@ describe('Groq AI Provider Integration & Dual-Provider Resilience Tests', () => 
         });
       });
 
-      const base64Data = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+      const base64Data = 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAAElFTkSuQmCC';
       const result = await VisualAnalysisService.analyzeImage(
         base64Data,
         'image/png',
