@@ -269,7 +269,7 @@ export const AnalysisResultsPage: React.FC = () => {
               {submission.title}
             </h1>
             <p className="text-xs text-slate-500 leading-relaxed">
-              {analysis?.summary || 'Analysis completed against approved brand guidelines and visual standards.'}
+              {analysis?.summary || 'Draft saved. Click "Re-Analyze Revised Copy" above to run brand compliance checks.'}
             </p>
           </div>
 
@@ -478,7 +478,17 @@ export const AnalysisResultsPage: React.FC = () => {
           {/* TAB 1: Written Copy Findings */}
           {activeTab === 'copy' && (
             <div className="space-y-3">
-              {filteredTextFindings.length === 0 ? (
+              {!analysis ? (
+                <div className="p-8 bg-white rounded-2xl border border-dashed border-slate-300 text-center space-y-2">
+                  <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
+                  <h4 className="text-sm font-bold text-slate-900">
+                    No Analysis Report Generated Yet
+                  </h4>
+                  <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                    This submission is currently saved as a draft. Click <strong>"Re-Analyze Revised Copy"</strong> in the workspace to evaluate brand governance compliance.
+                  </p>
+                </div>
+              ) : filteredTextFindings.length === 0 ? (
                 <div className="p-8 bg-white rounded-2xl border border-slate-200 text-center space-y-2">
                   <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
                   <h4 className="text-sm font-bold text-slate-900">

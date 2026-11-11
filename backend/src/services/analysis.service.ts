@@ -34,7 +34,7 @@ export const AIAnalysisReportSchema = z.object({
 export type AIAnalysisReport = z.infer<typeof AIAnalysisReportSchema>;
 
 export class AnalysisService {
-  private static readonly MODEL_NAME = 'gemini-2.5-flash';
+  private static readonly MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
   private static readonly REQUEST_TIMEOUT_MS = 25000;
 
   /**
@@ -195,19 +195,37 @@ Return a single JSON object with the following structure:
       }
 
       const data: any = await response.json();
-      const rawJson = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      const parts: any[] = data?.candidates?.[0]?.content?.parts || [];
 
-      if (!rawJson) {
-        throw new Error('Gemini API returned an empty candidate text response.');
+      // Extract JSON text, skipping internal thought/reasoning blocks
+      let rawJson = '';
+      for (const p of parts) {
+        if (p.text && !p.thought) {
+          rawJson = p.text;
+          break;
+        }
+      }
+      if (!rawJson && parts.length > 0) {
+        rawJson = parts[parts.length - 1].text || '';
       }
 
-      // Parse JSON safely
+      if (!rawJson) {
+        const finishReason = data?.candidates?.[0]?.finishReason;
+        throw new Error(`Gemini API returned an empty candidate text response (finishReason: ${finishReason || 'none'}).`);
+      }
+
+      // Parse JSON safely with markdown codeblock extraction
       let parsedObj: any;
+      let cleaned = rawJson.trim();
+      const jsonMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        cleaned = jsonMatch[1].trim();
+      }
       try {
-        parsedObj = JSON.parse(rawJson);
-      } catch (err: any) {
-        const cleaned = rawJson.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
         parsedObj = JSON.parse(cleaned);
+      } catch (err: any) {
+        const simpleCleaned = rawJson.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
+        parsedObj = JSON.parse(simpleCleaned);
       }
 
       // Validate against Zod schema

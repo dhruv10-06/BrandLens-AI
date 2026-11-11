@@ -133,7 +133,7 @@ export const SubmissionsListPage: React.FC = () => {
                     to={`/submissions/${sub._id}/analysis`}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition"
                   >
-                    <span>View Analysis</span>
+                    <span>{sub.latestAnalysisId ? 'View Analysis' : 'View / Analyze Draft'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>

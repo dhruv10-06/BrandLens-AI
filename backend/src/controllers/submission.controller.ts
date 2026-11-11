@@ -106,88 +106,101 @@ export class SubmissionController {
         ],
       });
 
-      // 2. Execute RAG Retrieval & Written Content Analysis
-      const ragResult = await RAGService.retrieveRelevantKnowledge(orgId, safeContent, 6);
-      const analysisOutput = await AnalysisService.analyzeContent(
-        safeContent,
-        contentType,
-        title,
-        ragResult
-      );
-
-      // 3. Execute Multimodal Visual Compliance Analysis if creative is attached
-      let visualResult: any = undefined;
-      if (visualAsset && visualAsset.dataUrl) {
-        visualResult = await VisualAnalysisService.analyzeImage(
-          visualAsset.dataUrl,
-          visualAsset.fileType,
-          org,
+      try {
+        // 2. Execute RAG Retrieval & Written Content Analysis
+        const ragResult = await RAGService.retrieveRelevantKnowledge(orgId, safeContent, 6);
+        const analysisOutput = await AnalysisService.analyzeContent(
+          safeContent,
+          contentType,
           title,
-          safeContent
+          ragResult
         );
+
+        // 3. Execute Multimodal Visual Compliance Analysis if creative is attached
+        let visualResult: any = undefined;
+        if (visualAsset && visualAsset.dataUrl) {
+          visualResult = await VisualAnalysisService.analyzeImage(
+            visualAsset.dataUrl,
+            visualAsset.fileType,
+            org,
+            title,
+            safeContent
+          );
+        }
+
+        // 4. Calculate Combined Overall Score
+        let finalScore = analysisOutput.overallComplianceScore;
+        let finalStatus = analysisOutput.status;
+
+        if (visualResult && content && content.trim().length >= 5) {
+          // Weighted composite score: 55% copy compliance, 45% visual brand compliance
+          finalScore = Math.round(analysisOutput.overallComplianceScore * 0.55 + visualResult.overallVisualScore * 0.45);
+        } else if (visualResult && (!content || content.trim().length < 5)) {
+          finalScore = visualResult.overallVisualScore;
+        }
+
+        const hasViolations =
+          analysisOutput.findings.length > 0 || (visualResult && visualResult.visualFindings?.length > 0);
+
+        finalStatus =
+          finalScore >= 90 && !hasViolations
+            ? 'passed'
+            : finalScore >= 70
+            ? 'warning'
+            : 'violations_found';
+
+        const compositeSummary = visualResult
+          ? `${analysisOutput.summary} Visual Audit: ${visualResult.summary}`
+          : analysisOutput.summary;
+
+        // 5. Save Analysis Report
+        const report = await AnalysisReport.create({
+          submissionId: submission._id,
+          organizationId: orgId,
+          analyzedContent: safeContent,
+          overallComplianceScore: finalScore,
+          status: finalStatus,
+          summary: compositeSummary,
+          findings: analysisOutput.findings,
+          visualAnalysis: visualResult ? {
+            overallVisualScore: visualResult.overallVisualScore,
+            detectedColors: visualResult.detectedColors || [],
+            logoAnalysis: visualResult.logoAnalysis,
+            typographyAnalysis: visualResult.typographyAnalysis,
+            visualFindings: visualResult.visualFindings || [],
+          } : undefined,
+          retrievedChunkIds: ragResult.guidelineChunkIds,
+          aiModelUsed: visualResult ? 'gemini-2.5-flash-multimodal' : (analysisOutput.aiModelUsed || 'gemini-2.5-flash'),
+        });
+
+        // 6. Update submission status based on findings
+        const newStatus =
+          !hasViolations || finalScore >= 90
+            ? 'pending_review'
+            : 'needs_changes';
+
+        submission.status = newStatus;
+        submission.latestAnalysisId = report._id as mongoose.Types.ObjectId;
+        await submission.save();
+
+        res.status(201).json({
+          success: true,
+          message: 'Content submitted and analyzed successfully.',
+          submission,
+          analysis: report,
+        });
+      } catch (analysisErr: any) {
+        // Fallback: If AI analysis fails, mark submission as 'draft' rather than leaving stuck in 'analysing'
+        submission.status = 'draft';
+        await submission.save();
+        res.status(201).json({
+          success: true,
+          message: 'Content submission saved as draft. AI analysis is temporarily unavailable; click "Re-Analyze" to retry.',
+          submission,
+          analysis: null,
+          warning: analysisErr?.message || 'AI analysis could not complete immediately.',
+        });
       }
-
-      // 4. Calculate Combined Overall Score
-      let finalScore = analysisOutput.overallComplianceScore;
-      let finalStatus = analysisOutput.status;
-
-      if (visualResult && content && content.trim().length >= 5) {
-        // Weighted composite score: 55% copy compliance, 45% visual brand compliance
-        finalScore = Math.round(analysisOutput.overallComplianceScore * 0.55 + visualResult.overallVisualScore * 0.45);
-      } else if (visualResult && (!content || content.trim().length < 5)) {
-        finalScore = visualResult.overallVisualScore;
-      }
-
-      const hasViolations =
-        analysisOutput.findings.length > 0 || (visualResult && visualResult.visualFindings?.length > 0);
-
-      finalStatus =
-        finalScore >= 90 && !hasViolations
-          ? 'passed'
-          : finalScore >= 70
-          ? 'warning'
-          : 'violations_found';
-
-      const compositeSummary = visualResult
-        ? `${analysisOutput.summary} Visual Audit: ${visualResult.summary}`
-        : analysisOutput.summary;
-
-      // 5. Save Analysis Report
-      const report = await AnalysisReport.create({
-        submissionId: submission._id,
-        organizationId: orgId,
-        analyzedContent: safeContent,
-        overallComplianceScore: finalScore,
-        status: finalStatus,
-        summary: compositeSummary,
-        findings: analysisOutput.findings,
-        visualAnalysis: visualResult ? {
-          overallVisualScore: visualResult.overallVisualScore,
-          detectedColors: visualResult.detectedColors || [],
-          logoAnalysis: visualResult.logoAnalysis,
-          typographyAnalysis: visualResult.typographyAnalysis,
-          visualFindings: visualResult.visualFindings || [],
-        } : undefined,
-        retrievedChunkIds: ragResult.guidelineChunkIds,
-        aiModelUsed: visualResult ? 'gemini-2.5-flash-multimodal' : (analysisOutput.aiModelUsed || 'gemini-2.5-flash'),
-      });
-
-      // 6. Update submission status based on findings
-      const newStatus =
-        !hasViolations || finalScore >= 90
-          ? 'pending_review'
-          : 'needs_changes';
-
-      submission.status = newStatus;
-      submission.latestAnalysisId = report._id as mongoose.Types.ObjectId;
-      await submission.save();
-
-      res.status(201).json({
-        success: true,
-        message: 'Content submitted and analyzed successfully.',
-        submission,
-        analysis: report,
-      });
     } catch (err: any) {
       next(err);
     }
@@ -221,12 +234,72 @@ export class SubmissionController {
   }
 
   /**
+   * Reconciles submissions that are stuck in 'analysing' state due to
+   * transient network interruptions or unhandled errors during previous analysis calls.
+   */
+  private static async reconcileStuckSubmission(submission: any): Promise<any> {
+    if (submission.status !== 'analysing') {
+      return submission;
+    }
+
+    // Check if an analysis report exists
+    let report: any = submission.latestAnalysisId;
+    if (!report || !report._id) {
+      report = await AnalysisReport.findOne({ submissionId: submission._id }).sort({ createdAt: -1 });
+    }
+
+    if (report) {
+      const hasViolations =
+        (report.findings && report.findings.length > 0) ||
+        (report.visualAnalysis?.visualFindings && report.visualAnalysis.visualFindings.length > 0);
+      const score = report.overallComplianceScore ?? 0;
+      const reconciledStatus = (!hasViolations || score >= 90) ? 'pending_review' : 'needs_changes';
+
+      await ContentSubmission.updateOne(
+        { _id: submission._id },
+        {
+          $set: {
+            status: reconciledStatus,
+            latestAnalysisId: report._id || report,
+          },
+        }
+      );
+      submission.status = reconciledStatus;
+      if (!submission.latestAnalysisId) {
+        submission.latestAnalysisId = report;
+      }
+    } else {
+      // No report found. If submission was created/updated > 30 seconds ago, it is stuck
+      const lastModified = submission.updatedAt ? new Date(submission.updatedAt).getTime() : 0;
+      const ageMs = Date.now() - lastModified;
+      if (ageMs > 30000) {
+        await ContentSubmission.updateOne(
+          { _id: submission._id },
+          { $set: { status: 'draft' } }
+        );
+        submission.status = 'draft';
+      }
+    }
+
+    return submission;
+  }
+
+  /**
    * List all submissions for the organization.
    */
   public static async getSubmissions(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const orgId = new mongoose.Types.ObjectId(req.user!.organizationId);
       const { status, contentType } = req.query;
+
+      // Proactively reconcile any submissions stuck in 'analysing'
+      const stuckSubs = await ContentSubmission.find({
+        organizationId: orgId,
+        status: 'analysing',
+      });
+      for (const stuck of stuckSubs) {
+        await SubmissionController.reconcileStuckSubmission(stuck);
+      }
 
       const query: any = { organizationId: orgId };
       if (status && status !== 'all') {
@@ -259,7 +332,7 @@ export class SubmissionController {
       const { id } = req.params;
       const orgId = new mongoose.Types.ObjectId(req.user!.organizationId);
 
-      const submission = await ContentSubmission.findOne({
+      let submission = await ContentSubmission.findOne({
         _id: id,
         organizationId: orgId,
       })
@@ -278,6 +351,22 @@ export class SubmissionController {
           error: 'Content submission not found or does not belong to your organisation.',
         });
         return;
+      }
+
+      if (submission.status === 'analysing') {
+        await SubmissionController.reconcileStuckSubmission(submission);
+        submission = await ContentSubmission.findOne({
+          _id: id,
+          organizationId: orgId,
+        })
+          .populate('creatorId', 'name email role')
+          .populate({
+            path: 'latestAnalysisId',
+            populate: {
+              path: 'retrievedChunkIds',
+              select: 'chunkIndex content metadata',
+            },
+          });
       }
 
       res.json({
@@ -374,88 +463,99 @@ export class SubmissionController {
         return;
       }
 
+      const previousStatus = submission.status;
       submission.status = 'analysing';
       await submission.save();
 
-      // Run RAG and AI Analysis on updated current content
-      const ragResult = await RAGService.retrieveRelevantKnowledge(orgId, submission.currentContent, 6);
-      const analysisOutput = await AnalysisService.analyzeContent(
-        submission.currentContent,
-        submission.contentType,
-        submission.title,
-        ragResult
-      );
+      try {
+        // Run RAG and AI Analysis on updated current content
+        const ragResult = await RAGService.retrieveRelevantKnowledge(orgId, submission.currentContent, 6);
+        const analysisOutput = await AnalysisService.analyzeContent(
+          submission.currentContent,
+          submission.contentType,
+          submission.title,
+          ragResult
+        );
 
-      // Re-run visual analysis if submission has an attached visual asset
-      let visualResult: any = undefined;
-      if (submission.visualAsset && submission.visualAsset.dataUrl) {
-        const org = await Organisation.findById(orgId);
-        if (org) {
-          visualResult = await VisualAnalysisService.analyzeImage(
-            submission.visualAsset.dataUrl,
-            submission.visualAsset.fileType,
-            org,
-            submission.title,
-            submission.currentContent
-          );
+        // Re-run visual analysis if submission has an attached visual asset
+        let visualResult: any = undefined;
+        if (submission.visualAsset && submission.visualAsset.dataUrl) {
+          const org = await Organisation.findById(orgId);
+          if (org) {
+            visualResult = await VisualAnalysisService.analyzeImage(
+              submission.visualAsset.dataUrl,
+              submission.visualAsset.fileType,
+              org,
+              submission.title,
+              submission.currentContent
+            );
+          }
         }
+
+        let finalScore = analysisOutput.overallComplianceScore;
+        if (visualResult && submission.currentContent && submission.currentContent.trim().length >= 5) {
+          finalScore = Math.round(analysisOutput.overallComplianceScore * 0.55 + visualResult.overallVisualScore * 0.45);
+        } else if (visualResult && (!submission.currentContent || submission.currentContent.trim().length < 5)) {
+          finalScore = visualResult.overallVisualScore;
+        }
+
+        const hasViolations =
+          analysisOutput.findings.length > 0 || (visualResult && visualResult.visualFindings?.length > 0);
+
+        const finalStatus =
+          finalScore >= 90 && !hasViolations
+            ? 'passed'
+            : finalScore >= 70
+            ? 'warning'
+            : 'violations_found';
+
+        const compositeSummary = visualResult
+          ? `${analysisOutput.summary} Visual Audit: ${visualResult.summary}`
+          : analysisOutput.summary;
+
+        const report = await AnalysisReport.create({
+          submissionId: submission._id,
+          organizationId: orgId,
+          analyzedContent: submission.currentContent,
+          overallComplianceScore: finalScore,
+          status: finalStatus,
+          summary: compositeSummary,
+          findings: analysisOutput.findings,
+          visualAnalysis: visualResult ? {
+            overallVisualScore: visualResult.overallVisualScore,
+            detectedColors: visualResult.detectedColors || [],
+            logoAnalysis: visualResult.logoAnalysis,
+            typographyAnalysis: visualResult.typographyAnalysis,
+            visualFindings: visualResult.visualFindings || [],
+          } : undefined,
+          retrievedChunkIds: ragResult.guidelineChunkIds,
+          aiModelUsed: visualResult ? 'gemini-2.5-flash-multimodal' : (analysisOutput.aiModelUsed || 'gemini-2.5-flash'),
+        });
+
+        const newStatus =
+          !hasViolations || finalScore >= 90
+            ? 'pending_review'
+            : 'needs_changes';
+
+        submission.status = newStatus;
+        submission.latestAnalysisId = report._id as mongoose.Types.ObjectId;
+        await submission.save();
+
+        res.json({
+          success: true,
+          message: 'Content re-analyzed successfully.',
+          submission,
+          analysis: report,
+        });
+      } catch (analysisErr: any) {
+        // If re-analysis fails, restore previous status so submission is not stuck in 'analysing'
+        submission.status = previousStatus !== 'analysing' ? previousStatus : 'needs_changes';
+        await submission.save();
+        res.status(500).json({
+          success: false,
+          error: `Re-analysis failed: ${analysisErr.message || 'AI service error'}. Submission restored to ${submission.status}.`,
+        });
       }
-
-      let finalScore = analysisOutput.overallComplianceScore;
-      if (visualResult && submission.currentContent && submission.currentContent.trim().length >= 5) {
-        finalScore = Math.round(analysisOutput.overallComplianceScore * 0.55 + visualResult.overallVisualScore * 0.45);
-      } else if (visualResult && (!submission.currentContent || submission.currentContent.trim().length < 5)) {
-        finalScore = visualResult.overallVisualScore;
-      }
-
-      const hasViolations =
-        analysisOutput.findings.length > 0 || (visualResult && visualResult.visualFindings?.length > 0);
-
-      const finalStatus =
-        finalScore >= 90 && !hasViolations
-          ? 'passed'
-          : finalScore >= 70
-          ? 'warning'
-          : 'violations_found';
-
-      const compositeSummary = visualResult
-        ? `${analysisOutput.summary} Visual Audit: ${visualResult.summary}`
-        : analysisOutput.summary;
-
-      const report = await AnalysisReport.create({
-        submissionId: submission._id,
-        organizationId: orgId,
-        analyzedContent: submission.currentContent,
-        overallComplianceScore: finalScore,
-        status: finalStatus,
-        summary: compositeSummary,
-        findings: analysisOutput.findings,
-        visualAnalysis: visualResult ? {
-          overallVisualScore: visualResult.overallVisualScore,
-          detectedColors: visualResult.detectedColors || [],
-          logoAnalysis: visualResult.logoAnalysis,
-          typographyAnalysis: visualResult.typographyAnalysis,
-          visualFindings: visualResult.visualFindings || [],
-        } : undefined,
-        retrievedChunkIds: ragResult.guidelineChunkIds,
-        aiModelUsed: visualResult ? 'gemini-2.5-flash-multimodal' : (analysisOutput.aiModelUsed || 'gemini-2.5-flash'),
-      });
-
-      const newStatus =
-        !hasViolations || finalScore >= 90
-          ? 'pending_review'
-          : 'needs_changes';
-
-      submission.status = newStatus;
-      submission.latestAnalysisId = report._id as mongoose.Types.ObjectId;
-      await submission.save();
-
-      res.json({
-        success: true,
-        message: 'Content re-analyzed successfully.',
-        submission,
-        analysis: report,
-      });
     } catch (err: any) {
       next(err);
     }
