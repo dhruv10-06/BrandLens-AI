@@ -58,6 +58,10 @@ export class VisualAnalysisService {
     const parsed = parseInt(process.env.GEMINI_TIMEOUT_MS || '', 10);
     return Number.isFinite(parsed) && parsed >= 5000 ? parsed : 60000;
   }
+  public static get PER_ATTEMPT_TIMEOUT_MS(): number {
+    const parsed = parseInt(process.env.GEMINI_PER_ATTEMPT_TIMEOUT_MS || '', 10);
+    return Number.isFinite(parsed) && parsed >= 3000 ? parsed : 20000;
+  }
 
   /**
    * Run Visual Brand Compliance analysis on an image buffer or base64 data URL.
@@ -230,6 +234,7 @@ Return a single JSON object with this exact structure:
       url,
       body,
       timeoutMs: this.REQUEST_TIMEOUT_MS,
+      perAttemptTimeoutMs: this.PER_ATTEMPT_TIMEOUT_MS,
       serviceName: 'Gemini Multimodal API',
     });
 

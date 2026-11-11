@@ -38,6 +38,12 @@ if (isProduction) {
 const parsedGeminiTimeout = parseInt(process.env.GEMINI_TIMEOUT_MS || '', 10);
 const validatedGeminiTimeout = Number.isFinite(parsedGeminiTimeout) && parsedGeminiTimeout >= 5000 ? parsedGeminiTimeout : 60000;
 
+const parsedGeminiPerAttemptTimeout = parseInt(process.env.GEMINI_PER_ATTEMPT_TIMEOUT_MS || '', 10);
+const validatedGeminiPerAttemptTimeout =
+  Number.isFinite(parsedGeminiPerAttemptTimeout) && parsedGeminiPerAttemptTimeout >= 3000
+    ? parsedGeminiPerAttemptTimeout
+    : 20000;
+
 export const ENV = {
   PORT: parseInt(process.env.PORT || '5000', 10),
   NODE_ENV,
@@ -48,6 +54,7 @@ export const ENV = {
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
   GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-3.8-flash',
   GEMINI_TIMEOUT_MS: validatedGeminiTimeout,
+  GEMINI_PER_ATTEMPT_TIMEOUT_MS: validatedGeminiPerAttemptTimeout,
   MAX_FILE_SIZE_MB: parseInt(process.env.MAX_FILE_SIZE_MB || '10', 10),
 };
 

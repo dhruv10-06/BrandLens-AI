@@ -477,5 +477,120 @@ describe('Gemini API Resilience, Retry & Error Handling Tests', () => {
       ).rejects.toThrow(/request timed out after 0.05 seconds/);
     });
   });
+
+  describe('6. Two-Tier Timeout & Per-Attempt Recovery Tests', () => {
+    it('recovers successfully when attempt 1 hits per-attempt timeout and attempt 2 succeeds', async () => {
+      let callCount = 0;
+      globalThis.fetch = vi.fn().mockImplementation(async (_url, options) => {
+        callCount++;
+        if (callCount === 1) {
+          // Attempt 1 hangs until aborted by its per-attempt timeout
+          return new Promise((_resolve, reject) => {
+            options?.signal?.addEventListener('abort', () => {
+              const err = new Error('The operation was aborted');
+              err.name = 'AbortError';
+              reject(err);
+            });
+          });
+        }
+        // Attempt 2 succeeds immediately
+        return new Response(JSON.stringify({ result: 'recovered_after_per_attempt_timeout' }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      });
+
+      const result = await executeGeminiRequestWithRetry({
+        url: 'https://example.com/gemini',
+        body: {},
+        timeoutMs: 5000, // 5s overall deadline
+        perAttemptTimeoutMs: 30, // 30ms per attempt
+        baseDelayMs: 10,
+        maxRetries: 3,
+      });
+
+      expect(callCount).toBe(2);
+      expect(result).toEqual({ result: 'recovered_after_per_attempt_timeout' });
+    });
+
+    it('exhausts all retries when every attempt hits per-attempt timeout', async () => {
+      let callCount = 0;
+      globalThis.fetch = vi.fn().mockImplementation(async (_url, options) => {
+        callCount++;
+        return new Promise((_resolve, reject) => {
+          options?.signal?.addEventListener('abort', () => {
+            const err = new Error('The operation was aborted');
+            err.name = 'AbortError';
+            reject(err);
+          });
+        });
+      });
+
+      await expect(
+        executeGeminiRequestWithRetry({
+          url: 'https://example.com/gemini',
+          body: {},
+          timeoutMs: 5000,
+          perAttemptTimeoutMs: 25,
+          baseDelayMs: 10,
+          maxRetries: 3,
+        })
+      ).rejects.toThrow(/timed out/);
+
+      // 1 initial attempt + 3 retries = 4 attempts total
+      expect(callCount).toBe(4);
+    });
+
+    it('overall deadline terminates attempts when overall timeout fires', async () => {
+      let callCount = 0;
+      globalThis.fetch = vi.fn().mockImplementation(async (_url, options) => {
+        callCount++;
+        return new Promise((_resolve, reject) => {
+          options?.signal?.addEventListener('abort', () => {
+            const err = new Error('The operation was aborted');
+            err.name = 'AbortError';
+            reject(err);
+          });
+        });
+      });
+
+      await expect(
+        executeGeminiRequestWithRetry({
+          url: 'https://example.com/gemini',
+          body: {},
+          timeoutMs: 60, // 60ms overall
+          perAttemptTimeoutMs: 150, // Per-attempt is longer than overall deadline
+          baseDelayMs: 10,
+          maxRetries: 3,
+        })
+      ).rejects.toThrow(/request timed out after 0.06 seconds/);
+    });
+
+    it('AnalysisService and VisualAnalysisService PER_ATTEMPT_TIMEOUT_MS defaults to 20000ms and validates env', () => {
+      const originalEnv = process.env.GEMINI_PER_ATTEMPT_TIMEOUT_MS;
+      try {
+        delete process.env.GEMINI_PER_ATTEMPT_TIMEOUT_MS;
+        expect(AnalysisService.PER_ATTEMPT_TIMEOUT_MS).toBe(20000);
+        expect(VisualAnalysisService.PER_ATTEMPT_TIMEOUT_MS).toBe(20000);
+
+        process.env.GEMINI_PER_ATTEMPT_TIMEOUT_MS = '25000';
+        expect(AnalysisService.PER_ATTEMPT_TIMEOUT_MS).toBe(25000);
+        expect(VisualAnalysisService.PER_ATTEMPT_TIMEOUT_MS).toBe(25000);
+
+        // Invalid non-numeric or too small fallback
+        process.env.GEMINI_PER_ATTEMPT_TIMEOUT_MS = 'invalid';
+        expect(AnalysisService.PER_ATTEMPT_TIMEOUT_MS).toBe(20000);
+
+        process.env.GEMINI_PER_ATTEMPT_TIMEOUT_MS = '1000'; // Less than 3000ms
+        expect(AnalysisService.PER_ATTEMPT_TIMEOUT_MS).toBe(20000);
+      } finally {
+        if (originalEnv !== undefined) {
+          process.env.GEMINI_PER_ATTEMPT_TIMEOUT_MS = originalEnv;
+        } else {
+          delete process.env.GEMINI_PER_ATTEMPT_TIMEOUT_MS;
+        }
+      }
+    });
+  });
 });
 
