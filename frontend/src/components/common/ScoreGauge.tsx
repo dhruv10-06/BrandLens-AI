@@ -9,36 +9,36 @@ interface ScoreGaugeProps {
 export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
   score,
   size = 'md',
-  labelSubtitle = 'Audited against approved brand guidelines',
+  labelSubtitle = 'Audited against sovereign brand codex',
 }) => {
   const getColor = (val: number) => {
     if (val >= 90) {
       return {
-        stroke: '#059669',
-        trackStroke: '#D1FAE5',
-        text: 'text-emerald-700',
-        bg: 'bg-emerald-50/80',
-        border: 'border-emerald-200',
-        label: 'Brand Compliant',
+        stroke: '#243C32', // Deep forest green
+        trackStroke: '#E5EFEA',
+        text: 'text-forest-900',
+        bg: 'bg-forest-50/90',
+        border: 'border-forest-300',
+        label: 'Sovereign Grade',
       };
     }
     if (val >= 70) {
       return {
-        stroke: '#D97706',
-        trackStroke: '#FEF3C7',
-        text: 'text-amber-700',
-        bg: 'bg-amber-50/80',
-        border: 'border-amber-200',
-        label: 'Advisory Warnings',
+        stroke: '#B49A68', // Antique burnished brass
+        trackStroke: '#F9F5EC',
+        text: 'text-brass-900',
+        bg: 'bg-brass-50/90',
+        border: 'border-brass-300',
+        label: 'Advisory Variance',
       };
     }
     return {
-      stroke: '#E11D48',
-      trackStroke: '#FFE4E6',
-      text: 'text-rose-700',
-      bg: 'bg-rose-50/80',
-      border: 'border-rose-200',
-      label: 'Violations Detected',
+      stroke: '#632F3C', // Oxblood burgundy
+      trackStroke: '#F9E7EC',
+      text: 'text-oxblood-900',
+      bg: 'bg-oxblood-50/90',
+      border: 'border-oxblood-300',
+      label: 'Breach Detected',
     };
   };
 
@@ -48,7 +48,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
   if (size === 'sm') {
     return (
       <div
-        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border font-bold text-xs ${bg} ${border} ${text} shadow-subtle`}
+        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border font-semibold text-xs ${bg} ${border} ${text} shadow-parchment-sm`}
       >
         <span className="font-mono tabular-nums">{score}%</span>
         <span className="text-[10px] uppercase font-bold tracking-wider opacity-90">({label})</span>
@@ -59,7 +59,7 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
   const dimensions = size === 'lg' ? { box: 'w-24 h-24', text: 'text-3xl' } : { box: 'w-16 h-16', text: 'text-xl' };
 
   return (
-    <div className="flex items-center gap-4 p-4 rounded-2xl border border-[#EAE8E3] bg-white shadow-card">
+    <div className="flex items-center gap-4 p-4 rounded-xl border border-[#E7DECE] bg-[#FDFBF7] shadow-parchment">
       <div className={`relative ${dimensions.box} flex items-center justify-center flex-shrink-0`}>
         <svg className={`${dimensions.box} -rotate-90 transform`} viewBox="0 0 36 36">
           <path
@@ -79,16 +79,16 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
           />
         </svg>
-        <span className={`absolute font-extrabold font-mono tabular-nums tracking-tight ${dimensions.text} ${text}`}>
+        <span className={`absolute font-bold font-mono tabular-nums tracking-tight ${dimensions.text} ${text}`}>
           {score}
         </span>
       </div>
       <div>
-        <div className="text-[10px] font-bold text-graphite-400 uppercase tracking-wider font-mono">
-          Compliance Rating
+        <div className="text-[10px] font-bold text-espresso-600 uppercase tracking-widest font-mono">
+          Adherence Index
         </div>
-        <div className={`text-base font-extrabold tracking-tight ${text}`}>{label}</div>
-        <div className="text-[11px] text-graphite-500 mt-0.5">{labelSubtitle}</div>
+        <div className={`text-base font-bold tracking-tight ${text}`}>{label}</div>
+        <div className="text-[11px] text-espresso-700 mt-0.5">{labelSubtitle}</div>
       </div>
     </div>
   );

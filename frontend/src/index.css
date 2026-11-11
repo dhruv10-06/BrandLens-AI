@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,59 +6,66 @@
 
 @layer base {
   :root {
-    --bg-canvas: #FCFBF9;
-    --bg-surface: #FFFFFF;
-    --bg-ivory: #F8F6F2;
-    --border-subtle: #EAE8E3;
-    --border-focus: #5145CD;
-    --text-primary: #1C1B26;
-    --text-secondary: #5C5975;
-    --text-muted: #9996B3;
-    --brand-primary: #5145CD;
-    --brand-accent: #7C4BEB;
-    --champagne-accent: #D4B785;
+    --bg-canvas: #FAF7F0;       /* Soft Cream Canvas */
+    --bg-surface: #FDFBF7;      /* Pristine Cream Surface */
+    --bg-parchment: #F4EFE4;    /* Champagne Ivory / Warm Parchment */
+    --border-subtle: #E7DECE;   /* Delicate Hairline Border */
+    --border-brass: #B49A68;    /* Antique Brass Accent Border */
+    --text-primary: #30251F;    /* Roasted Espresso Primary */
+    --text-secondary: #615248;  /* Muted Espresso Secondary */
+    --text-muted: #8E8271;      /* Taupe Muted */
+    --brand-forest: #243C32;    /* Deep Forest Green */
+    --brand-oxblood: #632F3C;   /* Oxblood Burgundy */
+    --brand-brass: #B49A68;     /* Burnished Antique Brass */
+    --brand-olive: #85836A;     /* Muted Olive */
   }
 
   body {
-    @apply antialiased text-graphite-900 selection:bg-brand-600 selection:text-white;
-    background-color: #FCFBF9;
-    font-family: 'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply antialiased text-espresso-900 selection:bg-brand-600 selection:text-cream-50;
+    background-color: #FAF7F0;
+    font-family: 'Plus Jakarta Sans', Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     letter-spacing: -0.012em;
-    color: #1C1B26;
+    color: #30251F;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.026em;
+    letter-spacing: -0.024em;
+    color: #30251F;
   }
 }
 
 @layer components {
-  /* Luxury Light Editorial Card Primitive */
-  .enterprise-card {
-    @apply bg-white rounded-2xl border border-[#EAE8E3] shadow-card transition-all duration-200;
+  /* Atelier Editorial Surfaces */
+  .atelier-surface {
+    @apply bg-[#FDFBF7] rounded-xl border border-[#E7DECE] shadow-parchment transition-all duration-200;
   }
 
-  .enterprise-card-interactive {
-    @apply bg-white rounded-2xl border border-[#EAE8E3] shadow-card transition-all duration-200 hover:border-[#DDD5C2] hover:shadow-card-hover;
+  .atelier-card-interactive {
+    @apply bg-[#FDFBF7] rounded-xl border border-[#E7DECE] shadow-parchment transition-all duration-200 hover:border-[#CCA678] hover:shadow-parchment-md;
   }
 
   /* Editorial Pill Badge */
-  .section-tag {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase font-mono bg-ivory-100 text-graphite-700 border border-[#EAE8E3];
+  .atelier-tag {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wider uppercase font-mono bg-parchment-100 text-espresso-800 border border-[#E2D7C5];
   }
 
   /* Editorial Table Header */
   .table-header-cell {
-    @apply px-4 py-3.5 text-left text-[11px] font-bold text-graphite-500 uppercase tracking-wider bg-ivory-50/80 border-b border-[#EAE8E3];
+    @apply px-4 py-3.5 text-left text-[11px] font-bold text-espresso-600 uppercase tracking-widest bg-parchment-100/90 border-b border-[#E2D7C5];
   }
 
   /* Editorial Table Row */
   .table-row-cell {
-    @apply px-4 py-3.5 text-xs text-graphite-800 border-b border-ivory-200/60;
+    @apply px-4 py-3.5 text-xs text-espresso-900 border-b border-[#EDE6D8];
+  }
+
+  /* Luxury Input Style */
+  .atelier-input {
+    @apply w-full bg-[#FAF7F0] border border-[#DDD2BF] rounded-lg px-3.5 py-2.5 text-sm text-espresso-900 placeholder:text-espresso-400 focus:outline-none focus:border-brass-600 focus:ring-1 focus:ring-brass-600/30 transition-all;
   }
 }
 
-/* Custom Scrollbars */
+/* Custom Scrollbars in Warm Parchment */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -67,16 +74,16 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #DFDDE9;
+  background: #DDD2BF;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #BFBDD4;
+  background: #C7B9A2;
 }
 
-/* Accessible focus outline */
+/* Accessible focus outline with Antique Brass tone */
 :focus-visible {
-  outline: 2px solid #5145CD;
+  outline: 2px solid #B49A68;
   outline-offset: 2px;
 }
 

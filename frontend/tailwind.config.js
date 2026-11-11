@@ -7,99 +7,118 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Deep Forest Green as the core sovereign brand tone (brand-600 used in active navigation tests)
         brand: {
-          50: '#F5F3FF',
-          100: '#ECE8FF',
-          200: '#DAD2FE',
-          300: '#BFB1FE',
-          400: '#9D85FB',
-          500: '#7B57F5',
-          600: '#5145CD',
-          700: '#4337B3',
-          800: '#372C96',
-          900: '#2F267A',
-          950: '#1C164D',
+          50: '#F2F7F4',
+          100: '#E5EFEA',
+          200: '#C8DDD4',
+          300: '#9BBCAE',
+          400: '#6E9C88',
+          500: '#4F7E6B',
+          600: '#243C32', // Deep forest green - primary active brand tone
+          700: '#1C3228',
+          800: '#172921',
+          900: '#111F19',
+          950: '#0A130F',
         },
-        pearl: {
-          50: '#FDFCFB',
-          100: '#FAF8F5',
-          200: '#F5F2EB',
-          300: '#EBE5D8',
-          400: '#DDD5C2',
+        // Old Money Luxury Canvas & Surfaces
+        cream: {
+          50: '#FAF8F3',  // Softest luxury cream
+          100: '#F5EFE4', // Champagne ivory
+          200: '#EAE1D2', // Warm parchment surface
+          300: '#DDD2BF', // Delicate parchment border
+          400: '#C7B9A2', // Muted warm stone
+          500: '#A79A88', // Warm taupe
         },
-        ivory: {
-          50: '#FCFBF9',
-          100: '#F8F6F2',
-          200: '#F2EFE8',
-          300: '#E8E3D8',
-          400: '#D9D2C3',
-          500: '#C4BBA7',
+        parchment: {
+          50: '#FAF7F0',  // Soft cream background
+          100: '#F4EFE4', // Champagne ivory canvas
+          200: '#EAE1D2', // Warm parchment card
+          300: '#DDD2BF', // Hairline borders
+          400: '#C7B9A2',
+          500: '#A79A88',
+          600: '#8E8271',
         },
-        lavender: {
-          50: '#FAF9FF',
-          100: '#F2EEFF',
-          200: '#E5DCFE',
-          300: '#D2C3FC',
-          400: '#B89EF8',
-          500: '#9973F3',
-          600: '#7C4BEB',
-          700: '#6735D4',
+        // Roasted Espresso Typography & Dark Surfaces
+        espresso: {
+          50: '#FAF8F7',
+          100: '#F4F0EE',
+          200: '#EAE4E0',
+          300: '#D4CBC4',
+          400: '#B5A89E',
+          500: '#96877B',
+          600: '#7A6B60',
+          700: '#615248',
+          800: '#4A3C34',
+          850: '#3D3028',
+          900: '#30251F', // Deep roasted espresso text
+          950: '#1F1713', // Deepest authority black-brown
         },
-        champagne: {
-          50: '#FBF9F4',
-          100: '#F6F1E5',
-          200: '#EEE3CC',
-          300: '#E2CEAA',
-          400: '#D4B785',
-          500: '#C19D60',
+        // British Racing / Deep Forest Green (Governance, pristine scores, approvals)
+        forest: {
+          50: '#F2F7F4',
+          100: '#E5EFEA',
+          200: '#C8DDD4',
+          300: '#9BBCAE',
+          400: '#6E9C88',
+          500: '#4F7E6B',
+          600: '#3A6050',
+          700: '#2D4C3F',
+          800: '#243C32', // Deep forest green
+          900: '#1C3228',
+          950: '#13221B',
         },
-        graphite: {
-          950: '#12121A',
-          900: '#1C1B26',
-          850: '#242331',
-          800: '#2D2C3D',
-          700: '#434157',
-          600: '#5C5975',
-          500: '#787594',
-          400: '#9996B3',
-          300: '#BFBDD4',
-          200: '#DFDDE9',
-          100: '#EFEFF5',
-          50: '#F7F7FA',
+        // Oxblood Burgundy (High-severity findings, rejections, critical warnings)
+        oxblood: {
+          50: '#FCF3F6',
+          100: '#F9E7EC',
+          200: '#F1CCD6',
+          300: '#E3A4B3',
+          400: '#CF7C90',
+          500: '#B55F74',
+          600: '#984A5E',
+          700: '#7D3B4C',
+          800: '#632F3C', // Deep oxblood burgundy
+          900: '#4D222E',
+          950: '#3B1A23',
         },
-        navy: {
-          950: '#090D16',
-          900: '#0F172A',
-          850: '#141E33',
-          800: '#182338',
-          750: '#1E2C46',
-          700: '#243452',
-          600: '#334566',
-          500: '#475C80',
-          400: '#64748B',
-          300: '#94A3B8',
-          200: '#CBD5E1',
-          100: '#E2E8F0',
-          50: '#F1F5F9',
+        // Antique Burnished Brass (Metrics, golden rules, score accents)
+        brass: {
+          50: '#FDFBFA',
+          100: '#F9F5EC',
+          200: '#F1E9DA',
+          300: '#E6D7BD',
+          400: '#D8C39B',
+          500: '#C7AE7F',
+          600: '#B49A68', // Antique burnished brass
+          700: '#9B7E45',
+          800: '#7C6436',
+          900: '#5C4927',
         },
-        warm: {
-          50: '#FAFAF8',
-          100: '#F5F4F0',
-          200: '#EBE9E1',
-          300: '#DDD9CD',
-          400: '#C8C2B1',
-          500: '#A8A08C',
-          600: '#7E7664',
-          700: '#5C5546',
-          800: '#3D382E',
-          900: '#24211A',
+        // Muted Olive & Warm Taupe (Medium findings, secondary tags)
+        olive: {
+          50: '#FAF9F7',
+          100: '#F2F2EE',
+          200: '#E5E4DB',
+          300: '#D0CFBF',
+          400: '#B7B5A0',
+          500: '#9E9C83',
+          600: '#85836A', // Muted olive
+          700: '#6B6A56',
+          800: '#525141',
+          900: '#38372C',
         },
-        editorial: {
-          teal: '#0D9488',
-          emerald: '#059669',
-          amber: '#D97706',
-          crimson: '#E11D48',
-          indigo: '#5145CD',
+        taupe: {
+          50: '#FAF9F8',
+          100: '#F4F2F0',
+          200: '#E8E5E2',
+          300: '#D8D3CE',
+          400: '#C1B9B1',
+          500: '#A79A88', // Warm taupe
+          600: '#8C7F6E',
+          700: '#6F6354',
+          800: '#53493E',
+          900: '#373029',
         },
       },
       fontFamily: {
@@ -112,6 +131,7 @@ export default {
         ],
         sans: [
           'Plus Jakarta Sans',
+          'Manrope',
           'Inter',
           '-apple-system',
           'BlinkMacSystemFont',
@@ -130,13 +150,16 @@ export default {
         ],
       },
       boxShadow: {
-        'subtle': '0 1px 2px 0 rgba(28, 27, 38, 0.03)',
-        'card': '0 1px 3px 0 rgba(28, 27, 38, 0.04), 0 1px 2px -1px rgba(28, 27, 38, 0.02)',
-        'card-hover': '0 6px 16px -2px rgba(28, 27, 38, 0.06), 0 2px 6px -1px rgba(28, 27, 38, 0.02)',
-        'elevated': '0 12px 28px -4px rgba(28, 27, 38, 0.07), 0 4px 10px -2px rgba(28, 27, 38, 0.03)',
-        'modal': '0 24px 48px -12px rgba(28, 27, 38, 0.16), 0 8px 16px -4px rgba(28, 27, 38, 0.04)',
-        'glow-lavender': '0 0 20px -2px rgba(124, 75, 235, 0.18)',
-        'glow-brand': '0 0 20px -2px rgba(81, 69, 205, 0.18)',
+        'parchment-sm': '0 1px 2px 0 rgba(48, 37, 31, 0.04)',
+        'parchment': '0 2px 6px -1px rgba(48, 37, 31, 0.06), 0 1px 3px -1px rgba(48, 37, 31, 0.04)',
+        'parchment-md': '0 6px 16px -2px rgba(48, 37, 31, 0.07), 0 2px 6px -1px rgba(48, 37, 31, 0.03)',
+        'parchment-lg': '0 12px 28px -4px rgba(48, 37, 31, 0.09), 0 4px 10px -2px rgba(48, 37, 31, 0.04)',
+        'parchment-modal': '0 24px 48px -12px rgba(48, 37, 31, 0.22), 0 8px 16px -4px rgba(48, 37, 31, 0.06)',
+        'brass-glow': '0 0 20px -2px rgba(180, 154, 104, 0.25)',
+        'forest-glow': '0 0 20px -2px rgba(36, 60, 50, 0.22)',
+      },
+      borderWidth: {
+        'hairline': '0.75px',
       },
     },
   },

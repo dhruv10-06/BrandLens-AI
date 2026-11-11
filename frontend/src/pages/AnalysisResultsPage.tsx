@@ -20,6 +20,7 @@ import {
   Image as ImageIcon,
   Type,
   AlertCircle,
+  Compass,
 } from 'lucide-react';
 
 export const AnalysisResultsPage: React.FC = () => {
@@ -164,19 +165,21 @@ export const AnalysisResultsPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center text-graphite-500 gap-3">
-        <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs font-bold tracking-wide text-graphite-600 font-mono">Retrieving Brand Governance Audit...</span>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-espresso-600 gap-3">
+        <div className="w-8 h-8 border-2 border-forest-800 border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs font-semibold tracking-wider text-espresso-700 font-mono">
+          Retrieving Sovereign Brand Dossier...
+        </span>
       </div>
     );
   }
 
   if (!submission) {
     return (
-      <div className="p-8 rounded-2xl bg-white border border-[#EAE8E3] text-center max-w-md mx-auto my-12 shadow-card">
-        <AlertTriangle className="w-8 h-8 text-amber-500 mx-auto mb-2" />
-        <h3 className="text-sm font-bold text-graphite-900">Submission Not Found</h3>
-        <p className="text-xs text-graphite-500 mt-1">This submission could not be retrieved from your workspace.</p>
+      <div className="p-8 rounded-2xl bg-[#FDFBF7] border border-[#E2D7C5] text-center max-w-md mx-auto my-12 shadow-parchment">
+        <AlertTriangle className="w-8 h-8 text-brass-700 mx-auto mb-2" />
+        <h3 className="text-sm font-bold font-serif text-espresso-950">Submission Not Found</h3>
+        <p className="text-xs text-espresso-700 mt-1">This submission could not be retrieved from your workspace.</p>
         <Link to="/submissions" className="mt-4 inline-block">
           <Button variant="outline" size="sm">Back to Submissions</Button>
         </Link>
@@ -215,16 +218,16 @@ export const AnalysisResultsPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <Link
           to="/submissions"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-graphite-500 hover:text-graphite-900 transition-colors font-mono"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-espresso-700 hover:text-espresso-950 transition-colors font-mono"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Submissions</span>
+          <ArrowLeft className="w-4 h-4 text-brass-700" />
+          <span>Return to Content Portfolio</span>
         </Link>
 
         {isReviewerRole && !isCreatorOfSubmission && (
           <Link to={`/review/${submission._id}`}>
             <Button variant="accent" size="sm" icon={<ShieldCheck className="w-3.5 h-3.5" />} iconRight={<ChevronRight className="w-3.5 h-3.5" />}>
-              Open Reviewer Sign-Off Deck
+              Open Adjudication Deck
             </Button>
           </Link>
         )}
@@ -232,10 +235,10 @@ export const AnalysisResultsPage: React.FC = () => {
 
       {actionMessage && (
         <div
-          className={`p-4 rounded-2xl border text-xs flex items-center justify-between gap-3 shadow-subtle ${
+          className={`p-4 rounded-xl border text-xs flex items-center justify-between gap-3 shadow-parchment-sm ${
             actionMessage.type === 'success'
-              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-              : 'bg-rose-50 border-rose-200 text-rose-800'
+              ? 'bg-forest-50 border-forest-300 text-forest-900'
+              : 'bg-oxblood-50 border-oxblood-300 text-oxblood-900'
           }`}
         >
           <span className="font-semibold">{actionMessage.text}</span>
@@ -248,26 +251,26 @@ export const AnalysisResultsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Overview Card */}
-      <div className="bg-white rounded-3xl border border-[#EAE8E3] shadow-card p-6 sm:p-7">
+      {/* Sovereign Dossier Overview Banner */}
+      <div className="bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment p-6 sm:p-8">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-2.5 max-w-xl">
+          <div className="space-y-3 max-w-xl">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-graphite-500 bg-ivory-100 px-2.5 py-0.5 rounded-full border border-[#EAE8E3] font-mono">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-espresso-700 bg-[#F5EFE4] px-2.5 py-0.5 rounded border border-[#DDD2BF] font-mono">
                 {submission.contentType.replace('_', ' ')}
               </span>
               <StatusBadge status={submission.status} />
               {submission.submissionFormat && (
-                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-lavender-50 text-brand-700 border border-lavender-200 font-mono">
+                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-brass-100 text-brass-900 border border-brass-300 font-mono">
                   {submission.submissionFormat}
                 </span>
               )}
-              <span className="text-xs text-graphite-400 font-mono">• Version {submission.version}</span>
+              <span className="text-xs text-espresso-600 font-mono">• Revision {submission.version}</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-graphite-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold font-serif text-espresso-950 tracking-tight">
               {submission.title}
             </h1>
-            <p className="text-xs sm:text-sm text-graphite-600 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-espresso-800 leading-relaxed font-sans">
               {analysis?.summary || 'Draft saved. Click "Re-Analyze Revised Copy" below to run brand compliance checks.'}
             </p>
           </div>
@@ -277,34 +280,36 @@ export const AnalysisResultsPage: React.FC = () => {
               <ScoreGauge score={analysis.overallComplianceScore} size="md" />
             )}
             {visualAnalysis && (
-              <div className="p-4 rounded-2xl bg-lavender-50/70 border border-lavender-200 text-center shadow-subtle min-w-[130px]">
-                <div className="text-[10px] font-extrabold uppercase tracking-wider text-brand-700 font-mono">Visual Score</div>
-                <div className="text-2xl font-extrabold font-mono text-brand-900 mt-0.5 tabular-nums">
+              <div className="p-4 rounded-xl bg-[#F5EFE4] border border-[#CCA678] text-center shadow-parchment min-w-[130px]">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-brass-800 font-mono">
+                  Visual Metric
+                </div>
+                <div className="text-2xl font-bold font-mono text-espresso-950 mt-0.5 tabular-nums">
                   {visualAnalysis.overallVisualScore}%
                 </div>
-                <div className="text-[10px] text-brand-700 font-bold font-mono">Multimodal Audit</div>
+                <div className="text-[10px] text-forest-900 font-semibold font-mono">Multimodal Vision</div>
               </div>
             )}
           </div>
         </div>
 
         {/* Severity Metrics Strip */}
-        <div className="mt-6 pt-5 border-t border-[#F2EFE8] grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3.5 rounded-xl bg-rose-50/60 border border-rose-200/80 flex items-center justify-between">
-            <span className="text-xs font-bold text-rose-800">Critical Issues</span>
-            <span className="text-base font-extrabold font-mono text-rose-700 tabular-nums">{severityCounts.Critical}</span>
+        <div className="mt-6 pt-5 border-t border-[#EDE6D8] grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-3.5 rounded-lg bg-oxblood-50/70 border border-oxblood-300 flex items-center justify-between">
+            <span className="text-xs font-semibold text-oxblood-900">Critical Flags</span>
+            <span className="text-base font-bold font-mono text-oxblood-900 tabular-nums">{severityCounts.Critical}</span>
           </div>
-          <div className="p-3.5 rounded-xl bg-orange-50/60 border border-orange-200/80 flex items-center justify-between">
-            <span className="text-xs font-bold text-orange-800">High Severity</span>
-            <span className="text-base font-extrabold font-mono text-orange-700 tabular-nums">{severityCounts.High}</span>
+          <div className="p-3.5 rounded-lg bg-oxblood-50/40 border border-oxblood-200 flex items-center justify-between">
+            <span className="text-xs font-semibold text-oxblood-800">High Severity</span>
+            <span className="text-base font-bold font-mono text-oxblood-800 tabular-nums">{severityCounts.High}</span>
           </div>
-          <div className="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/80 flex items-center justify-between">
-            <span className="text-xs font-bold text-amber-800">Medium Severity</span>
-            <span className="text-base font-extrabold font-mono text-amber-700 tabular-nums">{severityCounts.Medium}</span>
+          <div className="p-3.5 rounded-lg bg-brass-50/70 border border-brass-300 flex items-center justify-between">
+            <span className="text-xs font-semibold text-brass-900">Medium Severity</span>
+            <span className="text-base font-bold font-mono text-brass-900 tabular-nums">{severityCounts.Medium}</span>
           </div>
-          <div className="p-3.5 rounded-xl bg-sky-50/60 border border-sky-200/80 flex items-center justify-between">
-            <span className="text-xs font-bold text-sky-800">Low / Minor</span>
-            <span className="text-base font-extrabold font-mono text-sky-700 tabular-nums">{severityCounts.Low}</span>
+          <div className="p-3.5 rounded-lg bg-olive-50/70 border border-olive-300 flex items-center justify-between">
+            <span className="text-xs font-semibold text-olive-900">Advisory / Low</span>
+            <span className="text-base font-bold font-mono text-olive-900 tabular-nums">{severityCounts.Low}</span>
           </div>
         </div>
       </div>
@@ -315,18 +320,20 @@ export const AnalysisResultsPage: React.FC = () => {
         <div className="lg:col-span-6 space-y-5">
           {/* Visual Creative Showcase Card (if attached) */}
           {submission.visualAsset && (
-            <div className="bg-white rounded-2xl border border-[#EAE8E3] shadow-card p-5 sm:p-6 space-y-3.5">
+            <div className="bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment p-5 sm:p-6 space-y-3.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4 text-brand-600" />
-                  <span className="text-xs font-bold text-graphite-900 tracking-tight">Uploaded Visual Creative</span>
+                  <ImageIcon className="w-4 h-4 text-brass-700" />
+                  <span className="text-xs font-bold font-serif text-espresso-950 tracking-tight">
+                    Audited Visual Asset
+                  </span>
                 </div>
-                <span className="text-[11px] text-graphite-400 font-mono">
+                <span className="text-[11px] text-espresso-600 font-mono">
                   {submission.visualAsset.filename}
                 </span>
               </div>
 
-              <div className="rounded-xl overflow-hidden bg-graphite-950 border border-graphite-800 flex items-center justify-center p-2.5 shadow-subtle">
+              <div className="rounded-xl overflow-hidden bg-espresso-950 border border-espresso-800 flex items-center justify-center p-2.5 shadow-parchment-sm">
                 <img
                   src={submission.visualAsset.dataUrl}
                   alt={submission.visualAsset.filename}
@@ -336,23 +343,23 @@ export const AnalysisResultsPage: React.FC = () => {
 
               {visualAnalysis && (
                 <div className="pt-2 grid grid-cols-3 gap-2.5 text-center text-xs">
-                  <div className="p-2.5 rounded-xl bg-ivory-50 border border-[#EAE8E3]">
-                    <span className="text-[10px] text-graphite-400 uppercase font-bold block font-mono">Logo Check</span>
-                    <span className={`text-xs font-extrabold uppercase font-mono ${
-                      visualAnalysis.logoAnalysis.complianceStatus === 'compliant' ? 'text-emerald-700' : 'text-rose-700'
+                  <div className="p-2.5 rounded-lg bg-[#FAF7F0] border border-[#DDD2BF]">
+                    <span className="text-[10px] text-espresso-600 uppercase font-bold block font-mono">Logo Clearance</span>
+                    <span className={`text-xs font-bold uppercase font-mono ${
+                      visualAnalysis.logoAnalysis.complianceStatus === 'compliant' ? 'text-forest-900' : 'text-oxblood-900'
                     }`}>
                       {visualAnalysis.logoAnalysis.complianceStatus}
                     </span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-ivory-50 border border-[#EAE8E3]">
-                    <span className="text-[10px] text-graphite-400 uppercase font-bold block font-mono">Colors Found</span>
-                    <span className="text-xs font-extrabold text-graphite-800 font-mono">
+                  <div className="p-2.5 rounded-lg bg-[#FAF7F0] border border-[#DDD2BF]">
+                    <span className="text-[10px] text-espresso-600 uppercase font-bold block font-mono">Extracted Colors</span>
+                    <span className="text-xs font-bold text-espresso-950 font-mono">
                       {visualAnalysis.detectedColors.length} Swatches
                     </span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-ivory-50 border border-[#EAE8E3]">
-                    <span className="text-[10px] text-graphite-400 uppercase font-bold block font-mono">Legibility</span>
-                    <span className="text-xs font-extrabold text-brand-700 font-mono tabular-nums">
+                  <div className="p-2.5 rounded-lg bg-[#FAF7F0] border border-[#DDD2BF]">
+                    <span className="text-[10px] text-espresso-600 uppercase font-bold block font-mono">Legibility Score</span>
+                    <span className="text-xs font-bold text-forest-900 font-mono tabular-nums">
                       {visualAnalysis.typographyAnalysis.readabilityScore || 90}/100
                     </span>
                   </div>
@@ -363,11 +370,13 @@ export const AnalysisResultsPage: React.FC = () => {
 
           {/* Copy Revision Workspace (if written content exists) */}
           {submission.currentContent && submission.submissionFormat !== 'image' && (
-            <div className="bg-white rounded-2xl border border-[#EAE8E3] shadow-card p-5 sm:p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3.5 border-b border-[#F2EFE8]">
+            <div className="bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment p-5 sm:p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3.5 border-b border-[#EDE6D8]">
                 <div>
-                  <h3 className="text-sm font-bold text-graphite-900 tracking-tight">Copy Revision Workspace</h3>
-                  <p className="text-[11px] text-graphite-400">
+                  <h3 className="text-sm font-bold font-serif text-espresso-950 tracking-tight">
+                    Manuscript Revision Desk
+                  </h3>
+                  <p className="text-[11px] text-espresso-600">
                     Apply automated suggestions or edit directly, then re-analyze copy
                   </p>
                 </div>
@@ -377,7 +386,7 @@ export const AnalysisResultsPage: React.FC = () => {
                   size="sm"
                   onClick={handleSaveEdits}
                   isLoading={isSaving}
-                  icon={<Save className="w-3.5 h-3.5" />}
+                  icon={<Save className="w-3.5 h-3.5 text-brass-700" />}
                 >
                   Save Draft
                 </Button>
@@ -387,7 +396,7 @@ export const AnalysisResultsPage: React.FC = () => {
                 rows={10}
                 value={editableContent}
                 onChange={(e) => setEditableContent(e.target.value)}
-                className="w-full p-4 text-xs font-mono rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500 bg-[#FCFBF9] text-graphite-900 leading-relaxed resize-y font-medium"
+                className="w-full p-4 text-xs font-mono rounded-xl border border-[#DDD2BF] focus:outline-none focus:border-brass-600 focus:ring-1 focus:ring-brass-600/30 bg-[#FAF7F0] text-espresso-950 leading-relaxed resize-y font-normal"
               />
 
               {/* Actions Toolbar */}
@@ -397,7 +406,7 @@ export const AnalysisResultsPage: React.FC = () => {
                   size="md"
                   onClick={handleReanalyze}
                   isLoading={isReanalyzing}
-                  icon={<RefreshCw className={`w-3.5 h-3.5 ${isReanalyzing ? 'animate-spin' : ''}`} />}
+                  icon={<RefreshCw className={`w-3.5 h-3.5 text-brass-400 ${isReanalyzing ? 'animate-spin' : ''}`} />}
                 >
                   Re-Analyze Revised Copy
                 </Button>
@@ -408,33 +417,37 @@ export const AnalysisResultsPage: React.FC = () => {
                   onClick={handleSubmitForReview}
                   isLoading={isSubmittingReview}
                   disabled={submission.status === 'approved'}
-                  icon={<Send className="w-3.5 h-3.5" />}
+                  icon={<Send className="w-3.5 h-3.5 text-brass-400" />}
                 >
-                  Submit to Review Queue
+                  Submit to Review Chamber
                 </Button>
               </div>
             </div>
           )}
 
           {/* Original Content Reference Accordion */}
-          <div className="bg-ivory-50/80 rounded-2xl border border-[#EAE8E3] p-4 text-xs">
-            <div className="font-bold text-graphite-700 mb-1 font-mono text-[11px]">Original Submission Reference:</div>
-            <p className="text-graphite-500 italic line-clamp-3 leading-relaxed">"{submission.originalContent}"</p>
+          <div className="bg-[#F5EFE4] rounded-xl border border-[#DDD2BF] p-4 text-xs">
+            <div className="font-bold text-espresso-800 mb-1 font-mono text-[11px]">
+              Original Submission Baseline:
+            </div>
+            <p className="text-espresso-700 italic line-clamp-3 leading-relaxed font-serif">
+              "{submission.originalContent}"
+            </p>
           </div>
         </div>
 
         {/* Right Column: AI Findings Cards & Visual Diagnostics */}
         <div className="lg:col-span-6 space-y-4">
           {/* Tab Switcher between Written Findings and Visual Diagnostics */}
-          <div className="flex items-center justify-between border-b border-[#EAE8E3] pb-2.5">
+          <div className="flex items-center justify-between border-b border-[#E2D7C5] pb-2.5">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setActiveTab('copy')}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   activeTab === 'copy'
-                    ? 'bg-brand-600 text-white shadow-sm'
-                    : 'text-graphite-600 hover:bg-ivory-100'
+                    ? 'bg-forest-800 text-cream-50 shadow-parchment border border-forest-700'
+                    : 'text-espresso-700 hover:bg-[#F5EFE4]'
                 }`}
               >
                 <span>Copy Findings ({findings.length})</span>
@@ -444,10 +457,10 @@ export const AnalysisResultsPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setActiveTab('visual')}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                     activeTab === 'visual'
-                      ? 'bg-lavender-600 text-white shadow-sm'
-                      : 'text-graphite-600 hover:bg-ivory-100'
+                      ? 'bg-brass-700 text-cream-50 shadow-parchment border border-brass-600'
+                      : 'text-espresso-700 hover:bg-[#F5EFE4]'
                   }`}
                 >
                   <Palette className="w-3.5 h-3.5" />
@@ -457,16 +470,16 @@ export const AnalysisResultsPage: React.FC = () => {
             </div>
 
             {/* Severity Filter Pills */}
-            <div className="flex items-center gap-1 bg-ivory-100 p-1 rounded-xl text-[11px] font-semibold border border-[#EAE8E3]">
+            <div className="flex items-center gap-1 bg-[#F5EFE4] p-1 rounded-lg text-[11px] font-semibold border border-[#DDD2BF]">
               {(['All', 'Critical', 'High', 'Medium', 'Low'] as const).map((sev) => (
                 <button
                   key={sev}
                   type="button"
                   onClick={() => setSeverityFilter(sev)}
-                  className={`px-2.5 py-0.5 rounded-lg transition font-mono ${
+                  className={`px-2 py-0.5 rounded transition font-mono ${
                     severityFilter === sev
-                      ? 'bg-white text-graphite-900 shadow-subtle font-bold'
-                      : 'text-graphite-500 hover:text-graphite-800'
+                      ? 'bg-[#FAF7F0] text-espresso-950 shadow-parchment-sm font-bold border border-[#DDD2BF]'
+                      : 'text-espresso-600 hover:text-espresso-950'
                   }`}
                 >
                   {sev}
@@ -479,24 +492,24 @@ export const AnalysisResultsPage: React.FC = () => {
           {activeTab === 'copy' && (
             <div className="space-y-3.5">
               {!analysis ? (
-                <div className="p-8 bg-white rounded-2xl border border-dashed border-[#DDD5C2] text-center space-y-2">
-                  <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
-                  <h4 className="text-sm font-bold text-graphite-900">
+                <div className="p-8 bg-[#FDFBF7] rounded-xl border border-dashed border-[#DDD2BF] text-center space-y-2">
+                  <AlertCircle className="w-8 h-8 text-brass-700 mx-auto" />
+                  <h4 className="text-sm font-bold font-serif text-espresso-950">
                     No Analysis Report Generated Yet
                   </h4>
-                  <p className="text-xs text-graphite-500 max-w-sm mx-auto leading-relaxed">
+                  <p className="text-xs text-espresso-700 max-w-sm mx-auto leading-relaxed">
                     This submission is currently saved as a draft. Click <strong>"Re-Analyze Revised Copy"</strong> in the workspace to evaluate brand governance compliance.
                   </p>
                 </div>
               ) : filteredTextFindings.length === 0 ? (
-                <div className="p-8 bg-white rounded-2xl border border-[#EAE8E3] text-center space-y-2 shadow-card">
-                  <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
-                  <h4 className="text-sm font-bold text-graphite-900">
+                <div className="p-8 bg-[#FDFBF7] rounded-xl border border-[#E2D7C5] text-center space-y-2 shadow-parchment">
+                  <CheckCircle2 className="w-8 h-8 text-forest-800 mx-auto" />
+                  <h4 className="text-sm font-bold font-serif text-espresso-950">
                     {severityFilter === 'All'
                       ? 'No written brand violations detected!'
                       : `No ${severityFilter} severity issues found.`}
                   </h4>
-                  <p className="text-xs text-graphite-400">
+                  <p className="text-xs text-espresso-700">
                     Draft text adheres cleanly to indexed guidelines, approved terminology, and verified brand facts.
                   </p>
                 </div>
@@ -517,32 +530,32 @@ export const AnalysisResultsPage: React.FC = () => {
           {activeTab === 'visual' && visualAnalysis && (
             <div className="space-y-4">
               {/* Palette & Swatches Analysis Card */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[#EAE8E3] shadow-card space-y-3">
+              <div className="p-5 sm:p-6 rounded-xl bg-[#FDFBF7] border border-[#E2D7C5] shadow-parchment space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-graphite-900 flex items-center gap-1.5">
-                    <Palette className="w-4 h-4 text-brand-600" />
+                  <span className="text-xs font-bold font-serif text-espresso-950 flex items-center gap-1.5">
+                    <Palette className="w-4 h-4 text-brass-700" />
                     <span>Detected Color Palette vs Brand Standard</span>
                   </span>
-                  <span className="text-[11px] text-graphite-400 font-mono">Multimodal Swatch Inspection</span>
+                  <span className="text-[11px] text-espresso-600 font-mono">Multimodal Swatch Inspection</span>
                 </div>
 
                 <div className="flex flex-wrap gap-2.5 pt-1">
                   {visualAnalysis.detectedColors.map((color, idx) => (
                     <div
                       key={idx}
-                      className="p-2.5 rounded-xl border border-[#EAE8E3] bg-[#FAF8F5] flex items-center gap-2.5 shadow-subtle"
+                      className="p-2.5 rounded-lg border border-[#DDD2BF] bg-[#FAF7F0] flex items-center gap-2.5 shadow-parchment-sm"
                     >
                       <div
-                        className="w-6 h-6 rounded-lg border border-black/10 shadow-subtle flex-shrink-0"
+                        className="w-6 h-6 rounded border border-black/10 shadow-parchment-sm flex-shrink-0"
                         style={{ backgroundColor: color.hex }}
                       />
                       <div className="text-[11px] leading-tight">
-                        <div className="font-mono font-bold text-graphite-900">{color.hex}</div>
+                        <div className="font-mono font-bold text-espresso-950">{color.hex}</div>
                         <div className="text-[10px] mt-0.5">
                           {color.isApprovedBrandColor ? (
-                            <span className="text-emerald-700 font-bold font-mono">Approved Brand Color</span>
+                            <span className="text-forest-900 font-bold font-mono">Approved Brand Color</span>
                           ) : (
-                            <span className="text-rose-600 font-bold font-mono">Unapproved Shade</span>
+                            <span className="text-oxblood-900 font-bold font-mono">Unapproved Shade</span>
                           )}
                         </div>
                       </div>
@@ -552,71 +565,71 @@ export const AnalysisResultsPage: React.FC = () => {
               </div>
 
               {/* Logo Usage Card */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[#EAE8E3] shadow-card space-y-2">
+              <div className="p-5 sm:p-6 rounded-xl bg-[#FDFBF7] border border-[#E2D7C5] shadow-parchment space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-graphite-900 flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-brand-600" />
+                  <span className="text-xs font-bold font-serif text-espresso-950 flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-brass-700" />
                     <span>Logo Placement &amp; Clear Space</span>
                   </span>
-                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full font-mono ${
+                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded font-mono ${
                     visualAnalysis.logoAnalysis.complianceStatus === 'compliant'
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-rose-100 text-rose-800'
+                      ? 'bg-forest-100 text-forest-900 border border-forest-300'
+                      : 'bg-oxblood-100 text-oxblood-900 border border-oxblood-300'
                   }`}>
                     {visualAnalysis.logoAnalysis.complianceStatus}
                   </span>
                 </div>
-                <p className="text-xs text-graphite-600 leading-relaxed">{visualAnalysis.logoAnalysis.details}</p>
+                <p className="text-xs text-espresso-700 leading-relaxed">{visualAnalysis.logoAnalysis.details}</p>
               </div>
 
               {/* Typography Diagnostics */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[#EAE8E3] shadow-card space-y-2">
+              <div className="p-5 sm:p-6 rounded-xl bg-[#FDFBF7] border border-[#E2D7C5] shadow-parchment space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-graphite-900 flex items-center gap-1.5">
-                    <Type className="w-4 h-4 text-brand-600" />
+                  <span className="text-xs font-bold font-serif text-espresso-950 flex items-center gap-1.5">
+                    <Type className="w-4 h-4 text-brass-700" />
                     <span>Typography &amp; Contrast Legibility</span>
                   </span>
-                  <span className="text-xs font-extrabold text-brand-600 font-mono">
+                  <span className="text-xs font-bold text-forest-900 font-mono">
                     {visualAnalysis.typographyAnalysis.fontStyleDetected || 'Standard'}
                   </span>
                 </div>
-                <p className="text-xs text-graphite-600 leading-relaxed">{visualAnalysis.typographyAnalysis.details}</p>
+                <p className="text-xs text-espresso-700 leading-relaxed">{visualAnalysis.typographyAnalysis.details}</p>
               </div>
 
               {/* Visual Findings List */}
               <div className="space-y-3 pt-2">
-                <h4 className="text-xs font-bold text-graphite-700 uppercase tracking-wider font-mono">
+                <h4 className="text-xs font-bold text-espresso-700 uppercase tracking-widest font-mono">
                   Visual Discrepancy Findings ({filteredVisualFindings.length})
                 </h4>
 
                 {filteredVisualFindings.length === 0 ? (
-                  <div className="p-6 bg-white rounded-2xl border border-[#EAE8E3] text-center text-xs text-graphite-400 shadow-card">
+                  <div className="p-6 bg-[#FDFBF7] rounded-xl border border-[#E2D7C5] text-center text-xs text-espresso-600 shadow-parchment">
                     No visual violations detected. Creative conforms cleanly with brand palettes and typography!
                   </div>
                 ) : (
                   filteredVisualFindings.map((vf, idx) => (
                     <div
                       key={idx}
-                      className="p-5 rounded-2xl bg-white border border-[#EAE8E3] shadow-card space-y-2.5"
+                      className="p-5 rounded-xl bg-[#FDFBF7] border border-[#E2D7C5] shadow-parchment space-y-2.5"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="space-y-0.5">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-lavender-50 text-brand-700 border border-lavender-200 font-mono">
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-brass-100 text-brass-900 border border-brass-300 font-mono">
                             {vf.category}
                           </span>
-                          <h5 className="text-xs font-bold text-graphite-900 mt-1">Element: {vf.element}</h5>
+                          <h5 className="text-xs font-bold text-espresso-950 mt-1 font-serif">Element: {vf.element}</h5>
                         </div>
                         <SeverityBadge severity={vf.severity} />
                       </div>
 
-                      <p className="text-xs text-graphite-600 leading-relaxed">{vf.explanation}</p>
+                      <p className="text-xs text-espresso-700 leading-relaxed">{vf.explanation}</p>
 
-                      <div className="p-3.5 rounded-xl bg-lavender-50/70 border border-lavender-100 text-xs text-graphite-900 font-medium">
+                      <div className="p-3.5 rounded-lg bg-[#F5EFE4] border border-[#DDD2BF] text-xs text-espresso-950 font-medium">
                         <span className="font-bold">Recommendation: </span>
                         <span>{vf.recommendation}</span>
                       </div>
 
-                      <div className="text-[10px] text-graphite-400 pt-1 border-t border-[#F2EFE8] font-mono">
+                      <div className="text-[10px] text-espresso-600 pt-1 border-t border-[#EDE6D8] font-mono">
                         Evidence standard: {vf.supportingEvidence}
                       </div>
                     </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.tsx';
 import { Button } from '../components/common/Button.tsx';
-import { ShieldCheck, ArrowRight, UserCheck, Sparkles, AlertCircle, Lock } from 'lucide-react';
+import { ShieldCheck, ArrowRight, UserCheck, Sparkles, AlertCircle, Lock, Compass, Award } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -42,52 +42,117 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FCFBF9] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Luxury ambient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-lavender-200/40 via-champagne-100/30 to-transparent blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[#FAF7F0] flex flex-col lg:flex-row text-espresso-900 selection:bg-brand-600 selection:text-cream-50">
+      {/* Left Wing: Editorial Heritage & Brand Manifesto */}
+      <div className="lg:w-5/12 bg-[#1C3228] text-cream-50 p-8 sm:p-12 lg:p-16 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-forest-800">
+        <div className="relative z-10 space-y-8">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-forest-900 border border-brass-600/40 flex items-center justify-center text-cream-50 shadow-parchment">
+              <ShieldCheck className="w-5 h-5 text-brass-400" />
+            </div>
+            <div>
+              <span className="font-serif text-xl tracking-tight font-bold text-cream-50">
+                BrandLens <span className="text-brass-400 italic font-normal">Atelier</span>
+              </span>
+              <p className="text-[10px] text-forest-300 uppercase tracking-widest font-mono">
+                Sovereign Governance Chamber
+              </p>
+            </div>
+          </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center relative z-10">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-700 via-brand-600 to-lavender-500 mx-auto flex items-center justify-center text-white shadow-card mb-4 ring-1 ring-white/60">
-          <ShieldCheck className="w-8 h-8 text-white" />
+          <div className="space-y-4 pt-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest-900/80 border border-brass-500/30 text-brass-300 text-xs font-mono">
+              <Sparkles className="w-3.5 h-3.5 text-brass-400" />
+              <span>CodeNexus India Round 3</span>
+            </div>
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.15] text-cream-50">
+              The sovereign checkpoint where world-class brands preserve absolute integrity.
+            </h1>
+            <p className="text-sm text-forest-200 leading-relaxed max-w-md font-sans">
+              Autonomous multimodal intelligence safeguarding visual standards, messaging claims, and brand voice before content reaches the world.
+            </p>
+          </div>
+
+          {/* Three Pillars */}
+          <div className="space-y-4 pt-4 border-t border-forest-700/50">
+            <div className="flex items-start gap-3">
+              <Compass className="w-4 h-4 text-brass-400 flex-shrink-0 mt-1" />
+              <div>
+                <h4 className="text-xs font-bold text-cream-50 uppercase tracking-wider font-mono">
+                  01 / Vectorized Brand Codex
+                </h4>
+                <p className="text-xs text-forest-300 leading-relaxed">
+                  Real-time semantic retrieval against vectorized guideline rules and authorized factual assertions.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Award className="w-4 h-4 text-brass-400 flex-shrink-0 mt-1" />
+              <div>
+                <h4 className="text-xs font-bold text-cream-50 uppercase tracking-wider font-mono">
+                  02 / Dual-Key Human Adjudication
+                </h4>
+                <p className="text-xs text-forest-300 leading-relaxed">
+                  Strict cryptographic separation of duties ensuring impartial pre-publication approval.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-        <h2 className="text-3xl font-extrabold text-graphite-900 tracking-tight">
-          BrandLens <span className="text-brand-600">AI</span>
-        </h2>
-        <p className="mt-2 text-xs sm:text-sm text-graphite-500 font-medium">
-          Enterprise Multimodal Brand Compliance &amp; Governance
-        </p>
+
+        <div className="relative z-10 pt-10 text-[11px] text-forest-400 font-serif italic border-t border-forest-800/80 mt-8">
+          "Pristine brand equity is cultivated over decades, yet compromised in an instant."
+        </div>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0 relative z-10">
-        <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl shadow-card border border-[#EAE8E3]">
+      {/* Right Wing: Private Access Portal */}
+      <div className="lg:w-7/12 flex flex-col justify-center py-12 px-6 sm:px-12 lg:px-20 relative">
+        <div className="max-w-md w-full mx-auto space-y-8">
+          <div>
+            <div className="text-[11px] font-bold text-brass-700 uppercase tracking-widest font-mono mb-2">
+              Authentication Portal
+            </div>
+            <h2 className="font-serif text-3xl font-bold text-espresso-950 tracking-tight">
+              Sign In to Your Atelier
+            </h2>
+            <p className="text-xs text-espresso-700 mt-1">
+              Enter your enterprise credentials or access instant evaluator chambers below.
+            </p>
+          </div>
+
           {error && (
-            <div className="mb-5 p-3.5 rounded-xl bg-rose-50/90 border border-rose-200 text-xs text-rose-800 flex items-start gap-2.5 shadow-subtle">
-              <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
-              <span className="font-semibold">{error}</span>
+            <div className="p-3.5 rounded-lg bg-oxblood-50 border border-oxblood-200 text-xs text-oxblood-900 flex items-start gap-2.5 shadow-parchment-sm">
+              <AlertCircle className="w-4 h-4 text-oxblood-700 flex-shrink-0 mt-0.5" />
+              <span className="font-medium">{error}</span>
             </div>
           )}
 
           {/* Secure Demonstrator Access: Separate fixed-role accounts */}
-          <div className="mb-6 p-4 rounded-2xl bg-[#FAF8F5] border border-[#EAE8E3]">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-graphite-900 uppercase tracking-wider mb-1.5 font-mono">
-              <Sparkles className="w-3.5 h-3.5 text-brand-600" />
-              <span>CodeNexus India Evaluator Access</span>
+          <div className="p-5 rounded-xl bg-[#F5EFE4] border border-[#DDD2BF] shadow-parchment-sm space-y-3.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-espresso-900 uppercase tracking-wider font-mono">
+                <Sparkles className="w-3.5 h-3.5 text-brass-700" />
+                <span>One-Tap Evaluator Chambers</span>
+              </div>
+              <span className="text-[10px] uppercase font-bold text-brass-800 bg-brass-100 px-2 py-0.5 rounded border border-brass-300 font-mono">
+                Fixed Role
+              </span>
             </div>
-            <p className="text-[11px] text-graphite-600 mb-3.5 leading-relaxed">
-              Authenticate into separate fixed-role demo accounts with pre-indexed brand guidelines and sample violation drafts. Roles are non-switchable once logged in.
+            <p className="text-[11px] text-espresso-700 leading-relaxed">
+              Instantly authenticate into dedicated evaluator roles with indexed brand guidelines and sample violation drafts:
             </p>
-            <div className="space-y-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <button
                 type="button"
                 onClick={() => handleDemoSignIn('creator')}
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 rounded-xl transition-all shadow-sm hover:shadow-card disabled:opacity-60"
+                className="flex flex-col items-start p-3 text-left bg-forest-800 hover:bg-forest-900 text-cream-50 rounded-lg transition-all shadow-parchment hover:shadow-forest-glow border border-forest-700 disabled:opacity-60"
               >
-                <div className="flex items-center gap-2 font-bold">
-                  <UserCheck className="w-4 h-4" />
-                  <span>Demo Creator Account</span>
+                <div className="flex items-center gap-1.5 font-bold text-xs mb-1">
+                  <UserCheck className="w-3.5 h-3.5 text-brass-400" />
+                  <span>Senior Creator</span>
                 </div>
-                <span className="text-[10px] font-mono bg-brand-700/80 px-2 py-0.5 rounded text-white/95">
+                <span className="text-[10px] font-mono text-forest-200">
                   creator@brandlens.demo
                 </span>
               </button>
@@ -96,33 +161,33 @@ export const LoginPage: React.FC = () => {
                 type="button"
                 onClick={() => handleDemoSignIn('reviewer')}
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-graphite-950 bg-champagne-300 hover:bg-champagne-200 rounded-xl transition-all shadow-sm hover:shadow-card disabled:opacity-60"
+                className="flex flex-col items-start p-3 text-left bg-[#EAE1D2] hover:bg-[#DDD2BF] text-espresso-950 rounded-lg transition-all shadow-parchment border border-[#CCA678] disabled:opacity-60"
               >
-                <div className="flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-graphite-800" />
-                  <span>Demo Reviewer Account</span>
+                <div className="flex items-center gap-1.5 font-bold text-xs mb-1">
+                  <Lock className="w-3.5 h-3.5 text-brass-800" />
+                  <span>Executive Reviewer</span>
                 </div>
-                <span className="text-[10px] font-mono bg-champagne-400/60 px-2 py-0.5 rounded text-graphite-950 font-bold">
+                <span className="text-[10px] font-mono text-espresso-800 font-semibold">
                   reviewer@brandlens.demo
                 </span>
               </button>
             </div>
           </div>
 
-          <div className="relative mb-6">
+          <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#EAE8E3]" />
+              <div className="w-full border-t border-[#DDD2BF]" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-3 text-graphite-400 font-bold text-[10px] tracking-wider font-mono">
-                Or sign in with credentials
+              <span className="bg-[#FAF7F0] px-3 text-espresso-600 font-bold text-[10px] tracking-widest font-mono">
+                Or authenticate with credentials
               </span>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-graphite-700 uppercase tracking-wide mb-1.5 font-mono text-[11px]">
+              <label className="block text-xs font-bold text-espresso-800 uppercase tracking-widest mb-1.5 font-mono text-[11px]">
                 Email Address
               </label>
               <input
@@ -130,13 +195,13 @@ export const LoginPage: React.FC = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 placeholder:text-graphite-400 transition-colors font-medium"
+                placeholder="evaluator@company.com"
+                className="atelier-input"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-graphite-700 uppercase tracking-wide mb-1.5 font-mono text-[11px]">
+              <label className="block text-xs font-bold text-espresso-800 uppercase tracking-widest mb-1.5 font-mono text-[11px]">
                 Password
               </label>
               <input
@@ -145,27 +210,27 @@ export const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#EAE8E3] focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-[#FCFBF9] text-graphite-900 placeholder:text-graphite-400 transition-colors font-medium"
+                className="atelier-input"
               />
             </div>
 
             <Button
               type="submit"
-              variant="secondary"
+              variant="primary"
               size="lg"
               disabled={isSubmitting}
               isLoading={isSubmitting}
-              className="w-full mt-2"
-              icon={<ArrowRight className="w-4 h-4" />}
+              className="w-full mt-3"
+              iconRight={<ArrowRight className="w-4 h-4 text-brass-400" />}
             >
-              {isSubmitting ? 'Authenticating...' : 'Sign In'}
+              {isSubmitting ? 'Verifying Credentials...' : 'Enter Atelier Chamber'}
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-graphite-500">
-            Don't have an account?{' '}
-            <Link to="/register" className="font-bold text-brand-600 hover:text-brand-700 transition-colors">
-              Create an organisation workspace
+          <p className="text-center text-xs text-espresso-700">
+            Provision a new brand workspace?{' '}
+            <Link to="/register" className="font-bold text-forest-800 hover:text-forest-900 underline underline-offset-2">
+              Create an organization
             </Link>
           </p>
         </div>

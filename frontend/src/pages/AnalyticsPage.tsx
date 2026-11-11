@@ -15,6 +15,7 @@ import {
   Flame,
   Calendar,
   RefreshCw,
+  Compass,
 } from 'lucide-react';
 
 export const AnalyticsPage: React.FC = () => {
@@ -41,19 +42,21 @@ export const AnalyticsPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center text-graphite-500 gap-3">
-        <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs font-bold tracking-wide text-graphite-600 font-mono">Aggregating brand governance telemetry...</span>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-espresso-600 gap-3">
+        <div className="w-8 h-8 border-2 border-forest-800 border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs font-semibold tracking-wider text-espresso-700 font-mono">
+          Synthesizing Brand Governance Telemetry...
+        </span>
       </div>
     );
   }
 
   if (error || !metrics) {
     return (
-      <div className="p-8 rounded-2xl bg-white border border-[#EAE8E3] text-center max-w-md mx-auto my-12 shadow-card">
-        <AlertTriangle className="w-8 h-8 text-rose-500 mx-auto mb-2" />
-        <h3 className="text-sm font-bold text-graphite-900">Failed to Load Telemetry</h3>
-        <p className="text-xs text-graphite-500 mt-1">{error || 'Unknown error occurred'}</p>
+      <div className="p-8 rounded-2xl bg-[#FDFBF7] border border-[#E2D7C5] text-center max-w-md mx-auto my-12 shadow-parchment">
+        <AlertTriangle className="w-8 h-8 text-oxblood-700 mx-auto mb-2" />
+        <h3 className="text-sm font-bold font-serif text-espresso-950">Failed to Load Telemetry</h3>
+        <p className="text-xs text-espresso-700 mt-1">{error || 'Unknown error occurred'}</p>
         <Button variant="primary" size="sm" onClick={fetchAnalytics} className="mt-4">
           Retry Aggregation
         </Button>
@@ -74,18 +77,18 @@ export const AnalyticsPage: React.FC = () => {
   } = metrics;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-[#EAE8E3]">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lavender-100 border border-lavender-200 text-brand-700 text-[11px] font-bold uppercase tracking-wider mb-2 font-mono">
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>Organisation Governance Intelligence</span>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-[#E2D7C5]">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5EFE4] border border-[#DDD2BF] text-forest-900 text-[11px] font-bold uppercase tracking-widest font-mono">
+            <BarChart3 className="w-3.5 h-3.5 text-brass-700" />
+            <span>Organization Telemetry &amp; Insights</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-graphite-900 tracking-tight">
-            Brand Governance &amp; Analytics
+          <h1 className="text-3xl font-bold font-serif text-espresso-950 tracking-tight">
+            Brand Governance Telemetry
           </h1>
-          <p className="text-xs sm:text-sm text-graphite-500 mt-1">
+          <p className="text-xs sm:text-sm text-espresso-700">
             Real-time compliance telemetry, recurring violation trends, guideline gap detection, and visual compliance statistics.
           </p>
         </div>
@@ -94,30 +97,30 @@ export const AnalyticsPage: React.FC = () => {
           variant="outline"
           size="sm"
           onClick={fetchAnalytics}
-          icon={<RefreshCw className="w-3.5 h-3.5" />}
+          icon={<RefreshCw className="w-3.5 h-3.5 text-brass-700" />}
         >
-          Refresh Metrics
+          Refresh Telemetry
         </Button>
       </div>
 
       {/* Primary KPI Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Overall Score */}
-        <div className="p-5 sm:p-6 bg-white rounded-2xl border border-[#EAE8E3] shadow-card flex items-center justify-between">
+        <div className="p-5 sm:p-6 bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment flex items-center justify-between">
           <div>
-            <div className="text-[10px] font-extrabold uppercase tracking-wider text-graphite-400 font-mono">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-espresso-600 font-mono">
               Avg Compliance Score
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold font-mono text-graphite-900 mt-1 tabular-nums">
+            <div className="text-3xl font-bold font-mono text-espresso-950 mt-1 tabular-nums">
               {kpis.averageComplianceScore}%
             </div>
-            <div className="text-[11px] text-graphite-500 mt-0.5">Across all audited campaigns</div>
+            <div className="text-[11px] text-espresso-700 mt-0.5">Across all audited campaigns</div>
           </div>
           <div
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm ${
+            className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm ${
               kpis.averageComplianceScore >= 85
-                ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-                : 'bg-amber-50 text-amber-600 border border-amber-100'
+                ? 'bg-forest-100 text-forest-900 border border-forest-300'
+                : 'bg-brass-100 text-brass-900 border border-brass-300'
             }`}
           >
             <TrendingUp className="w-6 h-6" />
@@ -125,41 +128,41 @@ export const AnalyticsPage: React.FC = () => {
         </div>
 
         {/* Approval Rate */}
-        <div className="p-5 sm:p-6 bg-white rounded-2xl border border-[#EAE8E3] shadow-card flex items-center justify-between">
+        <div className="p-5 sm:p-6 bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment flex items-center justify-between">
           <div>
-            <div className="text-[10px] font-extrabold uppercase tracking-wider text-graphite-400 font-mono">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-espresso-600 font-mono">
               Review Approval Rate
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold font-mono text-graphite-900 mt-1 tabular-nums">
+            <div className="text-3xl font-bold font-mono text-espresso-950 mt-1 tabular-nums">
               {kpis.approvalRate}%
             </div>
-            <div className="text-[11px] text-graphite-500 mt-0.5 font-mono">
+            <div className="text-[11px] text-espresso-700 mt-0.5 font-mono">
               {statusDistribution.approved} of {kpis.totalSubmissions} approved
             </div>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-lavender-50 border border-lavender-100 flex items-center justify-center text-brand-600">
+          <div className="w-12 h-12 rounded-xl bg-forest-100 border border-forest-300 flex items-center justify-center text-forest-800">
             <CheckCircle2 className="w-6 h-6" />
           </div>
         </div>
 
         {/* Critical Violations */}
-        <div className="p-5 sm:p-6 bg-white rounded-2xl border border-[#EAE8E3] shadow-card flex items-center justify-between">
+        <div className="p-5 sm:p-6 bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment flex items-center justify-between">
           <div>
-            <div className="text-[10px] font-extrabold uppercase tracking-wider text-graphite-400 font-mono">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-espresso-600 font-mono">
               Critical Violations
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold font-mono text-graphite-900 mt-1 tabular-nums">
+            <div className="text-3xl font-bold font-mono text-espresso-950 mt-1 tabular-nums">
               {kpis.criticalViolationsCount}
             </div>
-            <div className="text-[11px] text-graphite-500 mt-0.5 font-mono">
+            <div className="text-[11px] text-espresso-700 mt-0.5 font-mono">
               {kpis.totalViolationsDetected} total issues detected
             </div>
           </div>
           <div
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+            className={`w-12 h-12 rounded-xl flex items-center justify-center ${
               kpis.criticalViolationsCount > 0
-                ? 'bg-rose-50 text-rose-600 border border-rose-100'
-                : 'bg-ivory-100 text-graphite-400 border border-[#EAE8E3]'
+                ? 'bg-oxblood-100 text-oxblood-900 border border-oxblood-300'
+                : 'bg-[#F5EFE4] text-espresso-600 border border-[#DDD2BF]'
             }`}
           >
             <ShieldAlert className="w-6 h-6" />
@@ -167,35 +170,37 @@ export const AnalyticsPage: React.FC = () => {
         </div>
 
         {/* Visual Compliance Score */}
-        <div className="p-5 sm:p-6 bg-white rounded-2xl border border-[#EAE8E3] shadow-card flex items-center justify-between">
+        <div className="p-5 sm:p-6 bg-[#FDFBF7] rounded-2xl border border-[#E2D7C5] shadow-parchment flex items-center justify-between">
           <div>
-            <div className="text-[10px] font-extrabold uppercase tracking-wider text-graphite-400 font-mono">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-espresso-600 font-mono">
               Visual Brand Score
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold font-mono text-graphite-900 mt-1 tabular-nums">
+            <div className="text-3xl font-bold font-mono text-espresso-950 mt-1 tabular-nums">
               {visualMetrics.totalVisualAssets > 0 ? `${visualMetrics.averageVisualScore}%` : 'N/A'}
             </div>
-            <div className="text-[11px] text-graphite-500 mt-0.5 font-mono">
+            <div className="text-[11px] text-espresso-700 mt-0.5 font-mono">
               {visualMetrics.totalVisualAssets} visual creative(s) audited
             </div>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-champagne-100 border border-champagne-200 flex items-center justify-center text-champagne-800">
+          <div className="w-12 h-12 rounded-xl bg-brass-100 border border-brass-300 flex items-center justify-center text-brass-800">
             <Palette className="w-6 h-6" />
           </div>
         </div>
       </div>
 
-      {/* Middle Row: Trend Line & Violation Category Distribution */}
+      {/* Middle Row: Trend Line & Severity Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Compliance Trend Chart */}
-        <div className="lg:col-span-2 bg-white p-6 sm:p-7 rounded-3xl border border-[#EAE8E3] shadow-card space-y-4">
+        <div className="lg:col-span-2 bg-[#FDFBF7] p-6 sm:p-8 rounded-2xl border border-[#E2D7C5] shadow-parchment space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-bold text-graphite-900 tracking-tight">7-Day Compliance Score Trajectory</h2>
-              <p className="text-xs text-graphite-500 mt-0.5">Rolling average score trend across recent submissions</p>
+              <h2 className="text-base font-bold font-serif text-espresso-950 tracking-tight">
+                7-Day Compliance Score Trajectory
+              </h2>
+              <p className="text-xs text-espresso-700 mt-0.5">Rolling average score trend across recent submissions</p>
             </div>
-            <div className="flex items-center gap-1.5 text-xs font-bold text-graphite-500 font-mono bg-ivory-100 px-2.5 py-1 rounded-lg border border-[#EAE8E3]">
-              <Calendar className="w-3.5 h-3.5 text-graphite-400" />
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-espresso-800 font-mono bg-[#F5EFE4] px-2.5 py-1 rounded-lg border border-[#DDD2BF]">
+              <Calendar className="w-3.5 h-3.5 text-brass-700" />
               <span>Past 7 Days</span>
             </div>
           </div>
@@ -204,14 +209,14 @@ export const AnalyticsPage: React.FC = () => {
           <div className="h-48 w-full pt-4">
             <svg viewBox="0 0 700 180" className="w-full h-full overflow-visible">
               {/* Grid Lines */}
-              <line x1="40" y1="20" x2="680" y2="20" stroke="#F2EFE8" strokeDasharray="3 3" />
-              <text x="10" y="24" fill="#9996B3" fontSize="10" fontFamily="monospace">100%</text>
+              <line x1="40" y1="20" x2="680" y2="20" stroke="#E2D7C5" strokeDasharray="3 3" />
+              <text x="10" y="24" fill="#8E8271" fontSize="10" fontFamily="monospace">100%</text>
 
-              <line x1="40" y1="80" x2="680" y2="80" stroke="#F2EFE8" strokeDasharray="3 3" />
-              <text x="10" y="84" fill="#9996B3" fontSize="10" fontFamily="monospace">80%</text>
+              <line x1="40" y1="80" x2="680" y2="80" stroke="#E2D7C5" strokeDasharray="3 3" />
+              <text x="10" y="84" fill="#8E8271" fontSize="10" fontFamily="monospace">80%</text>
 
-              <line x1="40" y1="140" x2="680" y2="140" stroke="#F2EFE8" strokeDasharray="3 3" />
-              <text x="10" y="144" fill="#9996B3" fontSize="10" fontFamily="monospace">60%</text>
+              <line x1="40" y1="140" x2="680" y2="140" stroke="#E2D7C5" strokeDasharray="3 3" />
+              <text x="10" y="144" fill="#8E8271" fontSize="10" fontFamily="monospace">60%</text>
 
               {/* Data Path */}
               {timelineTrend.length > 1 && (
@@ -223,7 +228,7 @@ export const AnalyticsPage: React.FC = () => {
                       return idx === 0 ? `M ${x} ${y}` : `${acc} L ${x} ${y}`;
                     }, '')}
                     fill="none"
-                    stroke="#5145CD"
+                    stroke="#243C32"
                     strokeWidth="3.2"
                     strokeLinecap="round"
                   />
@@ -233,11 +238,11 @@ export const AnalyticsPage: React.FC = () => {
                     const y = 160 - ((Math.max(50, pt.averageScore) - 50) / 50) * 140;
                     return (
                       <g key={idx}>
-                        <circle cx={x} cy={y} r="5" fill="#5145CD" stroke="#FFFFFF" strokeWidth="2.5" />
-                        <text x={x} y={175} textAnchor="middle" fill="#5C5975" fontSize="11" fontFamily="monospace" fontWeight="600">
+                        <circle cx={x} cy={y} r="5" fill="#243C32" stroke="#FAF7F0" strokeWidth="2.5" />
+                        <text x={x} y={175} textAnchor="middle" fill="#615248" fontSize="11" fontFamily="monospace" fontWeight="600">
                           {pt.date}
                         </text>
-                        <text x={x} y={y - 10} textAnchor="middle" fill="#1C1B26" fontSize="11" fontFamily="monospace" fontWeight="700">
+                        <text x={x} y={y - 10} textAnchor="middle" fill="#30251F" fontSize="11" fontFamily="monospace" fontWeight="700">
                           {pt.averageScore}%
                         </text>
                       </g>
@@ -250,18 +255,20 @@ export const AnalyticsPage: React.FC = () => {
         </div>
 
         {/* Severity Matrix */}
-        <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#EAE8E3] shadow-card space-y-4">
+        <div className="bg-[#FDFBF7] p-6 sm:p-8 rounded-2xl border border-[#E2D7C5] shadow-parchment space-y-4">
           <div>
-            <h2 className="text-sm font-bold text-graphite-900 tracking-tight">Severity Distribution</h2>
-            <p className="text-xs text-graphite-500 mt-0.5">Issues breakdown by business impact</p>
+            <h2 className="text-base font-bold font-serif text-espresso-950 tracking-tight">
+              Severity Distribution
+            </h2>
+            <p className="text-xs text-espresso-700 mt-0.5">Issues breakdown by business impact</p>
           </div>
 
           <div className="space-y-3.5 pt-2">
             {[
-              { label: 'Critical', count: severityBreakdown.Critical, color: 'bg-rose-500', text: 'text-rose-700' },
-              { label: 'High', count: severityBreakdown.High, color: 'bg-orange-500', text: 'text-orange-700' },
-              { label: 'Medium', count: severityBreakdown.Medium, color: 'bg-amber-500', text: 'text-amber-700' },
-              { label: 'Low', count: severityBreakdown.Low, color: 'bg-sky-500', text: 'text-sky-700' },
+              { label: 'Critical', count: severityBreakdown.Critical, color: 'bg-oxblood-800', text: 'text-oxblood-900' },
+              { label: 'High', count: severityBreakdown.High, color: 'bg-oxblood-600', text: 'text-oxblood-800' },
+              { label: 'Medium', count: severityBreakdown.Medium, color: 'bg-brass-600', text: 'text-brass-900' },
+              { label: 'Low', count: severityBreakdown.Low, color: 'bg-olive-600', text: 'text-olive-900' },
             ].map((sev) => {
               const total = kpis.totalViolationsDetected || 1;
               const pct = Math.round((sev.count / total) * 100);
@@ -269,9 +276,9 @@ export const AnalyticsPage: React.FC = () => {
                 <div key={sev.label} className="space-y-1">
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className={sev.text}>{sev.label}</span>
-                    <span className="text-graphite-600 font-mono tabular-nums">{sev.count} ({pct}%)</span>
+                    <span className="text-espresso-700 font-mono tabular-nums">{sev.count} ({pct}%)</span>
                   </div>
-                  <div className="h-2 rounded-full bg-ivory-100 overflow-hidden">
+                  <div className="h-2 rounded-full bg-[#EAE1D2] overflow-hidden">
                     <div className={`h-full rounded-full ${sev.color}`} style={{ width: `${pct}%` }} />
                   </div>
                 </div>
@@ -280,20 +287,22 @@ export const AnalyticsPage: React.FC = () => {
           </div>
 
           {/* Visual Compliance Summary */}
-          <div className="pt-3.5 border-t border-[#F2EFE8] space-y-2">
-            <div className="text-[10px] font-extrabold uppercase tracking-wider text-graphite-400 font-mono">Visual Health Diagnostics</div>
+          <div className="pt-3.5 border-t border-[#EDE6D8] space-y-2">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-espresso-600 font-mono">
+              Visual Health Diagnostics
+            </div>
             <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="p-2.5 rounded-xl bg-ivory-50 border border-[#EAE8E3]">
-                <div className="text-xs font-extrabold font-mono text-graphite-900">{visualMetrics.colorViolationCount}</div>
-                <div className="text-[10px] text-graphite-500 mt-0.5 font-medium">Color Drifts</div>
+              <div className="p-2.5 rounded-lg bg-[#FAF7F0] border border-[#DDD2BF]">
+                <div className="text-xs font-bold font-mono text-espresso-950">{visualMetrics.colorViolationCount}</div>
+                <div className="text-[10px] text-espresso-600 mt-0.5 font-medium">Color Drifts</div>
               </div>
-              <div className="p-2.5 rounded-xl bg-ivory-50 border border-[#EAE8E3]">
-                <div className="text-xs font-extrabold font-mono text-graphite-900">{visualMetrics.logoViolationCount}</div>
-                <div className="text-[10px] text-graphite-500 mt-0.5 font-medium">Logo Misuse</div>
+              <div className="p-2.5 rounded-lg bg-[#FAF7F0] border border-[#DDD2BF]">
+                <div className="text-xs font-bold font-mono text-espresso-950">{visualMetrics.logoViolationCount}</div>
+                <div className="text-[10px] text-espresso-600 mt-0.5 font-medium">Logo Misuse</div>
               </div>
-              <div className="p-2.5 rounded-xl bg-ivory-50 border border-[#EAE8E3]">
-                <div className="text-xs font-extrabold font-mono text-graphite-900">{visualMetrics.typographyViolationCount}</div>
-                <div className="text-[10px] text-graphite-500 mt-0.5 font-medium">Typography</div>
+              <div className="p-2.5 rounded-lg bg-[#FAF7F0] border border-[#DDD2BF]">
+                <div className="text-xs font-bold font-mono text-espresso-950">{visualMetrics.typographyViolationCount}</div>
+                <div className="text-[10px] text-espresso-600 mt-0.5 font-medium">Typography</div>
               </div>
             </div>
           </div>
@@ -301,24 +310,30 @@ export const AnalyticsPage: React.FC = () => {
       </div>
 
       {/* Violation Category Breakdown */}
-      <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#EAE8E3] shadow-card space-y-4">
+      <div className="bg-[#FDFBF7] p-6 sm:p-8 rounded-2xl border border-[#E2D7C5] shadow-parchment space-y-4">
         <div>
-          <h2 className="text-sm font-bold text-graphite-900 tracking-tight">Violations by Brand Category</h2>
-          <p className="text-xs text-graphite-500 mt-0.5">Empirical distribution of brand guideline discrepancies across all campaigns</p>
+          <h2 className="text-base font-bold font-serif text-espresso-950 tracking-tight">
+            Violations by Brand Category
+          </h2>
+          <p className="text-xs text-espresso-700 mt-0.5">
+            Empirical distribution of brand guideline discrepancies across all campaigns
+          </p>
         </div>
 
         {categoryBreakdown.length === 0 ? (
-          <div className="p-8 text-center text-xs text-graphite-400 font-mono">No brand violations recorded yet. All submissions are fully compliant!</div>
+          <div className="p-8 text-center text-xs text-espresso-600 font-mono">
+            No brand violations recorded yet. All submissions are fully compliant!
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
             {categoryBreakdown.map((cat) => (
-              <div key={cat.category} className="p-4 rounded-2xl bg-ivory-50/70 border border-[#EAE8E3] space-y-2">
+              <div key={cat.category} className="p-4 rounded-xl bg-[#FAF7F0] border border-[#DDD2BF] space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-graphite-900">{cat.category}</span>
-                  <span className="font-extrabold font-mono text-brand-700 tabular-nums">{cat.count} issues ({cat.percentage}%)</span>
+                  <span className="font-bold text-espresso-950 font-serif">{cat.category}</span>
+                  <span className="font-bold font-mono text-forest-900 tabular-nums">{cat.count} issues ({cat.percentage}%)</span>
                 </div>
-                <div className="h-2 rounded-full bg-ivory-200 overflow-hidden">
-                  <div className="h-full rounded-full bg-brand-600" style={{ width: `${cat.percentage}%` }} />
+                <div className="h-2 rounded-full bg-[#EAE1D2] overflow-hidden">
+                  <div className="h-full rounded-full bg-forest-800" style={{ width: `${cat.percentage}%` }} />
                 </div>
               </div>
             ))}
@@ -329,32 +344,38 @@ export const AnalyticsPage: React.FC = () => {
       {/* Bottom Grid: Recurring Violations & Policy Recommendations */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recurring Violations Leaderboard */}
-        <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#EAE8E3] shadow-card space-y-4">
+        <div className="bg-[#FDFBF7] p-6 sm:p-8 rounded-2xl border border-[#E2D7C5] shadow-parchment space-y-4">
           <div className="flex items-center gap-2">
-            <Flame className="w-4 h-4 text-orange-500" />
-            <h2 className="text-sm font-bold text-graphite-900 tracking-tight">Recurring Brand Inconsistencies</h2>
+            <Flame className="w-4 h-4 text-oxblood-700" />
+            <h2 className="text-base font-bold font-serif text-espresso-950 tracking-tight">
+              Recurring Brand Inconsistencies
+            </h2>
           </div>
-          <p className="text-xs text-graphite-500 -mt-2">Repeatedly detected terms, unverified statements, or visual discrepancies</p>
+          <p className="text-xs text-espresso-700 -mt-2">
+            Repeatedly detected terms, unverified statements, or visual discrepancies
+          </p>
 
           {recurringViolations.length === 0 ? (
-            <div className="p-8 text-center text-xs text-graphite-400 font-mono">No recurring violations detected across campaigns.</div>
+            <div className="p-8 text-center text-xs text-espresso-600 font-mono">
+              No recurring violations detected across campaigns.
+            </div>
           ) : (
-            <div className="divide-y divide-[#F2EFE8]">
+            <div className="divide-y divide-[#EDE6D8]">
               {recurringViolations.map((item, idx) => (
                 <div key={idx} className="py-3 flex items-start justify-between gap-3">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-ivory-100 text-graphite-800 border border-[#EAE8E3]">
+                      <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-[#FAF7F0] text-espresso-900 border border-[#DDD2BF]">
                         "{item.phraseOrRule}"
                       </span>
-                      <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-mono">
+                      <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-brass-100 text-brass-900 border border-brass-300 font-mono">
                         {item.category}
                       </span>
                     </div>
-                    <p className="text-xs text-graphite-500 line-clamp-1 italic">"{item.sampleContext}"</p>
+                    <p className="text-xs text-espresso-600 line-clamp-1 italic font-serif">"{item.sampleContext}"</p>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <span className="text-xs font-extrabold font-mono text-brand-700 px-2.5 py-1 rounded-xl bg-lavender-50 border border-lavender-200">
+                    <span className="text-xs font-bold font-mono text-forest-900 px-2.5 py-1 rounded-lg bg-forest-100 border border-forest-300">
                       {item.occurrences}x detected
                     </span>
                   </div>
@@ -365,47 +386,51 @@ export const AnalyticsPage: React.FC = () => {
         </div>
 
         {/* Policy Recommendations & Guideline Gaps */}
-        <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#EAE8E3] shadow-card space-y-4">
+        <div className="bg-[#FDFBF7] p-6 sm:p-8 rounded-2xl border border-[#E2D7C5] shadow-parchment space-y-4">
           <div className="flex items-center gap-2">
-            <Lightbulb className="w-4 h-4 text-amber-500" />
-            <h2 className="text-sm font-bold text-graphite-900 tracking-tight">Governance Policy Recommendations</h2>
+            <Lightbulb className="w-4 h-4 text-brass-700" />
+            <h2 className="text-base font-bold font-serif text-espresso-950 tracking-tight">
+              Governance Policy Recommendations
+            </h2>
           </div>
-          <p className="text-xs text-graphite-500 -mt-2">Actionable brand manual updates derived from empirical review patterns</p>
+          <p className="text-xs text-espresso-700 -mt-2">
+            Actionable brand manual updates derived from empirical review patterns
+          </p>
 
           <div className="space-y-3">
             {policyRecommendations.map((rec, idx) => (
-              <div key={idx} className="p-4 rounded-2xl bg-ivory-50/80 border border-[#EAE8E3] space-y-1.5">
+              <div key={idx} className="p-4 rounded-xl bg-[#FAF7F0] border border-[#DDD2BF] space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full font-mono ${
+                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full font-mono ${
                     rec.priority === 'Urgent'
-                      ? 'bg-rose-100 text-rose-800'
+                      ? 'bg-oxblood-100 text-oxblood-900 border border-oxblood-300'
                       : rec.priority === 'High'
-                      ? 'bg-orange-100 text-orange-800'
-                      : 'bg-lavender-100 text-brand-800'
+                      ? 'bg-brass-100 text-brass-900 border border-brass-300'
+                      : 'bg-forest-100 text-forest-900 border border-forest-300'
                   }`}>
                     {rec.priority} Priority
                   </span>
-                  <span className="text-[11px] font-semibold text-graphite-400 font-mono">{rec.area}</span>
+                  <span className="text-[11px] font-semibold text-espresso-600 font-mono">{rec.area}</span>
                 </div>
-                <h3 className="text-xs font-bold text-graphite-900">{rec.title}</h3>
-                <p className="text-xs text-graphite-600 leading-relaxed">{rec.description}</p>
-                <div className="text-[11px] font-semibold text-emerald-700 flex items-center gap-1 pt-1 font-mono">
-                  <ArrowUpRight className="w-3.5 h-3.5" />
+                <h3 className="text-xs font-bold font-serif text-espresso-950">{rec.title}</h3>
+                <p className="text-xs text-espresso-700 leading-relaxed font-sans">{rec.description}</p>
+                <div className="text-[11px] font-semibold text-forest-900 flex items-center gap-1 pt-1 font-mono">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-brass-700" />
                   <span>Impact: {rec.impact}</span>
                 </div>
               </div>
             ))}
 
             {guidelineGaps.length > 0 && (
-              <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/90 space-y-2">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900">
-                  <HelpCircle className="w-3.5 h-3.5 text-amber-600" />
+              <div className="p-4 rounded-xl bg-brass-50 border border-brass-300 space-y-2">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-brass-900">
+                  <HelpCircle className="w-3.5 h-3.5 text-brass-700" />
                   <span>Missing Guideline Verification Gaps</span>
                 </div>
-                <p className="text-xs text-amber-800 leading-relaxed">
+                <p className="text-xs text-espresso-800 leading-relaxed">
                   The following statements were frequently claimed by creators but lack verification in uploaded brand documents:
                 </p>
-                <ul className="text-xs text-amber-900 space-y-1 list-disc list-inside">
+                <ul className="text-xs text-espresso-900 space-y-1 list-disc list-inside">
                   {guidelineGaps.map((gap, i) => (
                     <li key={i}>
                       <span className="font-semibold">"{gap.topicOrClaim}"</span> ({gap.frequency}x unverified)

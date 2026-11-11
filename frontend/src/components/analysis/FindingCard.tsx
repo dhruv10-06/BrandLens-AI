@@ -15,32 +15,32 @@ export const FindingCard: React.FC<FindingCardProps> = ({
   isApplied = false,
 }) => {
   const getSeverityBorder = () => {
-    if (isApplied) return 'border-l-4 border-l-emerald-500 border-[#EAE8E3] bg-emerald-50/20';
+    if (isApplied) return 'border-l-4 border-l-forest-800 border-[#E7DECE] bg-forest-50/30';
     switch (finding.severity) {
       case 'Critical':
-        return 'border-l-4 border-l-rose-500 border-[#EAE8E3] hover:border-rose-300';
+        return 'border-l-4 border-l-oxblood-800 border-[#E7DECE] hover:border-oxblood-700';
       case 'High':
-        return 'border-l-4 border-l-orange-500 border-[#EAE8E3] hover:border-orange-300';
+        return 'border-l-4 border-l-oxblood-700 border-[#E7DECE] hover:border-oxblood-600';
       case 'Medium':
-        return 'border-l-4 border-l-amber-500 border-[#EAE8E3] hover:border-amber-300';
+        return 'border-l-4 border-l-brass-600 border-[#E7DECE] hover:border-brass-700';
       case 'Low':
       default:
-        return 'border-l-4 border-l-sky-500 border-[#EAE8E3] hover:border-sky-300';
+        return 'border-l-4 border-l-olive-600 border-[#E7DECE] hover:border-olive-700';
     }
   };
 
   return (
     <div
-      className={`rounded-2xl border bg-white p-5 sm:p-6 shadow-card transition-all duration-200 ${getSeverityBorder()}`}
+      className={`rounded-xl border bg-[#FDFBF7] p-5 sm:p-6 shadow-parchment transition-all duration-200 ${getSeverityBorder()}`}
     >
       {/* Header: Category, Severity, Evidence Status */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-extrabold text-sm text-graphite-900 tracking-tight">{finding.category}</span>
+          <span className="font-bold text-sm text-espresso-950 font-serif tracking-tight">{finding.category}</span>
           <EvidenceBadge status={finding.evidenceStatus} />
         </div>
         <div className="flex items-center gap-2.5">
-          <span className="text-[11px] font-mono text-graphite-400 font-medium">
+          <span className="text-[11px] font-mono text-espresso-600 font-medium">
             Confidence {Math.round(finding.confidence * 100)}%
           </span>
           <SeverityBadge severity={finding.severity} />
@@ -48,41 +48,41 @@ export const FindingCard: React.FC<FindingCardProps> = ({
       </div>
 
       {/* Problematic Original Text */}
-      <div className="mb-3.5 p-3.5 rounded-xl bg-rose-50/50 border border-rose-100">
-        <div className="text-[10px] font-extrabold uppercase tracking-wider text-rose-700 mb-1.5 flex items-center gap-1.5 font-mono">
-          <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
+      <div className="mb-3.5 p-3.5 rounded-lg bg-oxblood-50/50 border border-oxblood-200/80">
+        <div className="text-[10px] font-bold uppercase tracking-wider text-oxblood-800 mb-1.5 flex items-center gap-1.5 font-mono">
+          <AlertTriangle className="w-3.5 h-3.5 text-oxblood-700" />
           <span>Flagged Copy Snippet</span>
         </div>
-        <div className="text-xs font-mono text-rose-950 font-semibold bg-white/90 px-3 py-2 rounded-lg border border-rose-200/70 shadow-subtle leading-relaxed">
+        <div className="text-xs font-mono text-oxblood-950 font-medium bg-[#FAF7F0] px-3 py-2 rounded border border-oxblood-200/70 shadow-parchment-sm leading-relaxed">
           "{finding.originalText}"
         </div>
       </div>
 
       {/* Detailed Explanation */}
-      <div className="mb-3.5 text-xs text-graphite-700 leading-relaxed">
-        <span className="font-bold text-graphite-900">Governance Audit: </span>
+      <div className="mb-3.5 text-xs text-espresso-800 leading-relaxed">
+        <span className="font-bold text-espresso-950">Governance Finding: </span>
         <span>{finding.explanation}</span>
       </div>
 
       {/* Supporting Guideline / Evidence */}
-      <div className="mb-4 p-3.5 rounded-xl bg-ivory-50/80 border border-[#EAE8E3] text-xs">
-        <div className="text-[10px] font-bold uppercase tracking-wider text-graphite-500 mb-1.5 flex items-center gap-1.5 font-mono">
-          <Quote className="w-3.5 h-3.5 text-graphite-400" />
+      <div className="mb-4 p-3.5 rounded-lg bg-[#F5EFE4] border border-[#DDD2BF] text-xs">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-espresso-600 mb-1.5 flex items-center gap-1.5 font-mono">
+          <Quote className="w-3.5 h-3.5 text-brass-700" />
           <span>Indexed Guideline Citation</span>
         </div>
-        <p className="text-graphite-700 italic leading-relaxed">
+        <p className="text-espresso-800 italic leading-relaxed font-serif">
           "{finding.supportingEvidence}"
         </p>
       </div>
 
       {/* Suggested Correction & Action */}
-      <div className="pt-3.5 border-t border-[#F2EFE8] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="pt-3.5 border-t border-[#EDE6D8] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-700 mb-1 flex items-center gap-1 font-mono">
-            <Sparkles className="w-3.5 h-3.5 text-brand-600" />
+          <div className="text-[10px] font-bold uppercase tracking-widest text-forest-800 mb-1 flex items-center gap-1 font-mono">
+            <Sparkles className="w-3.5 h-3.5 text-brass-600" />
             <span>Recommended Compliant Phrasing</span>
           </div>
-          <div className="text-xs font-bold text-graphite-900 font-mono bg-ivory-50 px-3 py-1.5 rounded-lg border border-[#EAE8E3] inline-block">
+          <div className="text-xs font-semibold text-espresso-900 font-mono bg-[#FAF7F0] px-3 py-1.5 rounded border border-[#DDD2BF] inline-block">
             "{finding.suggestedCorrection}"
           </div>
         </div>
@@ -90,18 +90,18 @@ export const FindingCard: React.FC<FindingCardProps> = ({
         {onApplyCorrection && (
           <div className="flex-shrink-0 self-end sm:self-auto">
             {isApplied ? (
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-100/80 px-3.5 py-1.5 rounded-xl border border-emerald-200 shadow-subtle">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest-900 bg-forest-100/90 px-3.5 py-1.5 rounded-lg border border-forest-300 shadow-parchment-sm">
+                <CheckCircle2 className="w-3.5 h-3.5 text-forest-800" />
                 <span>Correction Applied</span>
               </span>
             ) : (
               <button
                 type="button"
                 onClick={() => onApplyCorrection(finding.suggestedCorrection, finding.originalText)}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 px-4 py-2 rounded-xl transition-all shadow-sm hover:shadow-card"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-cream-50 bg-forest-800 hover:bg-forest-900 active:bg-forest-950 px-4 py-2 rounded-lg transition-all shadow-parchment hover:shadow-forest-glow border border-forest-700"
               >
                 <span>Apply Correction</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 text-brass-400" />
               </button>
             )}
           </div>

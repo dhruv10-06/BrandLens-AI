@@ -8,7 +8,7 @@ import {
   ListTodo,
   CheckSquare,
   History,
-  Sparkles,
+  ShieldCheck,
   BarChart3,
   Cpu,
 } from 'lucide-react';
@@ -19,7 +19,7 @@ export const Sidebar: React.FC = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Brand Analytics', path: '/analytics', icon: BarChart3, badge: 'R3' },
+    { name: 'Brand Analytics', path: '/analytics', icon: BarChart3, badge: 'Intelligence' },
     { name: 'Brand Guidelines', path: '/guidelines', icon: BookOpen },
     { name: 'Submit Content', path: '/submissions/new', icon: FilePlus2 },
     { name: 'Submissions', path: '/submissions', icon: ListTodo },
@@ -30,11 +30,11 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-[#FAF8F5] text-graphite-700 flex-shrink-0 flex flex-col justify-between hidden md:flex min-h-[calc(100vh-4rem)] border-r border-[#EAE8E3]">
+    <aside className="w-64 bg-[#F5EFE4] text-espresso-800 flex-shrink-0 flex flex-col justify-between hidden md:flex min-h-[calc(100vh-4.25rem)] border-r border-[#E2D7C5]">
       <div className="p-4 space-y-6">
         <div>
-          <div className="text-[10px] font-extrabold uppercase tracking-wider text-graphite-400 px-3 mb-2.5 font-mono">
-            Governance Navigation
+          <div className="text-[10px] font-bold uppercase tracking-widest text-espresso-600 px-3 mb-2.5 font-mono">
+            Sovereign Navigation
           </div>
           <nav className="space-y-1">
             {navItems.map((item) => (
@@ -43,19 +43,19 @@ export const Sidebar: React.FC = () => {
                 to={item.path}
                 end
                 className={({ isActive }) =>
-                  `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-150 ${
+                  `flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
                     isActive
-                      ? 'bg-brand-600 text-white shadow-card ring-1 ring-brand-700/20'
-                      : 'text-graphite-600 hover:bg-ivory-200/70 hover:text-graphite-900'
+                      ? 'bg-brand-600 text-cream-50 shadow-parchment border border-forest-700/60'
+                      : 'text-espresso-800 hover:bg-[#EAE1D2] hover:text-espresso-950'
                   }`
                 }
               >
                 <div className="flex items-center gap-3">
-                  <item.icon className="w-4 h-4 flex-shrink-0" />
+                  <item.icon className="w-4 h-4 flex-shrink-0 text-brass-700" />
                   <span>{item.name}</span>
                 </div>
                 {item.badge && (
-                  <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-champagne-300/80 text-graphite-950 shadow-subtle font-mono">
+                  <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#EAE1D2] text-espresso-900 border border-[#DDD2BF] font-mono">
                     {item.badge}
                   </span>
                 )}
@@ -65,26 +65,26 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* Brand Governance Guidance Box */}
-        <div className="p-4 rounded-2xl bg-white border border-[#EAE8E3] text-xs space-y-2 shadow-subtle">
-          <div className="flex items-center gap-2 text-brand-600 font-bold text-xs tracking-tight">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>RAG Governance AI</span>
+        <div className="p-4 rounded-xl bg-[#FDFBF7] border border-[#E2D7C5] text-xs space-y-2 shadow-parchment-sm">
+          <div className="flex items-center gap-2 text-forest-800 font-bold text-xs tracking-tight font-serif">
+            <ShieldCheck className="w-4 h-4 text-brass-700" />
+            <span>Sovereign Brand Codex</span>
           </div>
-          <p className="text-graphite-500 leading-relaxed text-[11px]">
-            Content is verified against indexed guideline chunks and official brand facts. Violations cite ground-truth evidence.
+          <p className="text-espresso-700 leading-relaxed text-[11px]">
+            Every creative asset is vetted against vectorized brand guidelines and verified factual assertions with zero halluncination tolerance.
           </p>
         </div>
       </div>
 
       {/* Footer Info */}
-      <div className="p-4 border-t border-[#EAE8E3] text-[11px] text-graphite-500 flex items-center justify-between bg-ivory-100/50">
-        <div className="flex items-center gap-1.5 text-graphite-600 font-semibold font-mono">
-          <Cpu className="w-3.5 h-3.5 text-brand-600" />
-          <span>CodeNexus R3</span>
+      <div className="p-4 border-t border-[#E2D7C5] text-[11px] text-espresso-600 flex items-center justify-between bg-[#EFE8DA]">
+        <div className="flex items-center gap-1.5 font-mono text-espresso-800 font-medium">
+          <Cpu className="w-3.5 h-3.5 text-brass-700" />
+          <span>Atelier Engine</span>
         </div>
-        <span className="flex items-center gap-1.5 text-emerald-700 font-bold text-[10px] uppercase tracking-wider font-mono">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          Multimodal Live
+        <span className="flex items-center gap-1.5 text-forest-900 font-semibold text-[10px] uppercase tracking-wider font-mono">
+          <span className="w-1.5 h-1.5 rounded-full bg-forest-800 animate-pulse" />
+          Llama 3.3 Active
         </span>
       </div>
     </aside>
