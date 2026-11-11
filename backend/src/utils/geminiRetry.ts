@@ -1,6 +1,7 @@
 export interface GeminiRetryOptions {
   url: string;
   body: any;
+  headers?: Record<string, string>;
   serviceName?: string;
   timeoutMs?: number; // Overall analysis deadline (default 60000ms)
   perAttemptTimeoutMs?: number; // Per-attempt timeout (default 20000ms)
@@ -58,8 +59,9 @@ export function formatGeminiHttpError(status: number, responseText: string, serv
 
   if (status === 503) {
     const detail = parsedMessage ? ` (${parsedMessage})` : '';
+    const providerLabel = serviceName.includes('Groq') ? 'Groq' : 'Google Gemini';
     const err = new Error(
-      `The Google Gemini AI service is currently experiencing high demand (HTTP 503: UNAVAILABLE)${detail}. Spikes in demand are usually temporary. Please wait a moment and click "Re-Analyze" to retry.`
+      `The ${providerLabel} AI service is currently experiencing high demand (HTTP 503: UNAVAILABLE)${detail}. Spikes in demand are usually temporary. Please wait a moment and click "Re-Analyze" to retry.`
     );
     (err as any).statusCode = 503;
     (err as any).isTransient = true;
@@ -228,6 +230,7 @@ export async function executeGeminiRequestWithRetry(options: GeminiRetryOptions)
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            ...(options.headers || {}),
           },
           signal: attemptController.signal,
           body: JSON.stringify(body),
@@ -238,9 +241,12 @@ export async function executeGeminiRequestWithRetry(options: GeminiRetryOptions)
 
         const durationMs = Date.now() - attemptStart;
         const requestId =
-          response.headers?.get?.('x-goog-request-id') || response.headers?.get?.('x-request-id') || 'none';
+          response.headers?.get?.('x-goog-request-id') ||
+          response.headers?.get?.('x-request-id') ||
+          response.headers?.get?.('x-groq-request-id') ||
+          'none';
         console.log(
-          `[${serviceName}] Attempt ${attempt + 1} completed in ${durationMs}ms - Status: HTTP ${response.status} (Google Request ID: ${requestId})`
+          `[${serviceName}] Attempt ${attempt + 1} completed in ${durationMs}ms - Status: HTTP ${response.status} (Request ID: ${requestId})`
         );
 
         if (response.ok) {
@@ -322,7 +328,7 @@ export async function executeGeminiRequestWithRetry(options: GeminiRetryOptions)
             `[${serviceName}] Attempt ${attempt + 1}/${maxRetries + 1} timed out after ${durationMs}ms waiting for response (per-attempt limit: ${attemptTimeout}ms). Overall remaining: ${Math.round(overallDeadline - Date.now())}ms.`
           );
           lastError = new Error(
-            `${serviceName} attempt ${attempt + 1} timed out after ${attemptTimeout / 1000}s without response from Google.`
+            `${serviceName} attempt ${attempt + 1} timed out after ${attemptTimeout / 1000}s without response.`
           );
           (lastError as any).isTransient = true;
         } else if (err.isTransient) {
@@ -363,3 +369,7 @@ export async function executeGeminiRequestWithRetry(options: GeminiRetryOptions)
     clearTimeout(overallTimeoutId);
   }
 }
+
+export const executeAIRequestWithRetry = executeGeminiRequestWithRetry;
+export const formatAIHttpError = formatGeminiHttpError;
+export type AIRetryOptions = GeminiRetryOptions;

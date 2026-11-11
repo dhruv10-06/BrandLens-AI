@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/health', (req: Request, res: Response) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  const isGroq = ENV.AI_PROVIDER === 'groq';
 
   res.json({
     status: 'healthy',
@@ -19,9 +20,9 @@ router.get('/health', (req: Request, res: Response) => {
       name: mongoose.connection.name || 'brandlens',
     },
     aiService: {
-      provider: 'Google Gemini',
-      model: ENV.GEMINI_MODEL,
-      configured: Boolean(ENV.GEMINI_API_KEY),
+      provider: isGroq ? 'Groq' : 'Google Gemini',
+      model: isGroq ? ENV.GROQ_MODEL : ENV.GEMINI_MODEL,
+      configured: Boolean(isGroq ? ENV.GROQ_API_KEY : ENV.GEMINI_API_KEY),
     },
   });
 });

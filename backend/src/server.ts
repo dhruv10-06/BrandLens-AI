@@ -27,7 +27,8 @@ async function startServer() {
       console.log(`🚀 BrandLens AI API Server running on port ${ENV.PORT}`);
       console.log(`🌐 Health endpoint: http://localhost:${ENV.PORT}/api/health`);
       console.log(`🎯 Frontend Origin: ${ENV.FRONTEND_URL}`);
-      console.log(`🔑 Gemini Configured: ${Boolean(ENV.GEMINI_API_KEY)}`);
+      console.log(`🤖 Active AI Provider: ${ENV.AI_PROVIDER === 'groq' ? `Groq (${ENV.GROQ_MODEL || 'qwen/qwen3.8-27b'})` : `Google Gemini (${ENV.GEMINI_MODEL || 'gemini-3.8-flash'})`}`);
+      console.log(`🔑 Provider Configured: ${Boolean(ENV.AI_PROVIDER === 'groq' ? ENV.GROQ_API_KEY : ENV.GEMINI_API_KEY)}`);
       console.log(`====================================================`);
     });
 
